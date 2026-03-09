@@ -1159,7 +1159,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
         Scroll mode
       </label>
       <button class="admin-nav-btn anb-ghost" onclick="closeAdmin()">← Back to Site</button>
-      <button class="admin-nav-btn anb-green" onclick="downloadUpdatedHTML()" title="Download index.html + content.json with all changes">↓ Download</button>
+      <button class="admin-nav-btn anb-green" onclick="downloadUpdatedHTML()" title="Download index.html with all changes baked in">↓ Download index.html</button>
       <button class="admin-nav-btn anb-accent" onclick="saveAll()" id="save-all-btn">✓ Save All Changes</button>
       <span id="gh-nav-status" style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.45);margin-left:4px"></span>
     </div>
@@ -1198,9 +1198,10 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
           <div style="font-size:14px;color:var(--ink2);line-height:1.85;margin-top:12px">
             <strong style="color:var(--ink)">1.</strong> Edit content using the sidebar tabs above.<br>
             <strong style="color:var(--ink)">2.</strong> Click <strong>"Save All Changes"</strong> — persists everything to your browser.<br>
-            <strong style="color:var(--ink)">3.</strong> Click <strong>"↓ Download"</strong> to get <code style="font-family:var(--mono);background:var(--tag);padding:2px 6px;border-radius:3px">index.html</code> + <code style="font-family:var(--mono);background:var(--tag);padding:2px 6px;border-radius:3px">content.json</code> — upload both to your repo root.<br>
-            <strong style="color:var(--ink)">4.</strong> Blog &amp; project HTML pages are pushed automatically as separate files in <code style="font-family:var(--mono);background:var(--tag);padding:2px 6px;border-radius:3px">data/blogs/</code> and <code style="font-family:var(--mono);background:var(--tag);padding:2px 6px;border-radius:3px">data/projects/</code>.<br>
-            <strong style="color:var(--green)">⚡ Architecture:</strong> <code style="font-family:var(--mono);background:var(--tag);padding:2px 6px;border-radius:3px">index.html</code> stays under ~50 KB forever — no matter how many blogs you add. Each post lives in its own tiny file, loaded on demand. <strong>GitHub Auto-Sync handles everything automatically.</strong>
+            <strong style="color:var(--ink)">3.</strong> Click <strong>"↓ Download index.html"</strong> to get a file with all changes baked in.<br>
+            <strong style="color:var(--ink)">4.</strong> Upload to GitHub repo <code style="font-family:var(--mono);background:var(--tag);padding:2px 6px;border-radius:3px">yourusername.github.io</code> as <code style="font-family:var(--mono);background:var(--tag);padding:2px 6px;border-radius:3px">index.html</code>.<br>
+            <strong style="color:var(--ink)">5.</strong> Repo Settings → Pages → Deploy from branch → main. Done! 🚀<br>
+            <strong style="color:var(--green)">⚡ Pro tip:</strong> Set up <strong>GitHub Auto-Sync</strong> in Settings — it pushes <code style="font-family:var(--mono);background:var(--tag);padding:2px 6px;border-radius:3px">index.html</code> + every blog/project as a <strong>separate file</strong> on every Save. <code style="font-family:var(--mono);background:var(--tag);padding:2px 6px;border-radius:3px">index.html</code> stays tiny forever.
           </div>
         </div>
       </div>
@@ -1333,7 +1334,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
             <div id="gh-sync-badge" style="font-family:var(--mono);font-size:11px;padding:2px 9px;border-radius:100px;background:var(--tag);color:var(--ink3)">Not configured</div>
           </div>
           <div style="font-family:var(--mono);font-size:12px;color:var(--ink3);margin-bottom:18px;line-height:1.65">
-            Set this up once — every <strong style="color:var(--ink)">"Save All Changes"</strong> automatically pushes your updated <code style="background:var(--tag);padding:1px 5px;border-radius:3px">index.html</code>, <code style="background:var(--tag);padding:1px 5px;border-radius:3px">data/content.json</code>, and all blog/project HTML files to GitHub. Live in ~30s. <strong style="color:var(--green)">index.html stays small forever — each post is its own file.</strong>
+            Set this up once — every <strong style="color:var(--ink)">"Save All Changes"</strong> automatically pushes your updated <code style="background:var(--tag);padding:1px 5px;border-radius:3px">index.html</code> to GitHub, <strong style="color:var(--green)">plus each blog post and project as its own separate file</strong> (<code style="background:var(--tag);padding:1px 5px;border-radius:3px">blogs/blog-0.html</code>, <code style="background:var(--tag);padding:1px 5px;border-radius:3px">projects/proj-0.html</code>, etc). This keeps <code style="background:var(--tag);padding:1px 5px;border-radius:3px">index.html</code> tiny forever — no matter how many posts you add. Live in ~30s.
           </div>
           <div class="form-row" style="margin-bottom:10px">
             <div class="form-group" style="margin-bottom:0"><label class="form-label">GitHub Username</label><input class="form-input" id="gh-username" placeholder="e.g. hashwithharsh"></div>
@@ -1379,7 +1380,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
             <button class="btn btn-sm btn-danger" onclick="resetData()">⚠ Reset to Defaults</button>
           </div>
           <div style="font-size:13px;color:var(--ink3);font-family:var(--mono);line-height:1.75">
-            <strong style="color:var(--green)">↓ Download</strong> — downloads <code style="background:var(--tag);padding:1px 5px;border-radius:3px">index.html</code> (shell, ~50 KB) + <code style="background:var(--tag);padding:1px 5px;border-radius:3px">content.json</code> (all metadata). Upload both to your GitHub repo root. Blog &amp; project HTML files are pushed separately via Auto-Sync and live in <code style="background:var(--tag);padding:1px 5px;border-radius:3px">data/blogs/</code> and <code style="background:var(--tag);padding:1px 5px;border-radius:3px">data/projects/</code>.
+            <strong style="color:var(--green)">↓ Download index.html</strong> — bakes all your edits into a standalone file. Replace the file on GitHub to publish permanently.
           </div>
         </div>
       </div>
@@ -1591,62 +1592,57 @@ const DEFAULTS = {
 
 /* ═══════════════════════════════════════════════
    STATE — load from localStorage
+   Blog/project HTML content is stored separately as
+   hwh_blog_html_N and hwh_proj_html_N so it never
+   inflates index.html when baked into the seed.
 ════════════════════════════════════════════════ */
 function loadState() {
   try {
     const s = localStorage.getItem('hwh_data');
-    return s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULTS));
+    const state = s ? JSON.parse(s) : JSON.parse(JSON.stringify(DEFAULTS));
+    // Re-hydrate html content from separate localStorage keys
+    if (state.blogs) {
+      state.blogs.forEach(function(b, i) {
+        const html = localStorage.getItem('hwh_blog_html_' + i);
+        if (html) b.html = html;
+      });
+    }
+    if (state.projects) {
+      state.projects.forEach(function(p, i) {
+        const html = localStorage.getItem('hwh_proj_html_' + i);
+        if (html) p.html = html;
+      });
+    }
+    return state;
   } catch(e) { return JSON.parse(JSON.stringify(DEFAULTS)); }
 }
 function saveState(s) { localStorage.setItem('hwh_data', JSON.stringify(s)); }
+
+/* Save html content for a blog post to its own localStorage key */
+function saveBlogHtml(i, html) {
+  if (html) localStorage.setItem('hwh_blog_html_' + i, html);
+  else localStorage.removeItem('hwh_blog_html_' + i);
+}
+
+/* Save html content for a project to its own localStorage key */
+function saveProjHtml(i, html) {
+  if (html) localStorage.setItem('hwh_proj_html_' + i, html);
+  else localStorage.removeItem('hwh_proj_html_' + i);
+}
+
+/* Rebuild all blog/project html localStorage keys to match current array order.
+   Call this after reordering or deleting entries. */
+function reindexHtmlStore() {
+  const keysToRemove = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && (k.startsWith('hwh_blog_html_') || k.startsWith('hwh_proj_html_'))) keysToRemove.push(k);
+  }
+  keysToRemove.forEach(k => localStorage.removeItem(k));
+  S.blogs.forEach(function(b, i) { if (b.html) localStorage.setItem('hwh_blog_html_' + i, b.html); });
+  S.projects.forEach(function(p, i) { if (p.html) localStorage.setItem('hwh_proj_html_' + i, p.html); });
+}
 let S = loadState();
-
-/* ═══════════════════════════════════════════════
-   UNIQUE ID GENERATOR
-════════════════════════════════════════════════ */
-function generateId(prefix) {
-  return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
-}
-
-/* ═══════════════════════════════════════════════
-   META STATE — strips large html blobs from S.
-   Used for content.json and the index.html seed.
-   Keeps all metadata (title, excerpt, id, etc.)
-   but removes the full HTML content of each blog
-   and project, which is stored as separate files.
-════════════════════════════════════════════════ */
-function buildMetaState() {
-  const meta = JSON.parse(JSON.stringify(S));
-  meta.blogs = (meta.blogs || []).map(function(b) {
-    var copy = Object.assign({}, b);
-    delete copy.html;
-    return copy;
-  });
-  meta.projects = (meta.projects || []).map(function(p) {
-    var copy = Object.assign({}, p);
-    delete copy.html;
-    return copy;
-  });
-  return meta;
-}
-
-/* ═══════════════════════════════════════════════
-   LOAD REMOTE STATE — fetches data/content.json
-   from GitHub Pages. Used for first-time visitors
-   who have no localStorage data yet. Falls back
-   gracefully to DEFAULTS if fetch fails.
-════════════════════════════════════════════════ */
-async function loadRemoteState() {
-  try {
-    const r = await fetch('./data/content.json?t=' + Date.now(), { cache: 'no-cache' });
-    if (r.ok) {
-      const remote = await r.json();
-      // Sanity check: must have at minimum hero and blogs keys
-      if (remote && typeof remote === 'object' && remote.hero) return remote;
-    }
-  } catch(e) { /* offline or file not yet published */ }
-  return null;
-}
 
 /* ═══════════════════════════════════════════════
    THEME
@@ -2141,37 +2137,19 @@ function closeProjDetail() {
   document.getElementById('proj-detail').classList.remove('open');
   document.body.style.overflow = '';
 }
-async function openProjHtml(i) {
+function openProjHtml(i) {
   const p = S.projects[i];
-  if (!p) { toast('⚠ Project not found'); return; }
-
-  let htmlContent = p.html || '';
-
-  if (!htmlContent && p.id) {
-    const frame = document.getElementById('blog-frame');
-    const viewer = document.getElementById('blog-viewer');
-    document.getElementById('blog-viewer-title').textContent = p.name;
-    viewer.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    frame.srcdoc = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:monospace;color:#888;background:#0a0a0c">Loading page…</div>';
-    try {
-      const res = await fetch('./data/projects/' + p.id + '.html');
-      if (res.ok) {
-        htmlContent = await res.text();
-      } else {
-        frame.srcdoc = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:monospace;color:#ef4444;background:#0a0a0c">Could not load page (404).</div>';
-        return;
-      }
-    } catch(e) {
-      frame.srcdoc = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:monospace;color:#ef4444;background:#0a0a0c">Network error loading page.</div>';
-      return;
-    }
-  }
-
-  if (!htmlContent) { toast('⚠ No HTML page for this project'); return; }
+  if (!p || !p.html) { toast('⚠ No HTML page for this project'); return; }
   document.getElementById('blog-viewer-title').textContent = p.name;
   const frame = document.getElementById('blog-frame');
-  frame.srcdoc = htmlContent;
+  const isGHPages = location.hostname.endsWith('github.io') || location.hostname.endsWith('githubusercontent.com');
+  if (isGHPages) {
+    frame.src = `projects/proj-${i}.html`;
+    frame.removeAttribute('srcdoc');
+  } else {
+    frame.removeAttribute('src');
+    frame.srcdoc = p.html;
+  }
   const viewer = document.getElementById('blog-viewer');
   viewer.style.display = 'flex';
   viewer.scrollTop = 0;
@@ -2181,39 +2159,22 @@ async function openProjHtml(i) {
 /* ═══════════════════════════════════════════════
    BLOG VIEWER
 ════════════════════════════════════════════════ */
-async function openBlog(i) {
+function openBlog(i) {
   const b = S.blogs[i];
   if (!b) return;
-
-  let htmlContent = b.html || '';
-
-  // If no inline HTML but has an id → fetch from the separate file
-  // (this is the path visitors take after GitHub push)
-  if (!htmlContent && b.id) {
-    const frame = document.getElementById('blog-frame');
-    const viewer = document.getElementById('blog-viewer');
-    document.getElementById('blog-viewer-title').textContent = b.title;
-    viewer.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    frame.srcdoc = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:monospace;color:#888;background:#0a0a0c">Loading post…</div>';
-    try {
-      const res = await fetch('./data/blogs/' + b.id + '.html');
-      if (res.ok) {
-        htmlContent = await res.text();
-      } else {
-        frame.srcdoc = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:monospace;color:#ef4444;background:#0a0a0c">Could not load post (404).</div>';
-        return;
-      }
-    } catch(e) {
-      frame.srcdoc = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:monospace;color:#ef4444;background:#0a0a0c">Network error loading post.</div>';
-      return;
-    }
-  }
-
-  if (!htmlContent) { toast('⚠ No HTML content for this post yet'); return; }
+  if (!b.html) { toast('⚠ No HTML content for this post yet'); return; }
   document.getElementById('blog-viewer-title').textContent = b.title;
   const frame = document.getElementById('blog-frame');
-  frame.srcdoc = htmlContent;
+  // On GitHub Pages, load from the separate blog file for best performance.
+  // On localhost / admin preview, fall back to srcdoc so it works without a server.
+  const isGHPages = location.hostname.endsWith('github.io') || location.hostname.endsWith('githubusercontent.com');
+  if (isGHPages) {
+    frame.src = `blogs/blog-${i}.html`;
+    frame.removeAttribute('srcdoc');
+  } else {
+    frame.removeAttribute('src');
+    frame.srcdoc = b.html;
+  }
   const viewer = document.getElementById('blog-viewer');
   viewer.style.display = 'flex';
   viewer.scrollTop = 0;
@@ -2672,8 +2633,6 @@ function saveProject() {
   // Determine final html: cleared → '', pasted/uploaded → use it, blank → keep existing
   const finalHtml = _pmHtmlCleared ? '' : (newHtml !== '' ? newHtml : (existing.html || ''));
   const p = {
-    // Preserve existing id or generate a new one (id = filename in data/projects/{id}.html)
-    id: existing.id || generateId('proj'),
     name: document.getElementById('pm-name').value,
     desc: document.getElementById('pm-desc').value,
     detail: document.getElementById('pm-detail').value,
@@ -2684,8 +2643,13 @@ function saveProject() {
     html: finalHtml,
     pinned: existing.pinned || false
   };
-  if (idx >= 0) S.projects[idx] = p;
-  else S.projects.push(p);
+  if (idx >= 0) {
+    S.projects[idx] = p;
+    saveProjHtml(idx, finalHtml);
+  } else {
+    S.projects.push(p);
+    saveProjHtml(S.projects.length - 1, finalHtml);
+  }
   saveState(S); renderProjects(); renderProjectsEditor(); closeProjModal(); scheduleSave(); toast('✓ Project saved!');
 }
 function renderProjectsEditor() {
@@ -2713,6 +2677,7 @@ function moveProject(i, dir) {
   const t = i+dir;
   if (t<0||t>=S.projects.length) return;
   [S.projects[i],S.projects[t]] = [S.projects[t],S.projects[i]];
+  reindexHtmlStore();
   saveState(S); renderProjects(); renderProjectsEditor(); scheduleSave(); toast('✓ Order updated');
 }
 function toggleProjectPin(i) {
@@ -2722,7 +2687,11 @@ function toggleProjectPin(i) {
   toast(S.projects[i].pinned ? '📌 Project pinned!' : 'Project unpinned');
 }
 function deleteProject(i) {
-  if(confirm('Delete this project?')) { S.projects.splice(i,1); saveState(S); renderProjects(); renderProjectsEditor(); scheduleSave(); toast('Project deleted'); }
+  if(confirm('Delete this project?')) {
+    S.projects.splice(i,1);
+    reindexHtmlStore();
+    saveState(S); renderProjects(); renderProjectsEditor(); scheduleSave(); toast('Project deleted');
+  }
 }
 
 /* ═══════════════════════════════════════════════
@@ -2829,10 +2798,14 @@ function addBlogPost() {
   const groupId = document.getElementById('paste-group').value||'';
   const cover = _pasteCover || document.getElementById('paste-cover-url').value.trim() || '';
   if (!title) { toast('⚠ Please enter a post title'); return; }
-  // Always generate a unique id — this id becomes the filename in data/blogs/{id}.html
-  const id = generateId('blog');
-  S.blogs.unshift({ id, title, day, series, excerpt, html, cover, groupId, pinned:false });
+  // Unshift the new post (without html in state) and save html separately
+  S.blogs.unshift({ title, day, series, excerpt, html: '', cover, groupId, pinned:false });
   S.about.blogs = S.blogs.length;
+  // Reindex html store since we unshifted (all indices shifted by 1)
+  reindexHtmlStore();
+  // Now save html for the new post at index 0
+  if (html) saveBlogHtml(0, html);
+  S.blogs[0].html = html; // keep in memory for this session
   saveState(S); renderBlogs(); renderAbout(); renderBlogsEditor();
   _pasteCover = '';
   ['paste-html','paste-title','paste-day','paste-series','paste-excerpt','paste-cover-url'].forEach(id => document.getElementById(id).value='');
@@ -2883,6 +2856,7 @@ function moveBlog(i, dir) {
   const t=i+dir;
   if(t<0||t>=S.blogs.length) return;
   [S.blogs[i],S.blogs[t]]=[S.blogs[t],S.blogs[i]];
+  reindexHtmlStore();
   saveState(S); renderBlogs(); renderBlogsEditor(); scheduleSave(); toast('✓ Order updated');
 }
 function toggleBlogPin(i) {
@@ -2894,6 +2868,7 @@ function toggleBlogPin(i) {
 function deleteBlog(i) {
   if(confirm('Delete this blog post?')) {
     S.blogs.splice(i,1); S.about.blogs=S.blogs.length;
+    reindexHtmlStore();
     saveState(S); renderBlogs(); renderAbout(); renderBlogsEditor(); scheduleSave(); toast('Post deleted');
   }
 }
@@ -2966,18 +2941,19 @@ function saveBlogEdit() {
   if (!title) { toast('⚠ Title is required'); document.getElementById('be-title').focus(); return; }
   const newHtml = document.getElementById('be-html').value.trim();
   const newCover = _beEditCover || document.getElementById('be-cover-url').value.trim();
+  const finalHtml = newHtml !== '' ? newHtml : S.blogs[i].html;
   S.blogs[i] = {
     ...S.blogs[i],
-    // Preserve existing id (or generate one if somehow missing — ensures file path is stable)
-    id: S.blogs[i].id || generateId('blog'),
     title,
     day: parseInt(document.getElementById('be-day').value)||S.blogs[i].day,
     series: document.getElementById('be-series').value.trim()||S.blogs[i].series,
     excerpt: document.getElementById('be-excerpt').value.trim()||S.blogs[i].excerpt,
     groupId: document.getElementById('be-group').value,
     cover: newCover!==''?newCover:S.blogs[i].cover,
-    html: newHtml!==''?newHtml:S.blogs[i].html,
+    html: finalHtml,
   };
+  // Save html separately (not in state JSON)
+  saveBlogHtml(i, finalHtml);
   saveState(S); renderBlogs(); renderBlogsEditor(); renderBlogGroupsEditor(); scheduleSave(); closeBlogEditModal(); toast('✓ Blog post updated!');
 }
 
@@ -3004,6 +2980,7 @@ function changePw() {
 function resetData() {
   if(confirm('Reset everything to defaults? This cannot be undone.')) {
     S = JSON.parse(JSON.stringify(DEFAULTS));
+    reindexHtmlStore(); // clears all html keys since defaults have no html
     saveState(S); renderAll(); populateAdminForms(); renderDashStats();
     renderRoadmapEditor(); renderSkillsEditor(); renderProjectsEditor();
     renderBlogsEditor(); renderBlogGroupsEditor(); reObserve();
@@ -3084,6 +3061,9 @@ function getCleanHTML() {
    base64 charset is A-Za-z0-9+/= — zero HTML special characters.
    Closing tags inside project/blog HTML (script, head, body, html)
    are completely irrelevant and can never corrupt the pushed file.
+   *** HTML content for blogs/projects is NEVER baked into index.html.
+       It lives in separate files: blogs/blog-N.html, projects/proj-N.html
+       pushed via GitHub API. index.html stays tiny forever. ***
 ════════════════════════════════════════════════ */
 function _buildSeedTag() {
   // Helper: UTF-8 string → base64
@@ -3094,20 +3074,37 @@ function _buildSeedTag() {
     return btoa(bin);
   }
 
-  // Use METADATA-ONLY state — blog/project html blobs are stored in separate
-  // data/blogs/{id}.html and data/projects/{id}.html files, not baked into index.html.
-  // This keeps index.html tiny regardless of how many posts you add.
-  var b64State = _enc(JSON.stringify(buildMetaState()));
+  // Strip html content from blogs and projects before baking into index.html.
+  // Each blog/project html lives in its own file (blogs/blog-N.html etc.)
+  // so index.html never grows when you add content.
+  var stateForSeed = JSON.parse(JSON.stringify(S));
+  stateForSeed.blogs = stateForSeed.blogs.map(function(b) {
+    var copy = Object.assign({}, b);
+    delete copy.html;
+    return copy;
+  });
+  stateForSeed.projects = stateForSeed.projects.map(function(p) {
+    var copy = Object.assign({}, p);
+    delete copy.html;
+    return copy;
+  });
+
+  // Main state
+  var b64State = _enc(JSON.stringify(stateForSeed));
 
   // Password — must travel with the file so mobile/tablet use the same password.
+  // Falls back to DEFAULTS.pw if not yet changed (same logic as doLogin).
   var b64Pw = _enc(localStorage.getItem('hwh_pw') || DEFAULTS.pw);
 
-  // Resume URL
+  // Resume URL — stored only in localStorage on the device that set it,
+  // so it must be baked in so the Resume button works on every device.
   var resumeUrl = localStorage.getItem('hwh_resume_url') || '';
   var b64Ru = _enc(resumeUrl);
 
+  // Build the seed script. Tag open/close split so literals never appear in source.
   var open  = '<' + 'script id="__state_seed__">';
   var close = '<' + '/script>';
+  // Single decode helper used for all three values
   var body  = "(function(){"
             + "function dec(b){var s=atob(b),u=new Uint8Array(s.length);"
             + "for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);"
@@ -3123,38 +3120,14 @@ function _buildSeedTag() {
    DOWNLOAD UPDATED index.html
 ════════════════════════════════════════════════ */
 function downloadUpdatedHTML() {
-  // index.html — shell with metadata-only seed (blog/project HTML not baked in)
   var html    = getCleanHTML();
   var updated = html.replace('</head>', _buildSeedTag() + '</head>');
-  const blobHtml = new Blob([updated], {type:'text/html;charset=utf-8'});
-  const aHtml = document.createElement('a');
-  aHtml.href = URL.createObjectURL(blobHtml);
-  aHtml.download = 'index.html';
-  aHtml.click();
-
-  // content.json — metadata for visitors to load on first visit
-  setTimeout(function() {
-    const metaJson = JSON.stringify(buildMetaState(), null, 2);
-    const blobJson = new Blob([metaJson], {type:'application/json;charset=utf-8'});
-    const aJson = document.createElement('a');
-    aJson.href = URL.createObjectURL(blobJson);
-    aJson.download = 'content.json';
-    aJson.click();
-  }, 400);
-
-  // Count how many blog/project HTML files exist
-  const blogHtmlCount  = S.blogs.filter(b => b.html).length;
-  const projHtmlCount  = S.projects.filter(p => p.html).length;
-  const extraFiles     = blogHtmlCount + projHtmlCount;
-
-  var msg = '✓ Downloaded index.html + content.json.';
-  if (extraFiles > 0) {
-    msg += ' ⚠ ' + extraFiles + ' blog/project HTML file' + (extraFiles !== 1 ? 's' : '') +
-      ' must be pushed via GitHub Auto-Sync (Admin → Settings) — they live in data/blogs/ and data/projects/.';
-  } else {
-    msg += ' Upload both files to your GitHub repo root.';
-  }
-  toast(msg, 6000);
+  const blob = new Blob([updated], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'index.html';
+  a.click();
+  toast('✓ index.html downloaded with your changes baked in!');
 }
 
 /* ═══════════════════════════════════════════════
@@ -3208,70 +3181,73 @@ function updateGhBadge() {
   badge.style.color = configured ? 'var(--green)' : 'var(--ink3)';
 }
 let _ghPushing = false;
+
+/* Helper: push a single file to GitHub via API */
+async function _ghPushFile(username, repo, token, branch, path, content) {
+  const bytes = new TextEncoder().encode(content);
+  let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
+  const encoded = btoa(bin);
+  // Get existing SHA (if file exists) to avoid conflicts
+  let sha = null;
+  try {
+    const r = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}?ref=${branch}`, {
+      headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    if (r.ok) { const d = await r.json(); sha = d.sha; }
+  } catch(e) {}
+  const body = { message: `chore: auto-update ${path} [${new Date().toLocaleString()}]`, content: encoded, branch };
+  if (sha) body.sha = sha;
+  return fetch(`https://api.github.com/repos/${username}/${repo}/contents/${path}`, {
+    method: 'PUT',
+    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+}
+
 async function pushToGitHub() {
   const username = localStorage.getItem('gh_username');
-  const repo     = localStorage.getItem('gh_repo');
-  const token    = localStorage.getItem('gh_token');
-  const branch   = localStorage.getItem('gh_branch') || 'main';
-  if (!username || !repo || !token) return;
+  const repo = localStorage.getItem('gh_repo');
+  const token = localStorage.getItem('gh_token');
+  const branch = localStorage.getItem('gh_branch')||'main';
+  if (!username||!repo||!token) return;
   if (_ghPushing) return;
   _ghPushing = true;
   const navStatus = document.getElementById('gh-nav-status');
+  if (navStatus) navStatus.textContent = '⏳ Pushing...';
   try {
-    // Step 1: Assign IDs to any blogs/projects missing them
-    let stateChanged = false;
-    S.blogs.forEach(function(b) { if (!b.id) { b.id = generateId('blog'); stateChanged = true; } });
-    S.projects.forEach(function(p) { if (!p.id) { p.id = generateId('proj'); stateChanged = true; } });
-    if (stateChanged) saveState(S);
-
-    // Step 2: Build file queue
-    const queue = [];
-    S.blogs.forEach(function(b) {
-      if (b.html && b.id) queue.push({ path: 'data/blogs/' + b.id + '.html', content: b.html });
-    });
-    S.projects.forEach(function(p) {
-      if (p.html && p.id) queue.push({ path: 'data/projects/' + p.id + '.html', content: p.html });
-    });
-    // content.json — metadata only (no html blobs), fetched by visitors on first load
-    queue.push({ path: 'data/content.json', content: JSON.stringify(buildMetaState(), null, 2) });
-    // index.html — lightweight shell with metadata-only seed tag
-    queue.push({ path: 'index.html', content: getCleanHTML().replace('</head>', _buildSeedTag() + '</head>') });
-
-    // Step 3: Push every file
-    const total = queue.length;
-    for (let qi = 0; qi < queue.length; qi++) {
-      const f = queue[qi];
-      if (navStatus) navStatus.textContent = `⏳ Pushing ${qi + 1}/${total}…`;
-      const bytes = new TextEncoder().encode(f.content);
-      let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
-      const encoded = btoa(bin);
-      let sha = null;
-      try {
-        const shaRes = await fetch(
-          `https://api.github.com/repos/${username}/${repo}/contents/${f.path}?ref=${branch}`,
-          { headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' } }
-        );
-        if (shaRes.ok) { const d = await shaRes.json(); sha = d.sha; }
-      } catch(_e) {}
-      const body = { message: `chore: update ${f.path} [${new Date().toISOString().slice(0,16)}]`, content: encoded, branch };
-      if (sha) body.sha = sha;
-      const res = await fetch(
-        `https://api.github.com/repos/${username}/${repo}/contents/${f.path}`,
-        { method: 'PUT', headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
-      );
-      if (!res.ok) {
-        const err = await res.json().catch(()=>({}));
-        throw new Error('Failed to push ' + f.path + ': ' + (err.message || res.status));
-      }
+    // 1. Push index.html (without blog/project html content — stays tiny)
+    const indexHtml = getCleanHTML().replace('</head>', _buildSeedTag() + '</head>');
+    const indexPushRes = await _ghPushFile(username, repo, token, branch, 'index.html', indexHtml);
+    if (!indexPushRes.ok) {
+      const err = await indexPushRes.json().catch(()=>({}));
+      if (navStatus) { navStatus.textContent = '✗ Push failed'; setTimeout(()=>{ if(navStatus) navStatus.textContent=''; }, 5000); }
+      toast('⚠ Push failed: '+(err.message||'unknown error'));
+      return;
     }
-    if (navStatus) { navStatus.textContent = `✓ Pushed ${total} files!`; setTimeout(()=>{ if(navStatus) navStatus.textContent=''; }, 5000); }
-    toast(`✓ Pushed ${total} files to GitHub! Site live in ~30s.`);
+
+    // 2. Push each blog post as blogs/blog-N.html (only if it has html content)
+    const blogPushes = S.blogs.map(async (b, i) => {
+      if (!b.html) return;
+      return _ghPushFile(username, repo, token, branch, `blogs/blog-${i}.html`, b.html);
+    });
+
+    // 3. Push each project page as projects/proj-N.html (only if it has html content)
+    const projPushes = S.projects.map(async (p, i) => {
+      if (!p.html) return;
+      return _ghPushFile(username, repo, token, branch, `projects/proj-${i}.html`, p.html);
+    });
+
+    await Promise.all([...blogPushes, ...projPushes]);
+
+    const totalFiles = 1 + S.blogs.filter(b=>b.html).length + S.projects.filter(p=>p.html).length;
+    if (navStatus) { navStatus.textContent = `✓ Pushed ${totalFiles} file(s)!`; setTimeout(()=>{ if(navStatus) navStatus.textContent=''; }, 4000); }
+    toast(`✓ Pushed to GitHub! (${totalFiles} file${totalFiles>1?'s':''}) Site updating in ~30s.`);
   } catch(e) {
     console.error('GitHub sync error:', e);
     if (navStatus) { navStatus.textContent = '✗ Sync error'; setTimeout(()=>{ if(navStatus) navStatus.textContent=''; }, 5000); }
     const btn = document.getElementById('save-all-btn');
     if (btn) { btn.textContent = '✓ Save All Changes'; btn.style.opacity='1'; }
-    toast('⚠ Sync error — ' + e.message);
+    toast('⚠ Sync error — check browser console.');
   } finally {
     _ghPushing = false;
   }
@@ -3316,23 +3292,7 @@ document.addEventListener('keydown', function(e) {
 /* ═══════════════════════════════════════════════
    INIT
 ════════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', async function() {
-  // ── Remote state bootstrap ──────────────────────────────────────────────
-  // For first-time visitors who have no localStorage yet, we fetch
-  // data/content.json from GitHub Pages. This keeps index.html tiny while
-  // still delivering all the latest metadata instantly.
-  // On the admin's device (localStorage exists), we skip the remote fetch
-  // so the page renders instantly with full local state.
-  const hasLocal = !!localStorage.getItem('hwh_data');
-  if (!hasLocal) {
-    const remote = await loadRemoteState();
-    if (remote) {
-      S = remote;
-      saveState(S); // cache it so subsequent page loads are instant
-    }
-  }
-  // ── End bootstrap ────────────────────────────────────────────────────────
-
+document.addEventListener('DOMContentLoaded', function() {
   renderHeroName();
   renderAll();
   initTyping();
