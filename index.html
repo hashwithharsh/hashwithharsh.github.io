@@ -961,7 +961,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Scroll to top" class="">↑</button>
 
 <!-- Toast -->
-<div class="toast" id="toast" style="display: none;">✓ Blog post published!</div>
+<div class="toast" id="toast" style="display: none;">✓ Blog post updated!</div>
 
 <!-- ══ NAV ══ -->
 <nav role="navigation" aria-label="Main navigation">
@@ -970,8 +970,8 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
     <li><a href="#about" class="">About</a></li>
     <li><a href="#skills" class="">Skills</a></li>
     <li><a href="#projects" class="">Projects</a></li>
-    <li><a href="#blog" class="">Blog</a></li>
-    <li><a href="#contact" class="active">Contact</a></li>
+    <li><a href="#blog" class="active">Blog</a></li>
+    <li><a href="#contact" class="">Contact</a></li>
   </ul>
   <div class="nav-right">
     <div class="nav-pill">
@@ -1041,7 +1041,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       </div>
       <div class="reveal-right on">
         <div class="roadmap-title">// learning roadmap</div>
-        <div id="roadmap-list"><div class="road-item">
+        <div id="roadmap-list"><div class="road-item drawn">
       <div class="road-dot now"></div>
       <div>
         <div class="road-phase">Phase 1 · Now</div>
@@ -1049,7 +1049,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
         <div class="road-desc">Architecture, filesystem, bash scripting, process management</div>
         <span class="pill pill-now">● In Progress</span>
       </div>
-    </div><div class="road-item">
+    </div><div class="road-item drawn">
       <div class="road-dot"></div>
       <div>
         <div class="road-phase">Phase 2</div>
@@ -1057,7 +1057,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
         <div class="road-desc">Version control workflows, scripting for DevOps tasks</div>
         <span class="pill pill-next">Up next</span>
       </div>
-    </div><div class="road-item">
+    </div><div class="road-item drawn">
       <div class="road-dot"></div>
       <div>
         <div class="road-phase">Phase 3</div>
@@ -1065,7 +1065,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
         <div class="road-desc">Images, compose, registries, container security</div>
         <span class="pill pill-next">Up next</span>
       </div>
-    </div><div class="road-item">
+    </div><div class="road-item drawn">
       <div class="road-dot"></div>
       <div>
         <div class="road-phase">Phase 4</div>
@@ -1093,7 +1093,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
             <span class="sk-expand-icon">▶</span>
             <span>Linux (Ubuntu)</span>
           </div>
-          <div class="sk-bar"><div class="sk-fill" style="width:0" data-w="29%"></div></div>
+          <div class="sk-bar"><div class="sk-fill" style="width: 29%;" data-w="29%"></div></div>
         </div>
         <div class="sk-panel" id="sk-0-0">
           
@@ -1183,7 +1183,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
             <span class="sk-expand-icon">▶</span>
             <span>Vim / CLI Tools</span>
           </div>
-          <div class="sk-bar"><div class="sk-fill" style="width:0" data-w="5%"></div></div>
+          <div class="sk-bar"><div class="sk-fill" style="width: 5%;" data-w="5%"></div></div>
         </div>
         <div class="sk-panel" id="sk-0-2">
           
@@ -1634,10 +1634,10 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
 <!-- ══ BLOG VIEWER ══ -->
 <div id="blog-viewer" style="display: none;">
   <div class="blog-viewer-bar">
-    <div class="blog-viewer-title" id="blog-viewer-title">Blog Post</div>
+    <div class="blog-viewer-title" id="blog-viewer-title">Harsh — DevOps &amp; Cloud Engineer</div>
     <button class="btn btn-solid btn-sm" onclick="closeBlogViewer()">← Back to Portfolio</button>
   </div>
-  <iframe id="blog-frame" title="Blog Post"></iframe>
+  <iframe id="blog-frame" title="Blog Post" src="blogs/blog-0.html"></iframe>
 </div>
 
 <!-- ══ LIGHTBOX ══ -->
@@ -1709,11 +1709,11 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       <div style="font-family:var(--mono);font-size:12px;color:var(--ink);margin:3px 0 2px">Days</div>
       <div style="font-family:var(--mono);font-size:11px;color:var(--ink3)">of 120 completed</div>
     </div><div class="admin-card" style="padding:22px">
-      <div style="font-family:var(--serif);font-size:34px;font-weight:300;color:var(--accent)">2</div>
+      <div style="font-family:var(--serif);font-size:34px;font-weight:300;color:var(--accent)">3</div>
       <div style="font-family:var(--mono);font-size:12px;color:var(--ink);margin:3px 0 2px">Projects</div>
       <div style="font-family:var(--mono);font-size:11px;color:var(--ink3)">in portfolio</div>
     </div><div class="admin-card" style="padding:22px">
-      <div style="font-family:var(--serif);font-size:34px;font-weight:300;color:var(--accent)">1</div>
+      <div style="font-family:var(--serif);font-size:34px;font-weight:300;color:var(--accent)">2</div>
       <div style="font-family:var(--mono);font-size:12px;color:var(--ink);margin:3px 0 2px">Blog Posts</div>
       <div style="font-family:var(--mono);font-size:11px;color:var(--ink3)">published</div>
     </div><div class="admin-card" style="padding:22px">
@@ -2261,7 +2261,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
           <div class="form-hint" style="margin-bottom:11px">Create groups like "Linux Fundamentals", "Docker Series". Pin or reorder them.</div>
           <div id="blog-groups-editor"><div style="display:flex;align-items:center;gap:7px;margin-bottom:7px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:9px 11px">
           <input class="form-input" value="Linux Fundamentals." oninput="S.blogGroups.find(x=&gt;x.id==='linux').name=this.value;scheduleSave()" style="flex:1;font-size:13px;border:none;background:transparent;padding:0;outline:none">
-          <span style="font-family:var(--mono);font-size:11px;color:var(--ink3);padding:0 6px">1 posts</span>
+          <span style="font-family:var(--mono);font-size:11px;color:var(--ink3);padding:0 6px">2 posts</span>
           <button class="pin-toggle" onclick="toggleGroupPin('linux')">📌 Pin</button>
           <button class="icon-btn" style="padding:4px 7px" onclick="moveGroup('linux',-1)" title="Move up">↑</button>
           <button class="icon-btn" style="padding:4px 7px" onclick="moveGroup('linux',1)" title="Move down">↓</button>
@@ -2509,14 +2509,14 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       <button class="modal-close" onclick="closeBlogEditModal()">×</button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="blog-edit-idx" value="-1">
+      <input type="hidden" id="blog-edit-idx" value="0">
       <div class="form-group"><label class="form-label">Post Title</label><input class="form-input" id="be-title" placeholder="e.g. Day 2 — Linux Filesystem Deep Dive"></div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Day Number</label><input class="form-input" id="be-day" type="number" placeholder="2"></div>
         <div class="form-group"><label class="form-label">Series / Tags</label><input class="form-input" id="be-series" placeholder="e.g. DevOps Bootcamp · Day 2"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Blog Group</label><select class="form-select" id="be-group"><option value="">— No group —</option></select></div>
+        <div class="form-group"><label class="form-label">Blog Group</label><select class="form-select" id="be-group"><option value="">— No group —</option><option value="linux" selected="">Linux Fundamentals.</option></select></div>
         <div class="form-group">
           <label class="form-label">Cover Image</label>
           <div style="display:flex;gap:7px">
@@ -2533,7 +2533,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
         <div class="form-hint" style="margin-bottom:7px">Leave blank to keep existing content. Paste or upload new HTML to replace it.</div>
         <div style="display:flex;gap:7px;margin-bottom:7px">
           <button class="btn btn-sm" style="background:var(--tag);color:var(--ink2)" onclick="document.getElementById('be-html-upload').click()">↑ Upload HTML file</button>
-          <span id="be-html-status" style="font-family:var(--mono);font-size:12px;color:var(--green);align-self:center"></span>
+          <span id="be-html-status" style="font-family:var(--mono);font-size:12px;color:var(--green);align-self:center">✓ New file loaded (157 KB)</span>
         </div>
         <input type="file" id="be-html-upload" accept=".html,.htm" style="display:none" onchange="handleBlogEditHtmlUpload(event)">
         <textarea class="form-textarea" id="be-html" rows="4" placeholder="Leave blank to keep existing HTML. Paste or upload to replace."></textarea>
