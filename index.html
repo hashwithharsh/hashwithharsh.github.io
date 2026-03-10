@@ -1008,7 +1008,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       <span class="outline" id="hero-name-outline"><span class="hero-letter" style="animation-delay:0.28s">H</span><span class="hero-letter" style="animation-delay:0.34s">a</span><span class="hero-letter" style="animation-delay:0.4s">r</span><span class="hero-letter" style="animation-delay:0.46s">s</span><span class="hero-letter" style="animation-delay:0.52s">h</span><span class="hero-letter" style="animation-delay:0.5800000000000001s">.</span></span>
     </h1>
     <div class="hero-role">
-      I'm an <span id="typed-roles">Linux Enthusiast</span><span class="typing-cursor" aria-hidden="true"></span>
+      I'm an <span id="typed-roles"></span><span class="typing-cursor" aria-hidden="true"></span>
     </div>
     <div class="hero-badge">
       <div class="dot" aria-hidden="true"></div>
@@ -1411,11 +1411,11 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
 <div class="overlay" id="proj-modal-overlay">
   <div class="modal modal-wide">
     <div class="modal-head">
-      <div class="modal-title" id="proj-modal-title">Add Project</div>
+      <div class="modal-title" id="proj-modal-title">Edit Project</div>
       <button class="modal-close" onclick="closeProjModal()">×</button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="proj-edit-idx" value="-1">
+      <input type="hidden" id="proj-edit-idx" value="2">
       <div class="form-group"><label class="form-label">Project Name</label><input class="form-input" id="pm-name" placeholder="e.g. Linux Lab Setup"></div>
       <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="pm-desc" rows="3"></textarea></div>
       <div class="form-group"><label class="form-label">Detailed Notes (shown in project overlay)</label><textarea class="form-textarea" id="pm-detail" rows="3" placeholder="More detail about this project, what you learned, etc."></textarea></div>
@@ -1449,7 +1449,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
         <div class="form-hint" style="margin-bottom:10px">Upload a full HTML page — visitors see a "View Full Page" button that opens it in a reader, just like blog posts.</div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px">
           <button class="btn btn-sm" style="background:var(--tag);color:var(--ink2);white-space:nowrap" onclick="document.getElementById('pm-html-upload').click()">↑ Upload HTML file</button>
-          <span id="pm-html-status" style="font-family: var(--mono); font-size: 12px; color: var(--green);">✓ project(2).html (331 KB) — ready</span>
+          <span id="pm-html-status" style="font-family: var(--mono); font-size: 12px; color: var(--green);">✓ project(7).html (2212 KB) — ready</span>
           <button class="btn btn-sm" id="pm-html-clear-btn" style="background: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68); border: 1px solid rgba(239, 68, 68, 0.25); white-space: nowrap;" onclick="clearProjHtml()">✕ Remove page</button>
         </div>
         <input type="file" id="pm-html-upload" accept=".html,.htm" style="display:none" onchange="handleProjHtmlUpload(event)">
