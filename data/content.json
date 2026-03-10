@@ -1,0 +1,365 @@
+{
+  "pw": "harsh2025",
+  "hero": {
+    "name": "Harsh.",
+    "roles": [
+      "DevOps Engineer",
+      "Cloud Learner",
+      "Linux Enthusiast",
+      "Builder in Public"
+    ],
+    "badge": "Currently studying — Linux Architecture · Day 1 of 90",
+    "desc": "Building in public. Every project, every mistake, every breakthrough — documented here. Learning DevOps from scratch and sharing the full journey.",
+    "navStatus": "Learning DevOps"
+  },
+  "about": {
+    "bio": [
+      "I'm Harsh, a self-taught DevOps engineer in the making. I believe the best way to learn is to build things, break things, and write about it honestly.",
+      "My goal is to become a DevOps & Cloud Engineer who truly understands the systems they manage — from the Linux kernel up to Kubernetes clusters and CI/CD pipelines.",
+      "Every day I study, I document. Every concept I crack, I share. That's the deal I made with myself when I started this journey."
+    ],
+    "days": 1,
+    "goal": 90,
+    "projects": 0,
+    "blogs": 1
+  },
+  "roadmap": [
+    {
+      "phase": "Phase 1 · Now",
+      "name": "Linux & Shell Fundamentals",
+      "desc": "Architecture, filesystem, bash scripting, process management",
+      "status": "now"
+    },
+    {
+      "phase": "Phase 2",
+      "name": "Git & Python Automation",
+      "desc": "Version control workflows, scripting for DevOps tasks",
+      "status": "next"
+    },
+    {
+      "phase": "Phase 3",
+      "name": "Docker & Containers",
+      "desc": "Images, compose, registries, container security",
+      "status": "next"
+    },
+    {
+      "phase": "Phase 4",
+      "name": "Kubernetes & Cloud (AWS)",
+      "desc": "Orchestration, EKS, Terraform, CI/CD pipelines",
+      "status": "soon"
+    }
+  ],
+  "skills": [
+    {
+      "group": "Operating Systems",
+      "items": [
+        {
+          "name": "Linux (Ubuntu)",
+          "pct": 20,
+          "subs": [
+            {
+              "name": "Kernel Architecture",
+              "pct": 40
+            },
+            {
+              "name": "Filesystem & Paths",
+              "pct": 10
+            },
+            {
+              "name": "Process Management",
+              "pct": 10
+            },
+            {
+              "name": "User & Permissions",
+              "pct": 5
+            },
+            {
+              "name": "Networking (basic)",
+              "pct": 5
+            },
+            {
+              "name": "Systemd / Boot",
+              "pct": 5
+            }
+          ]
+        },
+        {
+          "name": "Bash Scripting",
+          "pct": 0,
+          "subs": [
+            {
+              "name": "Variables & Loops",
+              "pct": 0
+            },
+            {
+              "name": "Functions",
+              "pct": 0
+            },
+            {
+              "name": "File Operations",
+              "pct": 0
+            },
+            {
+              "name": "Cron Jobs",
+              "pct": 0
+            }
+          ]
+        },
+        {
+          "name": "Vim / CLI Tools",
+          "pct": 5,
+          "subs": [
+            {
+              "name": "Basic Navigation",
+              "pct": 15
+            },
+            {
+              "name": "Insert & Save",
+              "pct": 15
+            },
+            {
+              "name": "Search & Replace",
+              "pct": 5
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "group": "DevOps Tools",
+      "items": [
+        {
+          "name": "Git & GitHub",
+          "pct": 0,
+          "subs": [
+            {
+              "name": "Commits & Branches",
+              "pct": 0
+            },
+            {
+              "name": "Pull Requests",
+              "pct": 0
+            },
+            {
+              "name": "Merge & Rebase",
+              "pct": 0
+            },
+            {
+              "name": "GitHub Actions",
+              "pct": 0
+            }
+          ]
+        },
+        {
+          "name": "Docker",
+          "pct": 0,
+          "subs": [
+            {
+              "name": "Images & Containers",
+              "pct": 0
+            },
+            {
+              "name": "Dockerfile",
+              "pct": 0
+            },
+            {
+              "name": "Docker Compose",
+              "pct": 0
+            },
+            {
+              "name": "Registries",
+              "pct": 0
+            }
+          ]
+        },
+        {
+          "name": "Kubernetes",
+          "pct": 0,
+          "subs": [
+            {
+              "name": "Pods & Deployments",
+              "pct": 0
+            },
+            {
+              "name": "Services",
+              "pct": 0
+            },
+            {
+              "name": "Helm Charts",
+              "pct": 0
+            }
+          ]
+        },
+        {
+          "name": "CI/CD",
+          "pct": 0,
+          "subs": [
+            {
+              "name": "GitHub Actions",
+              "pct": 0
+            },
+            {
+              "name": "Jenkins",
+              "pct": 0
+            },
+            {
+              "name": "ArgoCD",
+              "pct": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Cloud & IaC",
+      "items": [
+        {
+          "name": "AWS",
+          "pct": 0,
+          "subs": [
+            {
+              "name": "EC2",
+              "pct": 0
+            },
+            {
+              "name": "S3",
+              "pct": 0
+            },
+            {
+              "name": "IAM",
+              "pct": 0
+            },
+            {
+              "name": "EKS",
+              "pct": 0
+            },
+            {
+              "name": "VPC",
+              "pct": 0
+            }
+          ]
+        },
+        {
+          "name": "Terraform",
+          "pct": 0,
+          "subs": [
+            {
+              "name": "Resources & Providers",
+              "pct": 0
+            },
+            {
+              "name": "State Management",
+              "pct": 0
+            },
+            {
+              "name": "Modules",
+              "pct": 0
+            }
+          ]
+        },
+        {
+          "name": "Python Scripting",
+          "pct": 0,
+          "subs": [
+            {
+              "name": "Basics & OOP",
+              "pct": 0
+            },
+            {
+              "name": "File Automation",
+              "pct": 0
+            },
+            {
+              "name": "API Requests",
+              "pct": 0
+            },
+            {
+              "name": "Boto3 (AWS SDK)",
+              "pct": 0
+            }
+          ]
+        },
+        {
+          "name": "Prometheus / Grafana",
+          "pct": 0,
+          "subs": [
+            {
+              "name": "Metrics & Queries",
+              "pct": 0
+            },
+            {
+              "name": "Grafana Dashboards",
+              "pct": 0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj_1773165857333_0e6ud",
+      "name": "Linux Lab Environment Setup",
+      "desc": "Setting up a local Linux lab using VirtualBox — configuring Ubuntu server, SSH access, and snapshot management for safe experimentation.",
+      "detail": "Creating a reproducible Linux learning environment to safely practice system administration, networking, and DevOps concepts without risking a production machine.",
+      "url": "https://github.com/hashwithharsh",
+      "status": "In Progress",
+      "tags": [
+        "Linux",
+        "VirtualBox",
+        "SSH"
+      ],
+      "screenshots": [],
+      "pinned": false
+    },
+    {
+      "name": "DevOps Bootcamp — 90 Days",
+      "desc": "A public learning project documenting my complete DevOps journey — daily notes, labs, mistakes, and wins. All open on GitHub.",
+      "detail": "Committing to 90 consecutive days of focused DevOps study and sharing every step publicly on GitHub and this blog. The goal: go from zero to job-ready DevOps engineer.",
+      "url": "https://github.com/hashwithharsh",
+      "tags": [
+        "Learn in Public",
+        "Documentation",
+        "DevOps"
+      ],
+      "status": "Ongoing",
+      "screenshots": [],
+      "pinned": false,
+      "id": "proj_1773165858252_sfujf"
+    }
+  ],
+  "blogGroups": [
+    {
+      "id": "all",
+      "name": "All Posts"
+    },
+    {
+      "id": "linux",
+      "name": "Linux Fundamentals",
+      "pinned": false,
+      "order": 0,
+      "_open": true
+    }
+  ],
+  "blogs": [
+    {
+      "title": "Linux Architecture & Why Every DevOps Engineer Must Understand It",
+      "day": 1,
+      "series": "DevOps Bootcamp · Series",
+      "excerpt": "From what the Linux kernel actually does, to why Docker containers share the host kernel — everything I learned on Day 1 of my 90-day DevOps journey.",
+      "cover": "",
+      "groupId": "linux",
+      "pinned": true,
+      "id": "blog_1773165858252_nq1tp"
+    }
+  ],
+  "contact": {
+    "sub": "Whether you want to collaborate, give feedback on my journey, or just say hi — I'm always open.",
+    "email": "harsh@hashwithharsh.dev",
+    "github": "https://github.com/hashwithharsh",
+    "linkedin": "https://www.linkedin.com/in/harsh-yadav-383239386/",
+    "twitter": "https://x.com/devops_harsh",
+    "footerMid": "Built in public · Learning DevOps",
+    "footerRight": "Day 1 of 90"
+  }
+}
