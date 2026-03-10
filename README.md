@@ -7,6 +7,10 @@ It allows me to publish projects and blogs while keeping authentication and sens
 
 The website is built using **pure HTML, CSS, and JavaScript** without frameworks to keep deployment simple and lightweight.
 
+
+# Short 20-second explanation..
+this project is a personal DevOps portfolio using a serverless architecture. The frontend is hosted on GitHub Pages while the backend runs as serverless functions on Vercel. The backend handles authentication using bcrypt and JWT and securely pushes blog and project updates to the GitHub repository using the GitHub API. This architecture separates frontend, backend, and secret management while keeping deployment simple and cost-efficient.
+
 ---
 
 # 🚀 Live Website
