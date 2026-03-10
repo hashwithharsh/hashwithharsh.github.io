@@ -964,7 +964,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Scroll to top" class="">↑</button>
 
 <!-- Toast -->
-<div class="toast" id="toast" style="display: none;">✓ Project saved!</div>
+<div class="toast" id="toast" style="display: none;">✓ Blog post updated!</div>
 
 <!-- ══ NAV ══ -->
 <nav role="navigation" aria-label="Main navigation">
@@ -1008,7 +1008,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       <span class="outline" id="hero-name-outline"><span class="hero-letter" style="animation-delay:0.28s">H</span><span class="hero-letter" style="animation-delay:0.34s">a</span><span class="hero-letter" style="animation-delay:0.4s">r</span><span class="hero-letter" style="animation-delay:0.46s">s</span><span class="hero-letter" style="animation-delay:0.52s">h</span><span class="hero-letter" style="animation-delay:0.5800000000000001s">.</span></span>
     </h1>
     <div class="hero-role">
-      I'm an <span id="typed-roles">Builder in </span><span class="typing-cursor" aria-hidden="true"></span>
+      I'm an <span id="typed-roles">DevO</span><span class="typing-cursor" aria-hidden="true"></span>
     </div>
     <div class="hero-badge">
       <div class="dot" aria-hidden="true"></div>
@@ -1183,8 +1183,8 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       <div class="sidebar-item" onclick="showTab('about')" id="tab-about"><span class="sidebar-icon">●</span> About &amp; Stats</div>
       <div class="sidebar-item" onclick="showTab('roadmap')" id="tab-roadmap"><span class="sidebar-icon">▷</span> Roadmap</div>
       <div class="sidebar-item" onclick="showTab('skills')" id="tab-skills"><span class="sidebar-icon">◆</span> Skills Stack</div>
-      <div class="sidebar-item active" onclick="showTab('projects')" id="tab-projects"><span class="sidebar-icon">◼</span> Projects</div>
-      <div class="sidebar-item" onclick="showTab('blogs')" id="tab-blogs"><span class="sidebar-icon">✎</span> Blog Posts</div>
+      <div class="sidebar-item" onclick="showTab('projects')" id="tab-projects"><span class="sidebar-icon">◼</span> Projects</div>
+      <div class="sidebar-item active" onclick="showTab('blogs')" id="tab-blogs"><span class="sidebar-icon">✎</span> Blog Posts</div>
       <div class="sidebar-item" onclick="showTab('contact')" id="tab-contact"><span class="sidebar-icon">✉</span> Contact Info</div>
       <div class="sidebar-item" onclick="showTab('settings')" id="tab-settings"><span class="sidebar-icon">⚙</span> Settings</div>
     </div>
@@ -1257,7 +1257,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       </div>
 
       <!-- PROJECTS EDITOR -->
-      <div class="admin-section active" id="sec-projects" data-sec="projects">
+      <div class="admin-section" id="sec-projects" data-sec="projects">
         <div class="admin-section-title">Projects</div>
         <div class="admin-section-sub">Add, edit or remove projects. 📌 Pin to float to the top.</div>
         <button class="btn btn-solid btn-sm" style="margin-bottom:18px" onclick="openProjectModal()">+ Add Project</button>
@@ -1265,7 +1265,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       </div>
 
       <!-- BLOG EDITOR -->
-      <div class="admin-section" id="sec-blogs" data-sec="blogs">
+      <div class="admin-section active" id="sec-blogs" data-sec="blogs">
         <div class="admin-section-title">Blog Posts</div>
         <div class="admin-section-sub">Upload HTML, organise into groups, pin and reorder.</div>
 
@@ -1472,14 +1472,14 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       <button class="modal-close" onclick="closeBlogEditModal()">×</button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="blog-edit-idx" value="-1">
+      <input type="hidden" id="blog-edit-idx" value="0">
       <div class="form-group"><label class="form-label">Post Title</label><input class="form-input" id="be-title" placeholder="e.g. Day 2 — Linux Filesystem Deep Dive"></div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Day Number</label><input class="form-input" id="be-day" type="number" placeholder="2"></div>
         <div class="form-group"><label class="form-label">Series / Tags</label><input class="form-input" id="be-series" placeholder="e.g. DevOps Bootcamp · Day 2"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Blog Group</label><select class="form-select" id="be-group"><option value="">— No group —</option></select></div>
+        <div class="form-group"><label class="form-label">Blog Group</label><select class="form-select" id="be-group"><option value="">— No group —</option><option value="linux" selected="">Linux Fundamentals</option></select></div>
         <div class="form-group">
           <label class="form-label">Cover Image</label>
           <div style="display:flex;gap:7px">
@@ -1496,7 +1496,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
         <div class="form-hint" style="margin-bottom:7px">Leave blank to keep existing content. Paste or upload new HTML to replace it.</div>
         <div style="display:flex;gap:7px;margin-bottom:7px">
           <button class="btn btn-sm" style="background:var(--tag);color:var(--ink2)" onclick="document.getElementById('be-html-upload').click()">↑ Upload HTML file</button>
-          <span id="be-html-status" style="font-family:var(--mono);font-size:12px;color:var(--green);align-self:center"></span>
+          <span id="be-html-status" style="font-family:var(--mono);font-size:12px;color:var(--green);align-self:center">✓ New file loaded (967 KB)</span>
         </div>
         <input type="file" id="be-html-upload" accept=".html,.htm" style="display:none" onchange="handleBlogEditHtmlUpload(event)">
         <textarea class="form-textarea" id="be-html" rows="4" placeholder="Leave blank to keep existing HTML. Paste or upload to replace."></textarea>
