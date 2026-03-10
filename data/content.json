@@ -313,19 +313,19 @@
       "pinned": false
     },
     {
+      "id": "proj_1773165858252_sfujf",
       "name": "DevOps Bootcamp — 90 Days",
       "desc": "A public learning project documenting my complete DevOps journey — daily notes, labs, mistakes, and wins. All open on GitHub.",
       "detail": "Committing to 90 consecutive days of focused DevOps study and sharing every step publicly on GitHub and this blog. The goal: go from zero to job-ready DevOps engineer.",
       "url": "https://github.com/hashwithharsh",
+      "status": "Ongoing",
       "tags": [
         "Learn in Public",
         "Documentation",
         "DevOps"
       ],
-      "status": "Ongoing",
       "screenshots": [],
-      "pinned": false,
-      "id": "proj_1773165858252_sfujf"
+      "pinned": false
     }
   ],
   "blogGroups": [
