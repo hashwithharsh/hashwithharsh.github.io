@@ -1,4 +1,4 @@
-<html lang="en" data-theme="dark"><head>
+<html lang="en" data-theme="light"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Harsh Yadav — Aspiring DevOps &amp; Cloud Engineer. Building in public. 90-day DevOps journey documented here.">
@@ -994,7 +994,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Scroll to top" class="">↑</button>
 
 <!-- Toast -->
-<div class="toast" id="toast" style="display: none;">Project deleted</div>
+<div class="toast" id="toast" style="display: none;">✓ Project saved!</div>
 
 <!-- ══ NAV ══ -->
 <nav role="navigation" aria-label="Main navigation">
@@ -1003,7 +1003,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
     <li><a href="#about" class="">About</a></li>
     <li><a href="#skills" class="">Skills</a></li>
     <li><a href="#projects" class="">Projects</a></li>
-    <li><a href="#blog">Blog</a></li>
+    <li><a href="#blog" class="">Blog</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <div class="nav-right">
@@ -1038,7 +1038,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       <span class="outline" id="hero-name-outline"><span class="hero-letter" style="animation-delay:0.28s">H</span><span class="hero-letter" style="animation-delay:0.34s">a</span><span class="hero-letter" style="animation-delay:0.4s">r</span><span class="hero-letter" style="animation-delay:0.46s">s</span><span class="hero-letter" style="animation-delay:0.52s">h</span><span class="hero-letter" style="animation-delay:0.5800000000000001s">.</span></span>
     </h1>
     <div class="hero-role">
-      I'm an <span id="typed-roles">Linux</span><span class="typing-cursor" aria-hidden="true"></span>
+      I'm an <span id="typed-roles">Cl</span><span class="typing-cursor" aria-hidden="true"></span>
     </div>
     <div class="hero-badge">
       <div class="dot" aria-hidden="true"></div>
@@ -1105,7 +1105,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
 <section id="blog">
   <div class="wrap section-gap">
     <div class="slabel">04 — Blog · Learn in Public</div>
-    <div id="blog-accordion" class="reveal"></div>
+    <div id="blog-accordion" class="reveal on"></div>
   </div>
 </section>
 
@@ -1115,9 +1115,9 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
 <section id="contact">
   <div class="wrap section-gap">
     <div class="slabel" style="justify-content:center">05 — Contact</div>
-    <h2 class="contact-h reveal">Let's <em>connect</em><br>&amp; build together.</h2>
-    <p class="contact-sub reveal" id="contact-sub-text">Whether you want to collaborate, give feedback on my journey, or just say hi — I'm always open.</p>
-    <div class="contact-row reveal" id="contact-links-row"></div>
+    <h2 class="contact-h reveal on">Let's <em>connect</em><br>&amp; build together.</h2>
+    <p class="contact-sub reveal on" id="contact-sub-text">Whether you want to collaborate, give feedback on my journey, or just say hi — I'm always open.</p>
+    <div class="contact-row reveal on" id="contact-links-row"></div>
   </div>
 </section>
 
@@ -1139,7 +1139,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
 <!-- ══ BLOG VIEWER ══ -->
 <div id="blog-viewer" style="display: none;">
   <div class="blog-viewer-bar">
-    <div class="blog-viewer-title" id="blog-viewer-title">Linux Lab Environment Setup</div>
+    <div class="blog-viewer-title" id="blog-viewer-title">Linux Architecture &amp; Why Every DevOps Engineer Must Understand It</div>
     <button class="btn btn-solid btn-sm" onclick="closeBlogViewer()">← Back to Portfolio</button>
   </div>
   <!-- Loading overlay sits OVER the iframe — never inside it.
@@ -1157,7 +1157,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       border-radius:6px;cursor:pointer;margin-top:4px;
     ">Cancel</button>
   </div>
-  <iframe id="blog-frame" title="Blog Post" style="display: block;"></iframe>
+  <iframe id="blog-frame" title="Blog Post" style="display: none;" src="about:blank"></iframe>
 </div>
 
 <!-- ══ LIGHTBOX ══ -->
@@ -1445,7 +1445,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       <button class="modal-close" onclick="closeProjModal()">×</button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="proj-edit-idx" value="2">
+      <input type="hidden" id="proj-edit-idx" value="0">
       <div class="form-group"><label class="form-label">Project Name</label><input class="form-input" id="pm-name" placeholder="e.g. Linux Lab Setup"></div>
       <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="pm-desc" rows="3"></textarea></div>
       <div class="form-group"><label class="form-label">Detailed Notes (shown in project overlay)</label><textarea class="form-textarea" id="pm-detail" rows="3" placeholder="More detail about this project, what you learned, etc."></textarea></div>
@@ -1479,8 +1479,8 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
         <div class="form-hint" style="margin-bottom:10px">Upload a full HTML page — visitors see a "View Full Page" button that opens it in a reader, just like blog posts.</div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px">
           <button class="btn btn-sm" style="background:var(--tag);color:var(--ink2);white-space:nowrap" onclick="document.getElementById('pm-html-upload').click()">↑ Upload HTML file</button>
-          <span id="pm-html-status" style="font-family: var(--mono); font-size: 12px; color: var(--green);">✓ project(7).html (2212 KB) — ready</span>
-          <button class="btn btn-sm" id="pm-html-clear-btn" style="background: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68); border: 1px solid rgba(239, 68, 68, 0.25); white-space: nowrap;" onclick="clearProjHtml()">✕ Remove page</button>
+          <span id="pm-html-status" style="font-family: var(--mono); font-size: 12px; color: rgb(239, 68, 68);">✕ Will be removed on Save</span>
+          <button class="btn btn-sm" id="pm-html-clear-btn" style="background: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68); border: 1px solid rgba(239, 68, 68, 0.25); white-space: nowrap; display: none;" onclick="clearProjHtml()">✕ Remove page</button>
         </div>
         <input type="file" id="pm-html-upload" accept=".html,.htm" style="display:none" onchange="handleProjHtmlUpload(event)">
         <textarea class="form-textarea" id="pm-html" rows="3" placeholder="Or paste HTML here… leave blank to keep existing."></textarea>
@@ -3708,6 +3708,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   document.querySelectorAll('.divider').forEach(d => dIO.observe(d));
 });
 </script>
+
 
 
 </body></html>
