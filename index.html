@@ -1,4 +1,4 @@
-<html lang="en" data-theme="dark"><head>
+<html lang="en" data-theme="light"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Harsh Yadav — Aspiring DevOps &amp; Cloud Engineer. Building in public. 90-day DevOps journey documented here.">
@@ -994,7 +994,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
 <button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Scroll to top" class="">↑</button>
 
 <!-- Toast -->
-<div class="toast" id="toast" style="display: none;">✓ Pushed 3 files to GitHub! Live in ~30s.</div>
+<div class="toast" id="toast" style="display: none;">✓ All changes saved!</div>
 
 <!-- ══ NAV ══ -->
 <nav role="navigation" aria-label="Main navigation">
@@ -1002,7 +1002,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
   <ul>
     <li><a href="#about" class="">About</a></li>
     <li><a href="#skills" class="">Skills</a></li>
-    <li><a href="#projects" class="active">Projects</a></li>
+    <li><a href="#projects" class="">Projects</a></li>
     <li><a href="#blog" class="">Blog</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -1038,7 +1038,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       <span class="outline" id="hero-name-outline"><span class="hero-letter" style="animation-delay:0.28s">H</span><span class="hero-letter" style="animation-delay:0.34s">a</span><span class="hero-letter" style="animation-delay:0.4s">r</span><span class="hero-letter" style="animation-delay:0.46s">s</span><span class="hero-letter" style="animation-delay:0.52s">h</span><span class="hero-letter" style="animation-delay:0.5800000000000001s">.</span></span>
     </h1>
     <div class="hero-role">
-      I'm an <span id="typed-roles">Linux E</span><span class="typing-cursor" aria-hidden="true"></span>
+      I'm an <span id="typed-roles">Linux Enthusiast</span><span class="typing-cursor" aria-hidden="true"></span>
     </div>
     <div class="hero-badge">
       <div class="dot" aria-hidden="true"></div>
@@ -1208,12 +1208,12 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
   <div class="admin-body">
     <div class="admin-sidebar">
       <div class="admin-sidebar-title">Manage</div>
-      <div class="sidebar-item" onclick="showTab('dash')" id="tab-dash"><span class="sidebar-icon">◼</span> Dashboard</div>
+      <div class="sidebar-item active" onclick="showTab('dash')" id="tab-dash"><span class="sidebar-icon">◼</span> Dashboard</div>
       <div class="sidebar-item" onclick="showTab('hero')" id="tab-hero"><span class="sidebar-icon">▲</span> Hero Section</div>
       <div class="sidebar-item" onclick="showTab('about')" id="tab-about"><span class="sidebar-icon">●</span> About &amp; Stats</div>
       <div class="sidebar-item" onclick="showTab('roadmap')" id="tab-roadmap"><span class="sidebar-icon">▷</span> Roadmap</div>
       <div class="sidebar-item" onclick="showTab('skills')" id="tab-skills"><span class="sidebar-icon">◆</span> Skills Stack</div>
-      <div class="sidebar-item active" onclick="showTab('projects')" id="tab-projects"><span class="sidebar-icon">◼</span> Projects</div>
+      <div class="sidebar-item" onclick="showTab('projects')" id="tab-projects"><span class="sidebar-icon">◼</span> Projects</div>
       <div class="sidebar-item" onclick="showTab('blogs')" id="tab-blogs"><span class="sidebar-icon">✎</span> Blog Posts</div>
       <div class="sidebar-item" onclick="showTab('contact')" id="tab-contact"><span class="sidebar-icon">✉</span> Contact Info</div>
       <div class="sidebar-item" onclick="showTab('settings')" id="tab-settings"><span class="sidebar-icon">⚙</span> Settings</div>
@@ -1221,7 +1221,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
     <div class="admin-content">
 
       <!-- DASHBOARD -->
-      <div class="admin-section" id="sec-dash" data-sec="dash">
+      <div class="admin-section active" id="sec-dash" data-sec="dash">
         <div class="admin-section-title">Welcome back, Harsh 👋</div>
         <div class="admin-section-sub">Your portfolio at a glance.</div>
         <div id="dash-stats"></div>
@@ -1287,7 +1287,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       </div>
 
       <!-- PROJECTS EDITOR -->
-      <div class="admin-section active" id="sec-projects" data-sec="projects">
+      <div class="admin-section" id="sec-projects" data-sec="projects">
         <div class="admin-section-title">Projects</div>
         <div class="admin-section-sub">Add, edit or remove projects. 📌 Pin to float to the top.</div>
         <button class="btn btn-solid btn-sm" style="margin-bottom:18px" onclick="openProjectModal()">+ Add Project</button>
@@ -1445,7 +1445,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       <button class="modal-close" onclick="closeProjModal()">×</button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="proj-edit-idx" value="0">
+      <input type="hidden" id="proj-edit-idx" value="1">
       <div class="form-group"><label class="form-label">Project Name</label><input class="form-input" id="pm-name" placeholder="e.g. Linux Lab Setup"></div>
       <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="pm-desc" rows="3"></textarea></div>
       <div class="form-group"><label class="form-label">Detailed Notes (shown in project overlay)</label><textarea class="form-textarea" id="pm-detail" rows="3" placeholder="More detail about this project, what you learned, etc."></textarea></div>
@@ -1479,8 +1479,8 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
         <div class="form-hint" style="margin-bottom:10px">Upload a full HTML page — visitors see a "View Full Page" button that opens it in a reader, just like blog posts.</div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px">
           <button class="btn btn-sm" style="background:var(--tag);color:var(--ink2);white-space:nowrap" onclick="document.getElementById('pm-html-upload').click()">↑ Upload HTML file</button>
-          <span id="pm-html-status" style="font-family: var(--mono); font-size: 12px; color: var(--green);">✓ Page on GitHub — upload new file to replace</span>
-          <button class="btn btn-sm" id="pm-html-clear-btn" style="background: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68); border: 1px solid rgba(239, 68, 68, 0.25); white-space: nowrap;" onclick="clearProjHtml()">✕ Remove page</button>
+          <span id="pm-html-status" style="font-family: var(--mono); font-size: 12px; color: rgb(239, 68, 68);">✕ Will be removed on Save</span>
+          <button class="btn btn-sm" id="pm-html-clear-btn" style="background: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68); border: 1px solid rgba(239, 68, 68, 0.25); white-space: nowrap; display: none;" onclick="clearProjHtml()">✕ Remove page</button>
         </div>
         <input type="file" id="pm-html-upload" accept=".html,.htm" style="display:none" onchange="handleProjHtmlUpload(event)">
         <textarea class="form-textarea" id="pm-html" rows="3" placeholder="Or paste HTML here… leave blank to keep existing."></textarea>
