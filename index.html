@@ -1038,7 +1038,7 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
       <span class="outline" id="hero-name-outline"><span class="hero-letter" style="animation-delay:0.28s">H</span><span class="hero-letter" style="animation-delay:0.34s">a</span><span class="hero-letter" style="animation-delay:0.4s">r</span><span class="hero-letter" style="animation-delay:0.46s">s</span><span class="hero-letter" style="animation-delay:0.52s">h</span><span class="hero-letter" style="animation-delay:0.5800000000000001s">.</span></span>
     </h1>
     <div class="hero-role">
-      I'm an <span id="typed-roles"></span><span class="typing-cursor" aria-hidden="true"></span>
+      I'm an <span id="typed-roles">Cloud Learner</span><span class="typing-cursor" aria-hidden="true"></span>
     </div>
     <div class="hero-badge">
       <div class="dot" aria-hidden="true"></div>
@@ -1479,8 +1479,8 @@ h1, h2, h3, p, span, div, a, input, textarea, select, button {
         <div class="form-hint" style="margin-bottom:10px">Upload a full HTML page — visitors see a "View Full Page" button that opens it in a reader, just like blog posts.</div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px">
           <button class="btn btn-sm" style="background:var(--tag);color:var(--ink2);white-space:nowrap" onclick="document.getElementById('pm-html-upload').click()">↑ Upload HTML file</button>
-          <span id="pm-html-status" style="font-family: var(--mono); font-size: 12px; color: rgb(239, 68, 68);">✕ Will be removed on Save</span>
-          <button class="btn btn-sm" id="pm-html-clear-btn" style="background: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68); border: 1px solid rgba(239, 68, 68, 0.25); white-space: nowrap; display: none;" onclick="clearProjHtml()">✕ Remove page</button>
+          <span id="pm-html-status" style="font-family: var(--mono); font-size: 12px; color: var(--green);">✓ Page on GitHub — upload new file to replace</span>
+          <button class="btn btn-sm" id="pm-html-clear-btn" style="background: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68); border: 1px solid rgba(239, 68, 68, 0.25); white-space: nowrap;" onclick="clearProjHtml()">✕ Remove page</button>
         </div>
         <input type="file" id="pm-html-upload" accept=".html,.htm" style="display:none" onchange="handleProjHtmlUpload(event)">
         <textarea class="form-textarea" id="pm-html" rows="3" placeholder="Or paste HTML here… leave blank to keep existing."></textarea>
