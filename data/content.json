@@ -347,7 +347,7 @@
       "day": 1,
       "series": "DevOps Bootcamp · Series",
       "excerpt": "From what the Linux kernel actually does, to why Docker containers share the host kernel — everything I learned on Day 1 of my 90-day DevOps journey.",
-      "cover": "",
+      "cover": "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fgvkte4e81dhy6z1mcmuo.png",
       "groupId": "linux",
       "pinned": true,
       "id": "blog_1773165858252_nq1tp"
