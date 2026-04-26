@@ -34,7 +34,7 @@
 </nav>
 
 <!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu" style="pointer-events:none;">
+<div class="mobile-menu" id="mobileMenu">
   <span class="mobile-close" id="closeMenu">✕ close</span>
   <a href="#about"    onclick="closeMobileMenu()">about</a>
   <a href="#stack"    onclick="closeMobileMenu()">stack</a>
@@ -72,8 +72,8 @@
     </p>
 
     <div class="hero-ctas">
-      <a href="projects.html" class="btn btn-accent" onclick="window.location.href='projects.html'; return false;">view projects ↓</a>
-      <a href="blog.html" class="btn" onclick="window.location.href='blog.html'; return false;">read the blog →</a>
+      <a href="projects.html" class="btn btn-accent">view projects ↓</a>
+      <a href="blog.html" class="btn">read the blog →</a>
     </div>
   </div>
   <div class="hero-scroll">
@@ -441,42 +441,7 @@
 
 <script src="js/content.js"></script>
 <script src="js/main.js"></script>
-<script>
-  // Patch: ensure mobile menu pointer-events are toggled correctly
-  // so the overlay never silently blocks clicks on the hero buttons.
-  document.addEventListener('DOMContentLoaded', () => {
-    const menu    = document.getElementById('mobileMenu');
-    const openBtn = document.getElementById('menuBtn');
-    const closeBtn = document.getElementById('closeMenu');
 
-    if (!menu) return;
-
-    // When hamburger opens the menu, allow pointer-events
-    if (openBtn) {
-      openBtn.addEventListener('click', () => {
-        menu.style.pointerEvents = 'auto';
-      }, true);
-    }
-
-    // When close button or any link closes it, disable pointer-events again
-    const disablePointerEvents = () => {
-      setTimeout(() => { menu.style.pointerEvents = 'none'; }, 350);
-    };
-
-    if (closeBtn) closeBtn.addEventListener('click', disablePointerEvents, true);
-
-    menu.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', disablePointerEvents, true);
-    });
-
-    // Also patch the global closeMobileMenu if main.js defines it
-    const _origClose = window.closeMobileMenu;
-    window.closeMobileMenu = function() {
-      if (_origClose) _origClose();
-      disablePointerEvents();
-    };
-  });
-</script>
 <script>
   // Load featured projects + blog on homepage
   document.addEventListener('DOMContentLoaded', async () => {

@@ -107,6 +107,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   renderProjectCards(projects, 'projectsFull');
+
+  // Update "all projects" button to show count
+  const allBtn = filterBar.querySelector('[data-tag="all"]');
+  if (allBtn) allBtn.textContent = `all projects (${projects.length})`;
 });
 </script>
 <script src="js/admin-trigger.js"></script>

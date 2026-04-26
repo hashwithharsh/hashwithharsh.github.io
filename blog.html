@@ -110,6 +110,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   renderBlogItems(blogs, 'blogFull');
   initBlogSearch(blogs, 'blogFull');
+
+  // Update "all posts" button to show count
+  const allBtn = filterBar.querySelector('[data-tag="all"]');
+  if (allBtn) allBtn.textContent = `all posts (${blogs.length})`;
 });
 </script>
 <script src="js/admin-trigger.js"></script>
