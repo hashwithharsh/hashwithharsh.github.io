@@ -1085,10 +1085,17 @@ footer {
   background: transparent;
   letter-spacing: .04em;
 }
-.filter-btn:hover, .filter-btn.active {
-  border-color: var(--accent);
+.filter-btn:hover {
+  border-color: rgba(181,255,77,.5);
   color: var(--accent);
   background: var(--accent-dim);
+}
+.filter-btn.active {
+  border-color: var(--accent);
+  color: #0a0a0a;
+  background: var(--accent);
+  font-weight: 600;
+  box-shadow: 0 0 16px rgba(181,255,77,.2);
 }
 
 .blog-full-list {
@@ -1528,4 +1535,10 @@ footer {
   #now .container > div[style*="grid-template-columns:repeat(3"] {
     grid-template-columns: 1fr !important;
   }
+}
+
+/* Ensure hero CTAs are always clickable above any decorative layers */
+.hero-ctas {
+  position: relative;
+  z-index: 2;
 }
