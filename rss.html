@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RSS — hashwithharsh</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav id="nav" class="scrolled">
+  <div class="container">
+    <a href="index.html" class="nav-logo"><span>#</span>hashwithharsh</a>
+    <ul class="nav-links">
+      <li><a href="index.html">home</a></li>
+      <li><a href="blog.html">blog</a></li>
+    </ul>
+    <a href="index.html#contact" class="nav-cta">say hello →</a>
+  </div>
+</nav>
+
+<div class="page-hero" style="background:var(--surface); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <span class="section-label">// rss / atom feed</span>
+    <h1>Subscribe to<br>hashwithharsh.</h1>
+    <p class="mt-16">Get new posts delivered to your RSS reader. No email list, no tracking, no noise.</p>
+  </div>
+</div>
+
+<section style="padding-top:60px; padding-bottom:80px;">
+  <div class="container" style="max-width:700px;">
+
+    <!-- Feed URL box -->
+    <div style="background:var(--surface); border:1px solid var(--border-2); border-radius:8px; padding:24px; margin-bottom:40px;">
+      <div class="section-label" style="margin-bottom:12px;">// feed url</div>
+      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+        <code id="feedUrl" style="
+          flex:1;
+          background:var(--bg);
+          border:1px solid var(--border-2);
+          padding:10px 14px;
+          border-radius:4px;
+          font-size:.82rem;
+          color:var(--accent);
+          min-width:0;
+          word-break:break-all;
+        ">https://hashwithharsh.dev/feed.xml</code>
+        <button onclick="copyFeedUrl()" class="btn" style="flex-shrink:0;" id="copyBtn">copy url</button>
+      </div>
+    </div>
+
+    <!-- How to use -->
+    <div style="margin-bottom:40px;">
+      <span class="section-label">// how to subscribe</span>
+      <div style="
+        display:flex;
+        flex-direction:column;
+        gap:1px;
+        background:var(--border);
+        border:1px solid var(--border);
+        border-radius:8px;
+        overflow:hidden;
+        margin-top:20px;
+      ">
+        <div style="background:var(--bg); padding:20px 24px;">
+          <div style="font-family:var(--ff-mono); font-size:.75rem; color:var(--accent); margin-bottom:6px;">01 — pick a reader</div>
+          <div style="font-size:.9rem; color:var(--text-2); font-weight:300;">
+            <a href="https://feedly.com" target="_blank" rel="noopener" style="color:var(--text); border-bottom:1px solid var(--border-2);">Feedly</a>, 
+            <a href="https://netnewswire.com" target="_blank" rel="noopener" style="color:var(--text); border-bottom:1px solid var(--border-2);">NetNewsWire</a>, 
+            <a href="https://reeder.app" target="_blank" rel="noopener" style="color:var(--text); border-bottom:1px solid var(--border-2);">Reeder</a>, or 
+            <a href="https://miniflux.app" target="_blank" rel="noopener" style="color:var(--text); border-bottom:1px solid var(--border-2);">Miniflux</a> (self-hosted).
+            Any RSS reader works.
+          </div>
+        </div>
+        <div style="background:var(--bg); padding:20px 24px;">
+          <div style="font-family:var(--ff-mono); font-size:.75rem; color:var(--accent); margin-bottom:6px;">02 — paste the feed url</div>
+          <div style="font-size:.9rem; color:var(--text-2); font-weight:300;">
+            Add <code style="color:var(--accent); font-size:.82em;">https://hashwithharsh.dev/feed.xml</code> as a new subscription in your reader.
+          </div>
+        </div>
+        <div style="background:var(--bg); padding:20px 24px;">
+          <div style="font-family:var(--ff-mono); font-size:.75rem; color:var(--accent); margin-bottom:6px;">03 — that's it</div>
+          <div style="font-size:.9rem; color:var(--text-2); font-weight:300;">
+            New posts appear automatically. No account needed, no tracking, no email.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent posts preview -->
+    <span class="section-label">// recent posts</span>
+    <div class="blog-list reveal" id="rssPreview" style="margin-top:20px;">
+      <div class="loading-state"><div class="loading-spinner"></div><span>loading...</span></div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <span class="footer-logo"><span>#</span>hashwithharsh</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/harshyadav" target="_blank" rel="noopener">github</a></li>
+        <li><a href="feed.xml">rss</a></li>
+        <li><a href="mailto:harsh@hashwithharsh.dev">email</a></li>
+      </ul>
+      <span class="footer-copy">© 2025 Harsh Yadav</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/content.js"></script>
+<script src="js/main.js"></script>
+<script>
+function copyFeedUrl() {
+  navigator.clipboard.writeText('https://hashwithharsh.dev/feed.xml').then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy url', 2000);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const blogs = await fetchBlogs();
+  renderBlogItems(blogs.slice(0, 5), 'rssPreview');
+});
+</script>
+<script src="js/admin-trigger.js"></script>
+</body>
+</html>

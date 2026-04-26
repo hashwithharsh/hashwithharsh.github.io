@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uses — hashwithharsh</title>
+  <meta name="description" content="The tools, setup, and software Harsh Yadav uses daily for DevOps and Cloud engineering work." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="alternate" type="application/rss+xml" title="hashwithharsh RSS Feed" href="/feed.xml" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>#</text></svg>" />
+</head>
+<body>
+
+<nav id="nav">
+  <div class="container">
+    <a href="index.html" class="nav-logo"><span>#</span>hashwithharsh</a>
+    <ul class="nav-links">
+      <li><a href="index.html#about">about</a></li>
+      <li><a href="projects.html">projects</a></li>
+      <li><a href="blog.html">blog</a></li>
+      <li><a href="uses.html" style="color:var(--text)">uses</a></li>
+    </ul>
+    <a href="index.html#contact" class="nav-cta">say hello →</a>
+    <div class="nav-hamburger" id="menuBtn"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <span class="mobile-close" id="closeMenu">✕ close</span>
+  <a href="index.html">home</a>
+  <a href="projects.html">projects</a>
+  <a href="blog.html">blog</a>
+  <a href="uses.html">uses</a>
+</div>
+
+<div class="page-hero" style="background:var(--surface); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <span class="section-label">// my setup</span>
+    <h1>What I use<br>every day.</h1>
+    <p class="mt-16">
+      My actual tools — hardware, software, terminals, editors. 
+      No affiliate links, no sponsored picks. Just what I actually use.
+    </p>
+  </div>
+</div>
+
+<section>
+  <div class="container">
+
+    <!-- Hardware -->
+    <span class="section-label" style="margin-bottom:20px;">// hardware</span>
+    <div class="uses-grid reveal" style="margin-bottom:48px;">
+      <div class="uses-section">
+        <div class="uses-section-title">workstation</div>
+        <div class="uses-item">
+          <div class="uses-item-name">Laptop</div>
+          <div class="uses-item-desc">Mid-range laptop running Ubuntu 22.04 dual-boot. Most dev work happens on Linux.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">External Monitor</div>
+          <div class="uses-item-desc">24" 1080p IPS. Not fancy — but horizontal space is everything in terminal workflows.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">Keyboard</div>
+          <div class="uses-item-desc">Budget mechanical with blue switches. Loud enough to keep me awake during long sessions.</div>
+        </div>
+      </div>
+      <div class="uses-section">
+        <div class="uses-section-title">peripherals</div>
+        <div class="uses-item">
+          <div class="uses-item-name">Mouse</div>
+          <div class="uses-item-desc">Logitech MX Master 3. The horizontal scroll wheel is underrated for wide terminals.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">Headphones</div>
+          <div class="uses-item-desc">Sony WH-1000XM4. ANC is essential when the internet goes down and I have to concentrate harder.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">Network</div>
+          <div class="uses-item-desc">100 Mbps fiber. I've learned to really appreciate fast internet when working with container images.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dev Environment -->
+    <span class="section-label" style="margin-bottom:20px;">// dev environment</span>
+    <div class="uses-grid reveal" style="margin-bottom:48px;">
+      <div class="uses-section">
+        <div class="uses-section-title">editors &amp; terminal</div>
+        <div class="uses-item">
+          <div class="uses-item-name">VS Code</div>
+          <div class="uses-item-desc">Daily driver. Extensions: Docker, Kubernetes, Terraform, GitLens, Error Lens, Remote SSH.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">Vim</div>
+          <div class="uses-item-desc">For quick server edits. Only know enough to not get stuck in it.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">Alacritty</div>
+          <div class="uses-item-desc">Fast, GPU-accelerated terminal. Configured with tmux for multi-pane sessions.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">tmux</div>
+          <div class="uses-item-desc">Can't live without it. Persistent sessions, split panes, one SSH connection for everything.</div>
+        </div>
+      </div>
+      <div class="uses-section">
+        <div class="uses-section-title">shell &amp; tools</div>
+        <div class="uses-item">
+          <div class="uses-item-name">Zsh + Oh My Zsh</div>
+          <div class="uses-item-desc">With powerlevel10k prompt. Git branch, kubectl context, AWS profile — all in the prompt.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">fzf</div>
+          <div class="uses-item-desc">Fuzzy finder for history, files, kubectl. Once you use it you can't go back.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">bat + exa + fd</div>
+          <div class="uses-item-desc">Better cat, ls, and find. Installed on every machine I touch.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">htop / btop</div>
+          <div class="uses-item-desc">System monitoring. btop looks cooler but htop is on every server by default.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cloud & DevOps -->
+    <span class="section-label" style="margin-bottom:20px;">// cloud &amp; devops tools</span>
+    <div class="uses-grid reveal" style="margin-bottom:48px;">
+      <div class="uses-section">
+        <div class="uses-section-title">cloud &amp; infra</div>
+        <div class="uses-item">
+          <div class="uses-item-name">AWS Free Tier</div>
+          <div class="uses-item-desc">My main cloud playground. EC2, S3, Lambda, EKS. I've hit the billing alert limit more than once.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">Terraform</div>
+          <div class="uses-item-desc">Infrastructure as code. Everything I provision gets a .tf file. State in S3 with DynamoDB locking.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">Ansible</div>
+          <div class="uses-item-desc">For server configuration and automation. When Terraform provisions it, Ansible configures it.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">k3s / minikube</div>
+          <div class="uses-item-desc">Local Kubernetes for development. k3s on my homelab, minikube for quick throwaway clusters.</div>
+        </div>
+      </div>
+      <div class="uses-section">
+        <div class="uses-section-title">observability</div>
+        <div class="uses-item">
+          <div class="uses-item-name">Prometheus + Grafana</div>
+          <div class="uses-item-desc">My default monitoring stack. kube-prometheus-stack helm chart gets me 80% of the way instantly.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">Loki</div>
+          <div class="uses-item-desc">Log aggregation. Way cheaper than Elasticsearch for what I need.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">k9s</div>
+          <div class="uses-item-desc">Terminal UI for Kubernetes. Faster than kubectl for interactive cluster browsing.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">Lens</div>
+          <div class="uses-item-desc">GUI Kubernetes IDE. Good for showing things to people who don't live in the terminal.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Apps & Services -->
+    <span class="section-label" style="margin-bottom:20px;">// apps &amp; services</span>
+    <div class="uses-grid reveal" style="margin-bottom:48px;">
+      <div class="uses-section">
+        <div class="uses-section-title">productivity</div>
+        <div class="uses-item">
+          <div class="uses-item-name">Obsidian</div>
+          <div class="uses-item-desc">All my notes — learning logs, runbooks, ideas, post drafts — in markdown files. No lock-in.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">Excalidraw</div>
+          <div class="uses-item-desc">Quick architecture diagrams. Hand-drawn aesthetic means nobody expects pixel-perfection.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">GitHub</div>
+          <div class="uses-item-desc">Everything lives here. Public repos, private experiments, GitHub Pages for this site.</div>
+        </div>
+      </div>
+      <div class="uses-section">
+        <div class="uses-section-title">learning</div>
+        <div class="uses-item">
+          <div class="uses-item-name">Killercoda</div>
+          <div class="uses-item-desc">Browser-based Linux/Kubernetes environments. No setup needed, just scenario and terminal.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">Official Docs</div>
+          <div class="uses-item-desc">Kubernetes, Terraform, AWS — always the source of truth. I read docs like other people read Reddit.</div>
+        </div>
+        <div class="uses-item">
+          <div class="uses-item-name">This Blog</div>
+          <div class="uses-item-desc">My own notes in public form. Writing forces understanding. Reading back saves me from repeating mistakes.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <span class="footer-logo"><span>#</span>hashwithharsh</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/harshyadav" target="_blank" rel="noopener">github</a></li>
+        <li><a href="https://linkedin.com/in/harshyadav" target="_blank" rel="noopener">linkedin</a></li>
+        <li><a href="rss.html">rss</a></li>
+        <li><a href="mailto:harsh@hashwithharsh.dev">email</a></li>
+      </ul>
+      <span class="footer-copy">© 2025 Harsh Yadav</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+<script src="js/admin-trigger.js"></script>
+</body>
+</html>

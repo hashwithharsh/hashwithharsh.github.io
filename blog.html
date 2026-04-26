@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — hashwithharsh</title>
+  <meta name="description" content="DevOps and Cloud engineering writeups by Harsh Yadav. Real problems, real fixes, no fluff." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="alternate" type="application/rss+xml" title="hashwithharsh RSS Feed" href="/feed.xml" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>#</text></svg>" />
+</head>
+<body>
+
+<nav id="nav">
+  <div class="container">
+    <a href="index.html" class="nav-logo"><span>#</span>hashwithharsh</a>
+    <ul class="nav-links">
+      <li><a href="index.html#about">about</a></li>
+      <li><a href="index.html#stack">stack</a></li>
+      <li><a href="projects.html">projects</a></li>
+      <li><a href="blog.html" style="color:var(--text)">blog</a></li>
+      <li><a href="uses.html">uses</a></li>
+    </ul>
+    <a href="index.html#contact" class="nav-cta">say hello →</a>
+    <div class="nav-hamburger" id="menuBtn">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <span class="mobile-close" id="closeMenu">✕ close</span>
+  <a href="index.html">home</a>
+  <a href="projects.html">projects</a>
+  <a href="blog.html">blog</a>
+  <a href="index.html#contact">contact</a>
+</div>
+
+<!-- Page Hero -->
+<div class="page-hero" style="background:var(--surface); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <span class="section-label">// knowledge base</span>
+    <h1>Writing from<br>the trenches.</h1>
+    <p class="mt-16">
+      Real DevOps and cloud problems I've hit, solved, and documented. 
+      No watered-down tutorials — just what actually happened and why.
+    </p>
+  </div>
+</div>
+
+<section style="padding-top:60px; padding-bottom:0;">
+  <div class="container">
+    <div class="search-wrap">
+      <input type="search" id="blogSearch" placeholder="search posts, tags, topics..." autocomplete="off" />
+    </div>
+    <div class="blog-filter" id="filterBar">
+      <button class="filter-btn active" data-tag="all">all posts</button>
+    </div>
+    <div class="blog-full-list" id="blogFull">
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <span>loading posts...</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <span class="footer-logo"><span>#</span>hashwithharsh</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/harshyadav" target="_blank" rel="noopener">github</a></li>
+        <li><a href="https://linkedin.com/in/harshyadav" target="_blank" rel="noopener">linkedin</a></li>
+        <li><a href="rss.html">rss</a></li>
+        <li><a href="mailto:harsh@hashwithharsh.dev">email</a></li>
+      </ul>
+      <span class="footer-copy">© 2025 Harsh Yadav</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/content.js"></script>
+<script src="js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const blogs = await fetchBlogs();
+  let active = 'all';
+
+  // Build tag filter
+  const allTags = [...new Set(blogs.flatMap(b => b.tags))].sort();
+  const filterBar = document.getElementById('filterBar');
+  allTags.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.dataset.tag = tag;
+    btn.textContent = '#' + tag;
+    filterBar.appendChild(btn);
+  });
+
+  filterBar.addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    active = btn.dataset.tag;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filtered = active === 'all' ? blogs : blogs.filter(b => b.tags.includes(active));
+    renderBlogItems(filtered, 'blogFull');
+  });
+
+  renderBlogItems(blogs, 'blogFull');
+  initBlogSearch(blogs, 'blogFull');
+});
+</script>
+<script src="js/admin-trigger.js"></script>
+</body>
+</html>

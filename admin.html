@@ -1,0 +1,2116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — hashwithharsh</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙</text></svg>" />
+
+<style>
+/* ═══════════════════════════════════════════
+   hashwithharsh Admin Panel — Styles
+   Terminal × Editorial × CMS
+═══════════════════════════════════════════ */
+:root {
+  --bg:          #070707;
+  --surface:     #0d0d0d;
+  --surface-2:   #111111;
+  --surface-3:   #171717;
+  --surface-4:   #1d1d1d;
+  --border:      #1a1a1a;
+  --border-2:    #252525;
+  --border-3:    #333;
+  --text:        #e2e2e2;
+  --text-2:      #999;
+  --text-3:      #555;
+  --accent:      #b5ff4d;
+  --accent-dim:  rgba(181,255,77,.10);
+  --accent-glow: rgba(181,255,77,.06);
+  --red:         #ff4c4c;
+  --red-dim:     rgba(255,76,76,.1);
+  --blue:        #5b9bff;
+  --blue-dim:    rgba(91,155,255,.1);
+  --yellow:      #ffd166;
+  --yellow-dim:  rgba(255,209,102,.1);
+  --green:       #06d6a0;
+  --green-dim:   rgba(6,214,160,.1);
+
+  --ff-display:  'Syne', sans-serif;
+  --ff-body:     'Outfit', sans-serif;
+  --ff-mono:     'JetBrains Mono', monospace;
+
+  --sidebar-w:   230px;
+  --topbar-h:    52px;
+  --ease:        cubic-bezier(.23,1,.32,1);
+  --fast:        .18s;
+  --radius:      8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--ff-body);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: var(--ff-body); cursor: pointer; }
+input, textarea, select { font-family: var(--ff-body); }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
+
+/* ── Login Screen ─────────────────────────── */
+#loginScreen {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg);
+  padding: 24px;
+}
+.login-card {
+  width: 100%; max-width: 420px;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: 12px;
+  padding: 48px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.login-logo {
+  font-family: var(--ff-mono);
+  font-size: .8rem;
+  color: var(--accent);
+  letter-spacing: .1em;
+  margin-bottom: 32px;
+  display: flex; align-items: center; gap: 10px;
+}
+.login-logo::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+.login-card h1 {
+  font-family: var(--ff-display);
+  font-size: 2rem; font-weight: 800;
+  color: var(--text); letter-spacing: -.03em;
+  margin-bottom: 6px;
+}
+.login-card > p {
+  font-size: .85rem; color: var(--text-3); margin-bottom: 36px;
+  font-weight: 300;
+}
+.field-group { margin-bottom: 20px; }
+.field-group label {
+  display: block; font-family: var(--ff-mono);
+  font-size: .68rem; color: var(--accent);
+  letter-spacing: .09em; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.field-group input {
+  width: 100%; background: var(--surface-3);
+  border: 1px solid var(--border-2);
+  border-radius: 6px; padding: 12px 14px;
+  color: var(--text); font-size: .9rem;
+  outline: none; transition: border-color var(--fast), box-shadow var(--fast);
+  letter-spacing: .04em;
+}
+.field-group input:focus {
+  border-color: rgba(181,255,77,.5);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.field-group input::placeholder { color: var(--text-3); }
+
+.btn-login {
+  width: 100%; margin-top: 8px;
+  background: var(--accent); color: #0a0a0a;
+  border: none; border-radius: 6px;
+  padding: 13px; font-family: var(--ff-mono);
+  font-size: .82rem; font-weight: 600;
+  letter-spacing: .06em; cursor: pointer;
+  transition: background .2s, box-shadow .2s, transform .15s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-login:hover {
+  background: #c9ff6a;
+  box-shadow: 0 4px 24px rgba(181,255,77,.3);
+}
+.btn-login:active { transform: scale(.98); }
+.btn-login:disabled { opacity: .5; cursor: not-allowed; }
+.login-error {
+  display: none; margin-top: 14px; text-align: center;
+  font-size: .78rem; color: var(--red); font-family: var(--ff-mono);
+}
+.login-error.show { display: block; }
+.login-hint {
+  margin-top: 24px; text-align: center;
+  font-size: .75rem; color: var(--text-3);
+  font-family: var(--ff-mono);
+}
+.login-hint a {
+  color: var(--text-2);
+  border-bottom: 1px solid var(--border-2);
+  transition: color var(--fast);
+}
+.login-hint a:hover { color: var(--text); }
+
+/* ── Admin Shell ─────────────────────────── */
+#adminShell {
+  display: none; /* shown after auth */
+  height: 100vh; flex-direction: column;
+}
+#adminShell.show { display: flex; }
+
+/* Top Bar */
+#topBar {
+  height: var(--topbar-h); min-height: var(--topbar-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 20px;
+  gap: 16px;
+  z-index: 100;
+}
+.topbar-logo {
+  font-family: var(--ff-mono);
+  font-size: .82rem; color: var(--text-2);
+  letter-spacing: -.01em; margin-right: auto;
+  display: flex; align-items: center; gap: 8px;
+}
+.topbar-logo span { color: var(--accent); font-weight: 500; }
+.topbar-badge {
+  font-family: var(--ff-mono); font-size: .6rem;
+  background: var(--accent-dim); color: var(--accent);
+  border: 1px solid rgba(181,255,77,.2);
+  padding: 2px 8px; border-radius: 20px;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+
+.tb-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 5px;
+  font-size: .75rem; font-family: var(--ff-mono);
+  letter-spacing: .04em; font-weight: 500;
+  border: 1px solid var(--border-2);
+  background: transparent; color: var(--text-2);
+  cursor: pointer; transition: all var(--fast);
+  white-space: nowrap;
+}
+.tb-btn:hover { color: var(--text); border-color: var(--border-3); background: var(--surface-3); }
+.tb-btn.accent {
+  background: var(--accent); color: #0a0a0a;
+  border-color: var(--accent); font-weight: 600;
+}
+.tb-btn.accent:hover { background: #c9ff6a; border-color: #c9ff6a; box-shadow: 0 0 16px rgba(181,255,77,.25); }
+.tb-btn.danger { color: var(--red); border-color: rgba(255,76,76,.25); }
+.tb-btn.danger:hover { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+
+/* Body (sidebar + main) */
+#adminBody {
+  flex: 1; display: flex; overflow: hidden;
+}
+
+/* Sidebar */
+#sidebar {
+  width: var(--sidebar-w); min-width: var(--sidebar-w);
+  background: var(--surface-2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow-y: auto; overflow-x: hidden;
+  padding: 16px 0;
+}
+.sidebar-section-title {
+  font-family: var(--ff-mono); font-size: .62rem;
+  color: var(--text-3); letter-spacing: .1em;
+  text-transform: uppercase; padding: 8px 20px 4px;
+  margin-top: 8px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 11px;
+  padding: 9px 20px; cursor: pointer;
+  font-size: .82rem; color: var(--text-2);
+  border-radius: 0; transition: all var(--fast);
+  border-left: 2px solid transparent;
+  letter-spacing: .01em; position: relative;
+}
+.nav-item:hover { background: var(--surface-3); color: var(--text); }
+.nav-item.active {
+  color: var(--accent); background: var(--accent-dim);
+  border-left-color: var(--accent);
+}
+.nav-item .icon {
+  width: 16px; height: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .85rem; flex-shrink: 0;
+  opacity: .7;
+}
+.nav-item.active .icon { opacity: 1; }
+.nav-badge {
+  margin-left: auto; font-family: var(--ff-mono);
+  font-size: .6rem; background: var(--surface-4);
+  padding: 2px 7px; border-radius: 10px;
+  color: var(--text-3); border: 1px solid var(--border);
+}
+.nav-item.active .nav-badge { background: var(--accent-dim); color: var(--accent); border-color: rgba(181,255,77,.2); }
+
+/* Main Content Area */
+#mainContent {
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  background: var(--bg);
+}
+.section-panel {
+  display: none; padding: 32px 36px; min-height: 100%;
+  animation: panelIn .2s var(--ease) both;
+}
+.section-panel.active { display: block; }
+@keyframes panelIn {
+  from { opacity: 0; transform: translateX(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Section Header */
+.section-hdr {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 28px; gap: 16px; flex-wrap: wrap;
+}
+.section-hdr-left {}
+.section-tag {
+  font-family: var(--ff-mono); font-size: .67rem;
+  color: var(--accent); letter-spacing: .1em;
+  text-transform: uppercase; margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-tag::before { content: ''; width: 16px; height: 1px; background: var(--accent); }
+.section-hdr h2 {
+  font-family: var(--ff-display); font-size: 1.6rem;
+  font-weight: 800; color: var(--text);
+  letter-spacing: -.03em;
+}
+.section-hdr .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* Cards / Items */
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+.item-card {
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: border-color var(--fast), transform var(--fast);
+  position: relative;
+  overflow: hidden;
+}
+.item-card:hover { border-color: var(--border-3); transform: translateY(-1px); }
+.item-card.pinned { border-color: rgba(181,255,77,.25); background: rgba(181,255,77,.03); }
+.item-card.pinned::before {
+  content: '📌'; position: absolute; top: 14px; right: 14px;
+  font-size: .7rem;
+}
+.item-card-top {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px;
+}
+.item-card-year {
+  font-family: var(--ff-mono); font-size: .65rem;
+  color: var(--accent); background: var(--accent-dim);
+  padding: 2px 8px; border-radius: 10px; border: 1px solid rgba(181,255,77,.15);
+}
+.item-card-status {
+  font-family: var(--ff-mono); font-size: .62rem;
+  padding: 2px 8px; border-radius: 10px;
+}
+.item-card-status.active { background: var(--green-dim); color: var(--green); border: 1px solid rgba(6,214,160,.2); }
+.item-card-status.wip    { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(255,209,102,.2); }
+.item-card-status.archived { background: var(--surface-4); color: var(--text-3); border: 1px solid var(--border); }
+.item-card h3 {
+  font-size: .92rem; font-weight: 600; color: var(--text);
+  margin-bottom: 6px; letter-spacing: -.01em;
+}
+.item-card p {
+  font-size: .8rem; color: var(--text-2); line-height: 1.5;
+  margin-bottom: 12px; font-weight: 300;
+  display: -webkit-box; -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+.item-tags {
+  display: flex; flex-wrap: wrap; gap: 5px;
+  margin-bottom: 14px;
+}
+.item-tag {
+  font-family: var(--ff-mono); font-size: .62rem;
+  color: var(--text-3); background: var(--surface-3);
+  padding: 2px 8px; border-radius: 3px;
+  border: 1px solid var(--border);
+}
+.item-actions {
+  display: flex; gap: 6px; border-top: 1px solid var(--border);
+  padding-top: 12px; margin-top: 4px;
+}
+.ia-btn {
+  flex: 1; padding: 6px; border-radius: 4px;
+  font-size: .72rem; font-family: var(--ff-mono);
+  letter-spacing: .03em; border: 1px solid var(--border-2);
+  background: transparent; color: var(--text-2);
+  cursor: pointer; transition: all var(--fast);
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.ia-btn:hover { background: var(--surface-3); color: var(--text); border-color: var(--border-3); }
+.ia-btn.edit:hover { color: var(--blue); border-color: rgba(91,155,255,.3); background: var(--blue-dim); }
+.ia-btn.del:hover  { color: var(--red);  border-color: rgba(255,76,76,.3);  background: var(--red-dim); }
+.ia-btn.pin        { font-size: .7rem; }
+.ia-btn.pin.active { color: var(--accent); border-color: rgba(181,255,77,.3); background: var(--accent-dim); }
+
+/* Form Elements */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-grid.single { grid-template-columns: 1fr; }
+.form-row { display: flex; flex-direction: column; gap: 6px; }
+.form-row label {
+  font-family: var(--ff-mono); font-size: .67rem;
+  color: var(--accent); letter-spacing: .08em; text-transform: uppercase;
+}
+.form-row input,
+.form-row textarea,
+.form-row select {
+  background: var(--surface-3); border: 1px solid var(--border-2);
+  border-radius: 5px; padding: 10px 12px;
+  color: var(--text); font-size: .85rem;
+  outline: none; transition: border-color var(--fast), box-shadow var(--fast);
+  width: 100%;
+}
+.form-row input:focus,
+.form-row textarea:focus,
+.form-row select:focus {
+  border-color: rgba(181,255,77,.4);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.form-row textarea {
+  resize: vertical; min-height: 90px; line-height: 1.5; font-size: .82rem;
+}
+.form-row select { cursor: pointer; }
+.form-row input::placeholder,
+.form-row textarea::placeholder { color: var(--text-3); }
+.form-hint { font-size: .72rem; color: var(--text-3); margin-top: 2px; }
+
+/* Inline editable fields */
+.edit-block {
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.edit-block-title {
+  font-family: var(--ff-mono); font-size: .68rem;
+  color: var(--accent); letter-spacing: .08em;
+  text-transform: uppercase; margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.save-section-btn {
+  padding: 6px 14px; border-radius: 4px;
+  font-size: .72rem; font-family: var(--ff-mono);
+  background: var(--accent); color: #0a0a0a;
+  border: none; cursor: pointer; font-weight: 600;
+  transition: background .2s;
+}
+.save-section-btn:hover { background: #c9ff6a; }
+
+/* Tags input */
+.tags-editor {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  background: var(--surface-3); border: 1px solid var(--border-2);
+  border-radius: 5px; padding: 8px 10px;
+  min-height: 42px; cursor: text;
+  transition: border-color var(--fast), box-shadow var(--fast);
+}
+.tags-editor:focus-within {
+  border-color: rgba(181,255,77,.4);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.tag-chip {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--surface-4); color: var(--text-2);
+  border: 1px solid var(--border-2);
+  border-radius: 3px; padding: 2px 8px;
+  font-family: var(--ff-mono); font-size: .7rem;
+}
+.tag-chip button {
+  background: none; border: none; color: var(--text-3);
+  font-size: .8rem; cursor: pointer; padding: 0; line-height: 1;
+  transition: color var(--fast);
+}
+.tag-chip button:hover { color: var(--red); }
+.tags-editor input {
+  background: none; border: none; outline: none;
+  color: var(--text); font-size: .8rem; font-family: var(--ff-mono);
+  min-width: 80px; padding: 2px 4px; flex: 1;
+}
+
+/* Stats Cards */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  margin-bottom: 32px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+}
+.stat-card-val {
+  font-family: var(--ff-display); font-size: 2rem;
+  font-weight: 800; color: var(--text);
+  letter-spacing: -.04em; line-height: 1;
+}
+.stat-card-val.accent { color: var(--accent); }
+.stat-card-lbl {
+  font-size: .75rem; color: var(--text-3);
+  margin-top: 4px; font-weight: 300;
+}
+.stat-card-icon {
+  font-size: 1.2rem; margin-bottom: 10px; display: block;
+}
+
+/* Dashboard quick actions */
+.quick-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px; margin-bottom: 32px;
+}
+.quick-card {
+  background: var(--surface); border: 1px solid var(--border-2);
+  border-radius: var(--radius); padding: 16px 18px;
+  cursor: pointer; transition: all var(--fast);
+  display: flex; align-items: center; gap: 12px;
+}
+.quick-card:hover {
+  border-color: rgba(181,255,77,.3);
+  background: var(--accent-dim);
+  transform: translateY(-1px);
+}
+.quick-card-icon { font-size: 1.3rem; }
+.quick-card-text { font-size: .82rem; color: var(--text-2); }
+.quick-card-text strong { display: block; color: var(--text); font-size: .88rem; margin-bottom: 1px; }
+
+/* Divider */
+.divider {
+  border: none; border-top: 1px solid var(--border);
+  margin: 28px 0;
+}
+
+/* Add item row */
+.add-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 12px;
+  border: 1px dashed var(--border-2); border-radius: var(--radius);
+  background: transparent; color: var(--text-3);
+  font-size: .8rem; font-family: var(--ff-mono);
+  cursor: pointer; transition: all var(--fast); margin-top: 12px;
+}
+.add-btn:hover {
+  border-color: rgba(181,255,77,.4); color: var(--accent);
+  background: var(--accent-dim);
+}
+
+/* List items (blog list style) */
+.list-items { display: flex; flex-direction: column; gap: 8px; }
+.list-item {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--surface); border: 1px solid var(--border-2);
+  border-radius: var(--radius); padding: 14px 18px;
+  transition: border-color var(--fast);
+}
+.list-item:hover { border-color: var(--border-3); }
+.list-item.pinned { border-color: rgba(181,255,77,.25); background: rgba(181,255,77,.02); }
+.li-meta { flex: 1; min-width: 0; }
+.li-title {
+  font-size: .88rem; color: var(--text); font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.li-sub {
+  font-size: .74rem; color: var(--text-3); margin-top: 2px;
+  font-family: var(--ff-mono);
+}
+.li-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 5px; }
+.li-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+/* Inline text editor rows */
+.editable-list { display: flex; flex-direction: column; gap: 8px; }
+.editable-item {
+  display: flex; gap: 8px; align-items: center;
+}
+.editable-item input {
+  flex: 1; background: var(--surface-3); border: 1px solid var(--border-2);
+  border-radius: 4px; padding: 8px 10px; color: var(--text);
+  font-size: .82rem; outline: none;
+  transition: border-color var(--fast), box-shadow var(--fast);
+}
+.editable-item input:focus {
+  border-color: rgba(181,255,77,.4);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.del-row-btn {
+  background: none; border: 1px solid var(--border-2);
+  color: var(--text-3); border-radius: 4px;
+  padding: 6px 9px; font-size: .8rem; cursor: pointer;
+  transition: all var(--fast); flex-shrink: 0;
+}
+.del-row-btn:hover { color: var(--red); border-color: rgba(255,76,76,.3); background: var(--red-dim); }
+.add-row-btn {
+  background: none; border: 1px dashed var(--border-2);
+  color: var(--text-3); border-radius: 4px;
+  padding: 7px 14px; font-size: .76rem; cursor: pointer;
+  font-family: var(--ff-mono); margin-top: 4px;
+  transition: all var(--fast); width: 100%;
+}
+.add-row-btn:hover { border-color: rgba(181,255,77,.3); color: var(--accent); background: var(--accent-dim); }
+
+/* Stack grid */
+.stack-cat {
+  background: var(--surface); border: 1px solid var(--border-2);
+  border-radius: var(--radius); padding: 16px 18px; margin-bottom: 10px;
+}
+.stack-cat-hdr {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+}
+.stack-cat-hdr input {
+  flex: 1; background: var(--surface-3); border: 1px solid var(--border-2);
+  border-radius: 4px; padding: 7px 10px; color: var(--text);
+  font-family: var(--ff-mono); font-size: .78rem; outline: none;
+  transition: border-color var(--fast);
+}
+.stack-cat-hdr input:focus { border-color: rgba(181,255,77,.4); }
+.stack-items-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+.stack-chip {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--surface-4); border: 1px solid var(--border-2);
+  border-radius: 4px; padding: 3px 9px;
+  font-family: var(--ff-mono); font-size: .72rem; color: var(--text-2);
+}
+.stack-chip button {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-3); font-size: .75rem; padding: 0; line-height: 1;
+  transition: color var(--fast);
+}
+.stack-chip button:hover { color: var(--red); }
+.stack-add-item {
+  display: flex; gap: 6px; margin-top: 8px;
+}
+.stack-add-item input {
+  flex: 1; background: var(--surface-3); border: 1px solid var(--border-2);
+  border-radius: 4px; padding: 6px 10px; color: var(--text);
+  font-family: var(--ff-mono); font-size: .76rem; outline: none;
+  transition: border-color var(--fast);
+}
+.stack-add-item input:focus { border-color: rgba(181,255,77,.4); }
+.stack-add-item button {
+  background: var(--accent-dim); border: 1px solid rgba(181,255,77,.2);
+  color: var(--accent); border-radius: 4px; padding: 6px 12px;
+  font-size: .75rem; cursor: pointer; font-family: var(--ff-mono);
+  transition: all var(--fast);
+}
+.stack-add-item button:hover { background: var(--accent-dim); border-color: rgba(181,255,77,.4); }
+
+/* Modal */
+#modalOverlay {
+  display: none; position: fixed; inset: 0; z-index: 9000;
+  background: rgba(7,7,7,.85); backdrop-filter: blur(8px);
+  align-items: center; justify-content: center;
+  padding: 24px;
+}
+#modalOverlay.show { display: flex; }
+.modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: 12px;
+  width: 100%; max-width: 640px;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  animation: modalIn .25s var(--ease) both;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(.96) translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: var(--surface); z-index: 1;
+}
+.modal-title { font-size: .92rem; font-weight: 600; color: var(--text); letter-spacing: -.01em; }
+.modal-close {
+  background: none; border: 1px solid var(--border-2);
+  color: var(--text-3); border-radius: 4px;
+  padding: 5px 9px; cursor: pointer; font-size: .8rem;
+  transition: all var(--fast);
+}
+.modal-close:hover { color: var(--text); border-color: var(--border-3); background: var(--surface-3); }
+.modal-body { padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.modal-footer {
+  display: flex; gap: 10px; justify-content: flex-end;
+  padding: 16px 24px; border-top: 1px solid var(--border);
+  position: sticky; bottom: 0; background: var(--surface);
+}
+
+/* Toast */
+#toastContainer {
+  position: fixed; bottom: 24px; right: 24px;
+  display: flex; flex-direction: column; gap: 8px;
+  z-index: 99999; pointer-events: none;
+}
+.toast {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px; border-radius: 6px;
+  font-size: .78rem; font-family: var(--ff-mono);
+  letter-spacing: .03em;
+  border: 1px solid; max-width: 320px;
+  backdrop-filter: blur(8px);
+  animation: toastIn .25s var(--ease) both;
+  pointer-events: all;
+}
+.toast.success { background: rgba(6,214,160,.1); border-color: rgba(6,214,160,.25); color: var(--green); }
+.toast.error   { background: var(--red-dim);  border-color: rgba(255,76,76,.25); color: var(--red); }
+.toast.info    { background: var(--blue-dim); border-color: rgba(91,155,255,.25); color: var(--blue); }
+.toast.warning { background: var(--yellow-dim); border-color: rgba(255,209,102,.25); color: var(--yellow); }
+.toast.out     { animation: toastOut .2s var(--ease) both; }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes toastOut {
+  to { opacity: 0; transform: translateX(16px); }
+}
+
+/* Settings page */
+.settings-group {
+  background: var(--surface); border: 1px solid var(--border-2);
+  border-radius: var(--radius); padding: 24px; margin-bottom: 16px;
+}
+.settings-group-title {
+  font-family: var(--ff-mono); font-size: .7rem; color: var(--accent);
+  letter-spacing: .08em; text-transform: uppercase; margin-bottom: 18px;
+  display: flex; align-items: center; gap: 8px;
+}
+.settings-group-title::before { content: '//'; color: var(--text-3); }
+
+/* Empty state */
+.empty-state {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 12px; padding: 60px 20px;
+  color: var(--text-3); text-align: center;
+}
+.empty-state .icon { font-size: 2.5rem; opacity: .4; }
+.empty-state p { font-size: .82rem; max-width: 280px; line-height: 1.6; }
+
+/* Spinner */
+.spinner {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid currentColor; border-top-color: transparent;
+  animation: spin .6s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Responsive */
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-grid { grid-template-columns: 1fr; }
+  .section-panel { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN SCREEN ═══ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">// admin access</div>
+    <h1>Enter the vault.</h1>
+    <p>Password protected. This panel is for admin use only.</p>
+    <div class="field-group">
+      <label for="loginPw">password</label>
+      <input type="password" id="loginPw" placeholder="••••••••••••" autocomplete="current-password" />
+    </div>
+    <button class="btn-login" id="loginBtn">authenticate →</button>
+    <div class="login-error" id="loginErr"></div>
+    <div class="login-hint">
+      Back to site? <a href="index.html">← go home</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ADMIN SHELL ═══ -->
+<div id="adminShell">
+
+  <!-- Top Bar -->
+  <div id="topBar">
+    <div class="topbar-logo">
+      <span>#</span>hashwithharsh
+      <span class="topbar-badge">admin</span>
+    </div>
+    <button class="tb-btn" onclick="exportData()" title="Download all data as JSON">⬇ export</button>
+    <button class="tb-btn accent" onclick="saveAllData()">💾 save all</button>
+    <button class="tb-btn danger" onclick="doLogout()">⏻ logout</button>
+  </div>
+
+  <!-- Body -->
+  <div id="adminBody">
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div class="sidebar-section-title">main</div>
+      <div class="nav-item active" data-section="dashboard" onclick="showSection('dashboard', this)">
+        <span class="icon">◈</span> Dashboard
+      </div>
+
+      <div class="sidebar-section-title">content</div>
+      <div class="nav-item" data-section="hero" onclick="showSection('hero', this)">
+        <span class="icon">⬡</span> Hero Section
+      </div>
+      <div class="nav-item" data-section="about" onclick="showSection('about', this)">
+        <span class="icon">◉</span> About Section
+      </div>
+      <div class="nav-item" data-section="stack" onclick="showSection('stack', this)">
+        <span class="icon">⊞</span> Tech Stack
+      </div>
+
+      <div class="sidebar-section-title">manage</div>
+      <div class="nav-item" data-section="projects" onclick="showSection('projects', this)">
+        <span class="icon">◧</span> Projects
+        <span class="nav-badge" id="projectsBadge">–</span>
+      </div>
+      <div class="nav-item" data-section="blogs" onclick="showSection('blogs', this)">
+        <span class="icon">≡</span> Blog Posts
+        <span class="nav-badge" id="blogsBadge">–</span>
+      </div>
+
+      <div class="sidebar-section-title">config</div>
+      <div class="nav-item" data-section="settings" onclick="showSection('settings', this)">
+        <span class="icon">⚙</span> Settings
+      </div>
+
+      <div style="flex:1"></div>
+      <div style="padding:16px 20px; border-top:1px solid var(--border); margin-top:16px;">
+        <div style="font-size:.7rem; color:var(--text-3); font-family:var(--ff-mono); line-height:1.6;">
+          <div style="color:var(--accent); margin-bottom:4px;">// session active</div>
+          <div id="sessionInfo">–</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="mainContent">
+
+      <!-- ── DASHBOARD ── -->
+      <section class="section-panel active" id="sec-dashboard">
+        <div class="section-hdr">
+          <div class="section-hdr-left">
+            <div class="section-tag">// dashboard</div>
+            <h2>Overview</h2>
+          </div>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+          <!-- JS rendered -->
+        </div>
+
+        <div class="section-tag" style="margin-bottom:12px;">// quick actions</div>
+        <div class="quick-grid">
+          <div class="quick-card" onclick="showSection('projects', document.querySelector('[data-section=projects]')); openProjectModal()">
+            <span class="quick-card-icon">＋</span>
+            <div class="quick-card-text"><strong>New Project</strong>Add to portfolio</div>
+          </div>
+          <div class="quick-card" onclick="showSection('blogs', document.querySelector('[data-section=blogs]')); openBlogModal()">
+            <span class="quick-card-icon">✍</span>
+            <div class="quick-card-text"><strong>New Blog Post</strong>Write metadata</div>
+          </div>
+          <div class="quick-card" onclick="showSection('hero', document.querySelector('[data-section=hero]'))">
+            <span class="quick-card-icon">⬡</span>
+            <div class="quick-card-text"><strong>Edit Hero</strong>Update your intro</div>
+          </div>
+          <div class="quick-card" onclick="exportData()">
+            <span class="quick-card-icon">⬇</span>
+            <div class="quick-card-text"><strong>Export Data</strong>Download JSON backup</div>
+          </div>
+        </div>
+
+        <div class="section-tag" style="margin-bottom:12px;">// recent changes</div>
+        <div id="recentChanges" style="background:var(--surface);border:1px solid var(--border-2);border-radius:8px;padding:20px;">
+          <div style="font-size:.8rem;color:var(--text-3);font-family:var(--ff-mono);">
+            // no changes tracked yet. edit content to begin.
+          </div>
+        </div>
+      </section>
+
+      <!-- ── HERO EDITOR ── -->
+      <section class="section-panel" id="sec-hero">
+        <div class="section-hdr">
+          <div class="section-hdr-left">
+            <div class="section-tag">// content editor</div>
+            <h2>Hero Section</h2>
+          </div>
+          <div class="actions">
+            <button class="tb-btn accent" onclick="saveHero()">save hero →</button>
+          </div>
+        </div>
+
+        <div class="edit-block">
+          <div class="edit-block-title">identity</div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label>display name</label>
+              <input type="text" id="heroName" placeholder="HARSH YADAV" />
+            </div>
+            <div class="form-row">
+              <label>status badge</label>
+              <input type="text" id="heroStatus" placeholder="currently tinkering with Terraform & AWS" />
+            </div>
+          </div>
+        </div>
+
+        <div class="edit-block">
+          <div class="edit-block-title">description</div>
+          <div class="form-grid single">
+            <div class="form-row">
+              <label>hero description paragraph</label>
+              <textarea id="heroDesc" rows="3" placeholder="Your hero paragraph..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="edit-block">
+          <div class="edit-block-title">cta buttons</div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label>primary button text</label>
+              <input type="text" id="heroCta1Text" placeholder="view projects ↓" />
+            </div>
+            <div class="form-row">
+              <label>primary button href</label>
+              <input type="text" id="heroCta1Href" placeholder="#projects" />
+            </div>
+            <div class="form-row">
+              <label>secondary button text</label>
+              <input type="text" id="heroCta2Text" placeholder="read the blog →" />
+            </div>
+            <div class="form-row">
+              <label>secondary button href</label>
+              <input type="text" id="heroCta2Href" placeholder="blog.html" />
+            </div>
+          </div>
+        </div>
+
+        <div class="edit-block">
+          <div class="edit-block-title">typewriter phrases — <span style="color:var(--text-3);font-weight:300">press Enter after each phrase</span></div>
+          <div class="editable-list" id="typewriterList"></div>
+          <button class="add-row-btn" onclick="addTypewriterPhrase()">+ add phrase</button>
+        </div>
+      </section>
+
+      <!-- ── ABOUT EDITOR ── -->
+      <section class="section-panel" id="sec-about">
+        <div class="section-hdr">
+          <div class="section-hdr-left">
+            <div class="section-tag">// content editor</div>
+            <h2>About Section</h2>
+          </div>
+          <div class="actions">
+            <button class="tb-btn accent" onclick="saveAbout()">save about →</button>
+          </div>
+        </div>
+
+        <div class="edit-block">
+          <div class="edit-block-title">bio paragraphs</div>
+          <div class="editable-list" id="aboutParas"></div>
+          <button class="add-row-btn" onclick="addAboutPara()">+ add paragraph</button>
+        </div>
+
+        <div class="edit-block">
+          <div class="edit-block-title">stats counters</div>
+          <div class="form-grid" id="aboutStats"></div>
+        </div>
+
+        <div class="edit-block">
+          <div class="edit-block-title">terminal card — profile data</div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label>role label</label>
+              <input type="text" id="terminalRole" placeholder='DevOps &amp; Cloud Student' />
+            </div>
+            <div class="form-row">
+              <label>location</label>
+              <input type="text" id="terminalLocation" placeholder='India 🇮🇳' />
+            </div>
+            <div class="form-row">
+              <label>availability status</label>
+              <input type="text" id="terminalAvail" placeholder='✓ Open to opportunities' />
+            </div>
+            <div class="form-row">
+              <label>open_to[] (comma-separated)</label>
+              <input type="text" id="terminalOpenTo" placeholder='internships, collaborations, open_source' />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── TECH STACK ── -->
+      <section class="section-panel" id="sec-stack">
+        <div class="section-hdr">
+          <div class="section-hdr-left">
+            <div class="section-tag">// content editor</div>
+            <h2>Tech Stack</h2>
+          </div>
+          <div class="actions">
+            <button class="tb-btn" onclick="addStackCategory()">+ add category</button>
+            <button class="tb-btn accent" onclick="saveStack()">save stack →</button>
+          </div>
+        </div>
+        <div id="stackEditor"></div>
+      </section>
+
+      <!-- ── PROJECTS ── -->
+      <section class="section-panel" id="sec-projects">
+        <div class="section-hdr">
+          <div class="section-hdr-left">
+            <div class="section-tag">// project manager</div>
+            <h2>Projects</h2>
+          </div>
+          <div class="actions">
+            <button class="tb-btn accent" onclick="openProjectModal()">+ new project</button>
+          </div>
+        </div>
+        <div class="item-grid" id="projectsGrid">
+          <!-- JS rendered -->
+        </div>
+      </section>
+
+      <!-- ── BLOGS ── -->
+      <section class="section-panel" id="sec-blogs">
+        <div class="section-hdr">
+          <div class="section-hdr-left">
+            <div class="section-tag">// blog manager</div>
+            <h2>Blog Posts</h2>
+          </div>
+          <div class="actions">
+            <button class="tb-btn accent" onclick="openBlogModal()">+ new post</button>
+          </div>
+        </div>
+        <div style="background:var(--surface);border:1px solid rgba(91,155,255,.2);border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:.78rem;color:var(--blue);font-family:var(--ff-mono);">
+          ℹ Blog metadata is saved to localStorage. To persist permanently, copy the JSON below to <code style="color:var(--accent)">content/blogs.json</code> in your repo.
+        </div>
+        <div class="list-items" id="blogsListAdmin">
+          <!-- JS rendered -->
+        </div>
+      </section>
+
+      <!-- ── SETTINGS ── -->
+      <section class="section-panel" id="sec-settings">
+        <div class="section-hdr">
+          <div class="section-hdr-left">
+            <div class="section-tag">// configuration</div>
+            <h2>Settings</h2>
+          </div>
+          <div class="actions">
+            <button class="tb-btn accent" onclick="saveSettings()">save settings →</button>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-title">site identity</div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label>site title</label>
+              <input type="text" id="siteTitle" placeholder="hashwithharsh" />
+            </div>
+            <div class="form-row">
+              <label>your name</label>
+              <input type="text" id="ownerName" placeholder="Harsh Yadav" />
+            </div>
+            <div class="form-row">
+              <label>tagline</label>
+              <input type="text" id="tagline" placeholder="DevOps & Cloud Engineering Student" />
+            </div>
+            <div class="form-row">
+              <label>site url</label>
+              <input type="text" id="siteUrl" placeholder="https://hashwithharsh.dev" />
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-title">social links</div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label>github url</label>
+              <input type="text" id="githubUrl" placeholder="https://github.com/harshyadav" />
+            </div>
+            <div class="form-row">
+              <label>linkedin url</label>
+              <input type="text" id="linkedinUrl" placeholder="https://linkedin.com/in/harshyadav" />
+            </div>
+            <div class="form-row">
+              <label>email</label>
+              <input type="text" id="contactEmail" placeholder="harsh@hashwithharsh.dev" />
+            </div>
+            <div class="form-row">
+              <label>twitter / x (optional)</label>
+              <input type="text" id="twitterUrl" placeholder="https://twitter.com/harshyadav" />
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-title">admin access</div>
+          <div class="form-grid">
+            <div class="form-row">
+              <label>admin api url</label>
+              <input type="text" id="adminApiUrl" placeholder="https://hashwithharsh-api.vercel.app/api/admin-auth" />
+              <div class="form-hint">Your Vercel serverless function URL</div>
+            </div>
+          </div>
+          <div style="margin-top:16px;">
+            <button class="tb-btn danger" onclick="clearAllData()">⚠ clear all local data</button>
+            <span style="font-size:.75rem;color:var(--text-3);margin-left:12px;">This only clears localStorage overrides — original JSON files remain untouched.</span>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-title">export / import</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="tb-btn" onclick="exportData()">⬇ export all data (JSON)</button>
+            <button class="tb-btn" onclick="document.getElementById('importInput').click()">⬆ import data (JSON)</button>
+            <input type="file" id="importInput" accept=".json" style="display:none" onchange="importData(event)" />
+          </div>
+          <div style="margin-top:14px;font-size:.76rem;color:var(--text-3);line-height:1.6;">
+            Export saves all your admin-edited data as a JSON file. Import loads a previously exported backup.
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ═══ MODAL ═══ -->
+<div id="modalOverlay" onclick="handleModalBgClick(event)">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Edit</div>
+      <button class="modal-close" onclick="closeModal()">✕ close</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<!-- ═══ TOASTS ═══ -->
+<div id="toastContainer"></div>
+
+<!-- ═══════════════════════════════════════════
+     ADMIN JAVASCRIPT
+═══════════════════════════════════════════ -->
+<script>
+/* ─── Constants ─────────────────────────── */
+const SESSION_KEY  = 'hwh_admin_session';
+const AUTH_API     = localStorage.getItem('hwh_settings')
+  ? (JSON.parse(localStorage.getItem('hwh_settings')).adminApiUrl || 'https://hashwithharsh-api.vercel.app/api/admin-auth')
+  : 'https://hashwithharsh-api.vercel.app/api/admin-auth';
+
+const KEYS = {
+  session:  'hwh_admin_session',
+  hero:     'hwh_hero',
+  about:    'hwh_about',
+  stack:    'hwh_stack',
+  projects: 'hwh_projects',
+  blogs:    'hwh_blogs',
+  settings: 'hwh_settings',
+};
+
+/* ─── State ──────────────────────────────── */
+let state = {
+  hero:     null,
+  about:    null,
+  stack:    null,
+  projects: [],
+  blogs:    [],
+  settings: {},
+};
+
+/* ─── Defaults ───────────────────────────── */
+const DEFAULTS = {
+  hero: {
+    name: 'HARSH YADAV',
+    status: 'currently tinkering with Terraform & AWS',
+    description: "DevOps & Cloud Engineering student obsessed with infrastructure, pipelines, and the art of breaking things to understand them better. I document everything — for you and for future me.",
+    cta1Text: 'view projects ↓',
+    cta1Href: '#projects',
+    cta2Text: 'read the blog →',
+    cta2Href: 'blog.html',
+    phrases: [
+      'whoami --devops-student',
+      'kubectl get pods --all',
+      'terraform apply --auto-approve',
+      'docker build -t hashwithharsh .',
+      'cat /etc/passion | grep cloud',
+      'git push origin main  # ship it',
+    ],
+  },
+  about: {
+    paragraphs: [
+      "I'm a self-driven DevOps and Cloud Engineering student who believes the fastest way to learn infrastructure is to build something real, watch it fail spectacularly, and reverse-engineer why.",
+      "hashwithharsh started as a place to dump my notes. It became something I'm proud of.",
+      "Right now I'm deep in AWS, Kubernetes, Terraform, and GitHub Actions. If it can be automated, I'm automating it.",
+    ],
+    stats: [
+      { label: 'projects built',       value: 12 },
+      { label: 'blog posts',           value: 24 },
+      { label: 'cloud certifications', value: 6  },
+      { label: 'days of daily learning', value: 365 },
+    ],
+    terminal: {
+      role:     'DevOps & Cloud Student',
+      location: 'India 🇮🇳',
+      avail:    '✓ Open to opportunities',
+      openTo:   'internships, collaborations, open_source',
+    },
+  },
+  stack: [
+    { category: 'containers & orchestration', items: ['Docker','Kubernetes','Helm','containerd'] },
+    { category: 'cloud platforms',            items: ['AWS','EC2','S3','Lambda','EKS','CloudFormation'] },
+    { category: 'infrastructure as code',     items: ['Terraform','Ansible','Packer'] },
+    { category: 'ci / cd',                    items: ['GitHub Actions','Jenkins','ArgoCD','GitLab CI'] },
+    { category: 'monitoring & observability', items: ['Prometheus','Grafana','Loki','Alertmanager'] },
+    { category: 'os & scripting',             items: ['Linux','Bash','Python','YAML','Git'] },
+  ],
+  settings: {
+    siteTitle:   'hashwithharsh',
+    ownerName:   'Harsh Yadav',
+    tagline:     'DevOps & Cloud Engineering Student',
+    siteUrl:     'https://hashwithharsh.dev',
+    githubUrl:   'https://github.com/harshyadav',
+    linkedinUrl: 'https://linkedin.com/in/harshyadav',
+    contactEmail:'harsh@hashwithharsh.dev',
+    twitterUrl:  '',
+    adminApiUrl: 'https://hashwithharsh-api.vercel.app/api/admin-auth',
+  },
+};
+
+/* ────────────────────────────────────────────
+   AUTH
+──────────────────────────────────────────── */
+function getSession() {
+  try { return JSON.parse(localStorage.getItem(KEYS.session)); } catch { return null; }
+}
+function isAuthed() {
+  const s = getSession();
+  return s && s.expiry > Date.now();
+}
+function doLogout() {
+  if (!confirm('Log out of admin panel?')) return;
+  localStorage.removeItem(KEYS.session);
+  window.location.href = 'index.html';
+}
+
+async function doLogin(password) {
+  const apiUrl = (JSON.parse(localStorage.getItem(KEYS.settings) || '{}').adminApiUrl)
+    || 'https://hashwithharsh-api.vercel.app/api/admin-auth';
+
+  const res  = await fetch(apiUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password, action: 'login' }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Login failed');
+  return data;
+}
+
+/* ────────────────────────────────────────────
+   INIT
+──────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', async () => {
+  // Check auth
+  if (isAuthed()) {
+    bootAdminPanel();
+  } else {
+    // Show login form
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('loginPw').focus();
+
+    document.getElementById('loginPw').addEventListener('keydown', e => {
+      if (e.key === 'Enter') loginSubmit();
+    });
+    document.getElementById('loginBtn').addEventListener('click', loginSubmit);
+  }
+});
+
+async function loginSubmit() {
+  const pw   = document.getElementById('loginPw').value.trim();
+  const btn  = document.getElementById('loginBtn');
+  const err  = document.getElementById('loginErr');
+
+  if (!pw) { document.getElementById('loginPw').focus(); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> verifying...';
+  err.className = 'login-error';
+
+  try {
+    const data = await doLogin(pw);
+    localStorage.setItem(KEYS.session, JSON.stringify({ token: data.token, expiry: data.expiry }));
+    btn.innerHTML = '✓ authenticated!';
+    setTimeout(bootAdminPanel, 500);
+  } catch (e) {
+    err.textContent = '⚠ ' + (e.message || 'Invalid password');
+    err.className = 'login-error show';
+    btn.disabled = false;
+    btn.innerHTML = 'authenticate →';
+    document.getElementById('loginPw').value = '';
+    document.getElementById('loginPw').focus();
+  }
+}
+
+function bootAdminPanel() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminShell').classList.add('show');
+  loadAllData();
+  renderDashboard();
+  updateSessionInfo();
+}
+
+/* ────────────────────────────────────────────
+   DATA MANAGEMENT
+──────────────────────────────────────────── */
+function loadAllData() {
+  state.hero     = JSON.parse(localStorage.getItem(KEYS.hero))     || { ...DEFAULTS.hero };
+  state.about    = JSON.parse(localStorage.getItem(KEYS.about))    || { ...DEFAULTS.about };
+  state.stack    = JSON.parse(localStorage.getItem(KEYS.stack))    || [...DEFAULTS.stack];
+  state.settings = JSON.parse(localStorage.getItem(KEYS.settings)) || { ...DEFAULTS.settings };
+
+  // Projects — try localStorage first, then fetch from JSON
+  const cachedProjects = localStorage.getItem(KEYS.projects);
+  if (cachedProjects) {
+    state.projects = JSON.parse(cachedProjects);
+    updateBadges();
+    renderProjects();
+  } else {
+    fetch('/content/projects.json')
+      .then(r => r.ok ? r.json() : [])
+      .then(data => { state.projects = data; updateBadges(); renderProjects(); })
+      .catch(() => { state.projects = []; updateBadges(); });
+  }
+
+  // Blogs — try localStorage first, then fetch from JSON
+  const cachedBlogs = localStorage.getItem(KEYS.blogs);
+  if (cachedBlogs) {
+    state.blogs = JSON.parse(cachedBlogs);
+    updateBadges();
+    renderBlogs();
+  } else {
+    fetch('/content/blogs.json')
+      .then(r => r.ok ? r.json() : [])
+      .then(data => { state.blogs = data; updateBadges(); renderBlogs(); })
+      .catch(() => { state.blogs = []; updateBadges(); });
+  }
+
+  // Populate forms
+  populateHeroForm();
+  populateAboutForm();
+  populateStackEditor();
+  populateSettingsForm();
+}
+
+function saveToLS(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+function saveAllData() {
+  saveToLS(KEYS.hero,     state.hero);
+  saveToLS(KEYS.about,    state.about);
+  saveToLS(KEYS.stack,    state.stack);
+  saveToLS(KEYS.projects, state.projects);
+  saveToLS(KEYS.blogs,    state.blogs);
+  saveToLS(KEYS.settings, state.settings);
+  toast('All data saved to localStorage ✓', 'success');
+  logChange('Saved all data');
+}
+
+function updateBadges() {
+  const pb = document.getElementById('projectsBadge');
+  const bb = document.getElementById('blogsBadge');
+  if (pb) pb.textContent = state.projects.length;
+  if (bb) bb.textContent = state.blogs.length;
+}
+
+/* ────────────────────────────────────────────
+   EXPORT / IMPORT
+──────────────────────────────────────────── */
+function exportData() {
+  const data = {
+    exported: new Date().toISOString(),
+    hero:     state.hero,
+    about:    state.about,
+    stack:    state.stack,
+    projects: state.projects,
+    blogs:    state.blogs,
+    settings: state.settings,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `hashwithharsh-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Data exported successfully', 'success');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.hero)     { state.hero     = data.hero;     saveToLS(KEYS.hero, data.hero); }
+      if (data.about)    { state.about    = data.about;    saveToLS(KEYS.about, data.about); }
+      if (data.stack)    { state.stack    = data.stack;    saveToLS(KEYS.stack, data.stack); }
+      if (data.projects) { state.projects = data.projects; saveToLS(KEYS.projects, data.projects); }
+      if (data.blogs)    { state.blogs    = data.blogs;    saveToLS(KEYS.blogs, data.blogs); }
+      if (data.settings) { state.settings = data.settings; saveToLS(KEYS.settings, data.settings); }
+      loadAllData();
+      renderDashboard();
+      toast('Data imported successfully', 'success');
+    } catch {
+      toast('Import failed — invalid JSON file', 'error');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function clearAllData() {
+  if (!confirm('Clear all locally stored admin data? This cannot be undone.')) return;
+  Object.values(KEYS).forEach(k => { if (k !== KEYS.session) localStorage.removeItem(k); });
+  loadAllData();
+  renderDashboard();
+  toast('Local data cleared', 'warning');
+}
+
+/* ────────────────────────────────────────────
+   NAVIGATION
+──────────────────────────────────────────── */
+function showSection(id, el) {
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const panel = document.getElementById('sec-' + id);
+  if (panel) panel.classList.add('active');
+  if (el) el.classList.add('active');
+
+  // Refresh dynamic sections
+  if (id === 'dashboard') renderDashboard();
+  if (id === 'projects')  renderProjects();
+  if (id === 'blogs')     renderBlogs();
+  if (id === 'stack')     populateStackEditor();
+}
+
+/* ────────────────────────────────────────────
+   DASHBOARD
+──────────────────────────────────────────── */
+function renderDashboard() {
+  const grid = document.getElementById('statsGrid');
+  if (!grid) return;
+
+  const session = getSession();
+  const expiresIn = session ? Math.round((session.expiry - Date.now()) / 3600000) : 0;
+
+  grid.innerHTML = `
+    <div class="stat-card">
+      <span class="stat-card-icon">◧</span>
+      <div class="stat-card-val accent">${state.projects.length}</div>
+      <div class="stat-card-lbl">total projects</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-icon">≡</span>
+      <div class="stat-card-val accent">${state.blogs.length}</div>
+      <div class="stat-card-lbl">blog posts</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-icon">◉</span>
+      <div class="stat-card-val">${state.projects.filter(p=>p.pinned).length}</div>
+      <div class="stat-card-lbl">pinned projects</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-icon">⏱</span>
+      <div class="stat-card-val">${expiresIn}h</div>
+      <div class="stat-card-lbl">session expires in</div>
+    </div>
+  `;
+  updateBadges();
+}
+
+const changeLog = [];
+function logChange(msg) {
+  changeLog.unshift({ msg, time: new Date().toLocaleTimeString() });
+  if (changeLog.length > 10) changeLog.pop();
+  const el = document.getElementById('recentChanges');
+  if (!el) return;
+  el.innerHTML = changeLog.map(c => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:.79rem;color:var(--text-2);">${c.msg}</span>
+      <span style="font-family:var(--ff-mono);font-size:.66rem;color:var(--text-3);">${c.time}</span>
+    </div>
+  `).join('') || '<div style="font-size:.8rem;color:var(--text-3);font-family:var(--ff-mono);">// no changes yet</div>';
+}
+
+function updateSessionInfo() {
+  const s = getSession();
+  const el = document.getElementById('sessionInfo');
+  if (!el || !s) return;
+  const h = Math.round((s.expiry - Date.now()) / 3600000);
+  el.textContent = `expires in ${h}h`;
+}
+
+/* ────────────────────────────────────────────
+   HERO SECTION
+──────────────────────────────────────────── */
+function populateHeroForm() {
+  const h = state.hero;
+  document.getElementById('heroName').value    = h.name    || '';
+  document.getElementById('heroStatus').value  = h.status  || '';
+  document.getElementById('heroDesc').value    = h.description || '';
+  document.getElementById('heroCta1Text').value = h.cta1Text || '';
+  document.getElementById('heroCta1Href').value = h.cta1Href || '';
+  document.getElementById('heroCta2Text').value = h.cta2Text || '';
+  document.getElementById('heroCta2Href').value = h.cta2Href || '';
+  renderTypewriterList();
+}
+
+function renderTypewriterList() {
+  const container = document.getElementById('typewriterList');
+  const phrases   = state.hero.phrases || [];
+  container.innerHTML = phrases.map((ph, i) => `
+    <div class="editable-item">
+      <input type="text" value="${escHtml(ph)}" onchange="state.hero.phrases[${i}] = this.value" placeholder="command phrase..." />
+      <button class="del-row-btn" onclick="removeTypewriterPhrase(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function addTypewriterPhrase() {
+  state.hero.phrases = state.hero.phrases || [];
+  state.hero.phrases.push('');
+  renderTypewriterList();
+  const inputs = document.querySelectorAll('#typewriterList input');
+  inputs[inputs.length - 1]?.focus();
+}
+
+function removeTypewriterPhrase(i) {
+  state.hero.phrases.splice(i, 1);
+  renderTypewriterList();
+}
+
+function saveHero() {
+  state.hero = {
+    ...state.hero,
+    name:        document.getElementById('heroName').value,
+    status:      document.getElementById('heroStatus').value,
+    description: document.getElementById('heroDesc').value,
+    cta1Text:    document.getElementById('heroCta1Text').value,
+    cta1Href:    document.getElementById('heroCta1Href').value,
+    cta2Text:    document.getElementById('heroCta2Text').value,
+    cta2Href:    document.getElementById('heroCta2Href').value,
+    phrases: Array.from(document.querySelectorAll('#typewriterList input')).map(i => i.value).filter(Boolean),
+  };
+  saveToLS(KEYS.hero, state.hero);
+  toast('Hero section saved ✓', 'success');
+  logChange('Updated hero section');
+}
+
+/* ────────────────────────────────────────────
+   ABOUT SECTION
+──────────────────────────────────────────── */
+function populateAboutForm() {
+  const a = state.about;
+  renderAboutParas();
+  renderAboutStats();
+  const t = a.terminal || {};
+  document.getElementById('terminalRole').value     = t.role     || '';
+  document.getElementById('terminalLocation').value = t.location || '';
+  document.getElementById('terminalAvail').value    = t.avail    || '';
+  document.getElementById('terminalOpenTo').value   = t.openTo   || '';
+}
+
+function renderAboutParas() {
+  const container = document.getElementById('aboutParas');
+  const paras = state.about.paragraphs || [];
+  container.innerHTML = paras.map((p, i) => `
+    <div class="editable-item">
+      <textarea rows="2" style="flex:1;background:var(--surface-3);border:1px solid var(--border-2);border-radius:4px;padding:8px;color:var(--text);font-size:.82rem;outline:none;resize:vertical;" onchange="state.about.paragraphs[${i}] = this.value">${escHtml(p)}</textarea>
+      <button class="del-row-btn" onclick="removeAboutPara(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function addAboutPara() {
+  state.about.paragraphs = state.about.paragraphs || [];
+  state.about.paragraphs.push('');
+  renderAboutParas();
+}
+
+function removeAboutPara(i) {
+  state.about.paragraphs.splice(i, 1);
+  renderAboutParas();
+}
+
+function renderAboutStats() {
+  const container = document.getElementById('aboutStats');
+  const stats = state.about.stats || [];
+  container.innerHTML = stats.map((s, i) => `
+    <div class="form-row" style="grid-column: auto;">
+      <label>${escHtml(s.label)}</label>
+      <input type="number" value="${s.value}" onchange="state.about.stats[${i}].value = parseInt(this.value)" />
+    </div>
+  `).join('');
+}
+
+function saveAbout() {
+  state.about = {
+    paragraphs: Array.from(document.querySelectorAll('#aboutParas textarea')).map(t => t.value).filter(Boolean),
+    stats: state.about.stats,
+    terminal: {
+      role:     document.getElementById('terminalRole').value,
+      location: document.getElementById('terminalLocation').value,
+      avail:    document.getElementById('terminalAvail').value,
+      openTo:   document.getElementById('terminalOpenTo').value,
+    },
+  };
+  // Re-read stat values
+  document.querySelectorAll('#aboutStats input').forEach((inp, i) => {
+    if (state.about.stats[i]) state.about.stats[i].value = parseInt(inp.value) || 0;
+  });
+  saveToLS(KEYS.about, state.about);
+  toast('About section saved ✓', 'success');
+  logChange('Updated about section');
+}
+
+/* ────────────────────────────────────────────
+   TECH STACK
+──────────────────────────────────────────── */
+function populateStackEditor() {
+  const container = document.getElementById('stackEditor');
+  const stack     = state.stack || [];
+  container.innerHTML = stack.map((cat, ci) => `
+    <div class="stack-cat" id="stack-cat-${ci}">
+      <div class="stack-cat-hdr">
+        <input type="text" value="${escHtml(cat.category)}" placeholder="category name"
+               onchange="state.stack[${ci}].category = this.value" />
+        <button class="del-row-btn" onclick="removeStackCategory(${ci})" title="Remove category">✕</button>
+      </div>
+      <div class="stack-items-wrap" id="stack-items-${ci}">
+        ${(cat.items||[]).map((item, ii) => `
+          <span class="stack-chip">
+            ${escHtml(item)}
+            <button onclick="removeStackItem(${ci},${ii})" title="Remove">✕</button>
+          </span>
+        `).join('')}
+      </div>
+      <div class="stack-add-item">
+        <input type="text" id="stack-new-${ci}" placeholder="add item..." onkeydown="if(event.key==='Enter')addStackItem(${ci})" />
+        <button onclick="addStackItem(${ci})">+ add</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addStackCategory() {
+  state.stack.push({ category: 'new category', items: [] });
+  populateStackEditor();
+  toast('Category added', 'info');
+}
+
+function removeStackCategory(ci) {
+  if (!confirm('Remove this category and all its items?')) return;
+  state.stack.splice(ci, 1);
+  populateStackEditor();
+}
+
+function addStackItem(ci) {
+  const inp = document.getElementById(`stack-new-${ci}`);
+  const val = inp?.value?.trim();
+  if (!val) return;
+  state.stack[ci].items = state.stack[ci].items || [];
+  state.stack[ci].items.push(val);
+  inp.value = '';
+  populateStackEditor();
+}
+
+function removeStackItem(ci, ii) {
+  state.stack[ci].items.splice(ii, 1);
+  populateStackEditor();
+}
+
+function saveStack() {
+  // Sync category names from inputs before saving
+  document.querySelectorAll('.stack-cat-hdr input').forEach((inp, i) => {
+    if (state.stack[i]) state.stack[i].category = inp.value;
+  });
+  saveToLS(KEYS.stack, state.stack);
+  toast('Tech stack saved ✓', 'success');
+  logChange('Updated tech stack');
+}
+
+/* ────────────────────────────────────────────
+   PROJECTS
+──────────────────────────────────────────── */
+function renderProjects() {
+  const grid = document.getElementById('projectsGrid');
+  if (!grid) return;
+
+  if (!state.projects.length) {
+    grid.innerHTML = `
+      <div class="empty-state" style="grid-column:1/-1">
+        <span class="icon">◧</span>
+        <p>No projects yet. Add your first project to get started.</p>
+        <button class="tb-btn accent" onclick="openProjectModal()">+ add project</button>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = state.projects.map((p, i) => `
+    <div class="item-card ${p.pinned ? 'pinned' : ''}" id="proj-${i}">
+      <div class="item-card-top">
+        <span class="item-card-year">${p.year || '2025'}</span>
+        <span class="item-card-status ${p.status || 'active'}">${statusLabel(p.status)}</span>
+      </div>
+      <h3>${escHtml(p.title)}</h3>
+      <p>${escHtml(p.description)}</p>
+      <div class="item-tags">${(p.tags||[]).map(t=>`<span class="item-tag">${escHtml(t)}</span>`).join('')}</div>
+      <div class="item-actions">
+        <button class="ia-btn edit" onclick="openProjectModal(${i})">✎ edit</button>
+        <button class="ia-btn pin ${p.pinned?'active':''}" onclick="toggleProjectPin(${i})">📌 ${p.pinned?'unpin':'pin'}</button>
+        <button class="ia-btn del" onclick="deleteProject(${i})">✕ delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openProjectModal(i) {
+  const isEdit = typeof i === 'number';
+  const p = isEdit ? { ...state.projects[i] } : {
+    title: '', description: '', tags: [], github: '', demo: '',
+    featured: false, pinned: false, status: 'active', year: String(new Date().getFullYear()),
+  };
+
+  document.getElementById('modalTitle').textContent = isEdit ? 'Edit Project' : 'Add New Project';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="form-grid">
+      <div class="form-row" style="grid-column:1/-1">
+        <label>project title *</label>
+        <input type="text" id="mp-title" value="${escHtml(p.title)}" placeholder="K8s Monitoring Stack" />
+      </div>
+      <div class="form-row" style="grid-column:1/-1">
+        <label>description *</label>
+        <textarea id="mp-desc" rows="3">${escHtml(p.description)}</textarea>
+      </div>
+      <div class="form-row">
+        <label>github url</label>
+        <input type="text" id="mp-github" value="${escHtml(p.github||'')}" placeholder="https://github.com/..." />
+      </div>
+      <div class="form-row">
+        <label>live demo url</label>
+        <input type="text" id="mp-demo" value="${escHtml(p.demo||'')}" placeholder="https://..." />
+      </div>
+      <div class="form-row">
+        <label>year</label>
+        <input type="text" id="mp-year" value="${escHtml(p.year||'')}" placeholder="2025" />
+      </div>
+      <div class="form-row">
+        <label>status</label>
+        <select id="mp-status">
+          <option value="active"   ${p.status==='active'  ?'selected':''}>active</option>
+          <option value="wip"      ${p.status==='wip'     ?'selected':''}>in progress (wip)</option>
+          <option value="archived" ${p.status==='archived'?'selected':''}>archived</option>
+        </select>
+      </div>
+      <div class="form-row" style="grid-column:1/-1">
+        <label>tags (press Enter or comma to add)</label>
+        <div class="tags-editor" id="mp-tags-editor" onclick="document.getElementById('mp-tag-input').focus()">
+          ${(p.tags||[]).map(t=>`<span class="tag-chip">${escHtml(t)}<button onclick="removeProjectTag(this,'${escHtml(t)}')" type="button">✕</button></span>`).join('')}
+          <input type="text" id="mp-tag-input" placeholder="docker, kubernetes..." onkeydown="handleProjectTagInput(event)" />
+        </div>
+      </div>
+      <div class="form-row">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:.82rem;color:var(--text-2);">
+          <input type="checkbox" id="mp-featured" ${p.featured?'checked':''} style="accent-color:var(--accent);" />
+          Featured on homepage (shows in projects grid)
+        </label>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('modalFooter').innerHTML = `
+    <button class="tb-btn" onclick="closeModal()">cancel</button>
+    <button class="tb-btn accent" onclick="saveProject(${isEdit ? i : 'null'})">
+      ${isEdit ? '✓ update project' : '+ add project'}
+    </button>
+  `;
+
+  openModal();
+}
+
+function handleProjectTagInput(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const inp = document.getElementById('mp-tag-input');
+    const val = inp.value.trim().replace(/,$/, '');
+    if (!val) return;
+    const editor = document.getElementById('mp-tags-editor');
+    const chip = document.createElement('span');
+    chip.className = 'tag-chip';
+    chip.innerHTML = `${escHtml(val)}<button onclick="removeProjectTag(this,'${escHtml(val)}')" type="button">✕</button>`;
+    editor.insertBefore(chip, inp);
+    inp.value = '';
+  }
+}
+
+function removeProjectTag(btn, tag) {
+  btn.parentElement.remove();
+}
+
+function getProjectTags() {
+  return Array.from(document.querySelectorAll('#mp-tags-editor .tag-chip'))
+    .map(c => c.textContent.replace('✕', '').trim())
+    .filter(Boolean);
+}
+
+function saveProject(idx) {
+  const title = document.getElementById('mp-title').value.trim();
+  const desc  = document.getElementById('mp-desc').value.trim();
+  if (!title || !desc) { toast('Title and description are required', 'error'); return; }
+
+  const proj = {
+    id:          title.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'') + '-' + Date.now(),
+    title,
+    description: desc,
+    github:      document.getElementById('mp-github').value.trim() || null,
+    demo:        document.getElementById('mp-demo').value.trim()   || null,
+    year:        document.getElementById('mp-year').value.trim()   || String(new Date().getFullYear()),
+    status:      document.getElementById('mp-status').value,
+    tags:        getProjectTags(),
+    featured:    document.getElementById('mp-featured').checked,
+    pinned:      idx !== null ? (state.projects[idx]?.pinned || false) : false,
+  };
+
+  if (idx !== null && idx !== undefined) {
+    state.projects[idx] = { ...state.projects[idx], ...proj };
+    toast('Project updated ✓', 'success');
+    logChange(`Updated project: ${proj.title}`);
+  } else {
+    state.projects.unshift(proj);
+    toast('Project added ✓', 'success');
+    logChange(`Added project: ${proj.title}`);
+  }
+
+  saveToLS(KEYS.projects, state.projects);
+  updateBadges();
+  closeModal();
+  renderProjects();
+}
+
+function deleteProject(i) {
+  const p = state.projects[i];
+  if (!confirm(`Delete project "${p.title}"? This cannot be undone.`)) return;
+  state.projects.splice(i, 1);
+  saveToLS(KEYS.projects, state.projects);
+  updateBadges();
+  renderProjects();
+  toast('Project deleted', 'warning');
+  logChange(`Deleted project: ${p.title}`);
+}
+
+function toggleProjectPin(i) {
+  state.projects[i].pinned = !state.projects[i].pinned;
+  saveToLS(KEYS.projects, state.projects);
+  renderProjects();
+  toast(state.projects[i].pinned ? 'Project pinned ✓' : 'Project unpinned', 'info');
+}
+
+function statusLabel(s) {
+  return s === 'wip' ? 'in progress' : s === 'archived' ? 'archived' : 'active';
+}
+
+/* ────────────────────────────────────────────
+   BLOGS
+──────────────────────────────────────────── */
+function renderBlogs() {
+  const list = document.getElementById('blogsListAdmin');
+  if (!list) return;
+
+  if (!state.blogs.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <span class="icon">≡</span>
+        <p>No blog posts yet. Add your first post to get started.</p>
+        <button class="tb-btn accent" onclick="openBlogModal()">+ add post</button>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = state.blogs.map((b, i) => `
+    <div class="list-item ${b.pinned?'pinned':''}">
+      <div class="li-meta">
+        <div class="li-title">${escHtml(b.title)}</div>
+        <div class="li-sub">${b.slug} · ${b.date} · ${b.readTime || ''}</div>
+        <div class="li-tags">${(b.tags||[]).map(t=>`<span class="item-tag">${escHtml(t)}</span>`).join('')}</div>
+      </div>
+      <div class="li-actions">
+        <button class="ia-btn edit" onclick="openBlogModal(${i})">✎</button>
+        <button class="ia-btn pin ${b.pinned?'active':''}" onclick="toggleBlogPin(${i})" title="${b.pinned?'Unpin':'Pin'}">📌</button>
+        <button class="ia-btn del" onclick="deleteBlog(${i})">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openBlogModal(i) {
+  const isEdit = typeof i === 'number';
+  const b = isEdit ? { ...state.blogs[i] } : {
+    slug: '', title: '', date: new Date().toISOString().slice(0,10),
+    tags: [], excerpt: '', readTime: '5 min read', pinned: false,
+  };
+
+  document.getElementById('modalTitle').textContent = isEdit ? 'Edit Blog Post' : 'Add Blog Post';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="form-grid single">
+      <div class="form-row">
+        <label>title *</label>
+        <input type="text" id="mb-title" value="${escHtml(b.title)}" placeholder="Docker Networking Deep Dive"
+               oninput="autoSlug(this)" />
+      </div>
+      <div class="form-row">
+        <label>slug * (url identifier)</label>
+        <input type="text" id="mb-slug" value="${escHtml(b.slug)}" placeholder="docker-networking-deep-dive" />
+        <div class="form-hint">Used in URL: post.html?slug=your-slug — must match your .md filename in content/posts/</div>
+      </div>
+      <div class="form-row">
+        <label>excerpt (shown in blog list)</label>
+        <textarea id="mb-excerpt" rows="2">${escHtml(b.excerpt||'')}</textarea>
+      </div>
+      <div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="form-row">
+          <label>publish date</label>
+          <input type="date" id="mb-date" value="${b.date||''}" />
+        </div>
+        <div class="form-row">
+          <label>read time</label>
+          <input type="text" id="mb-readtime" value="${escHtml(b.readTime||'')}" placeholder="8 min read" />
+        </div>
+      </div>
+      <div class="form-row">
+        <label>tags (press Enter or comma to add)</label>
+        <div class="tags-editor" id="mb-tags-editor" onclick="document.getElementById('mb-tag-input').focus()">
+          ${(b.tags||[]).map(t=>`<span class="tag-chip">${escHtml(t)}<button onclick="this.parentElement.remove()" type="button">✕</button></span>`).join('')}
+          <input type="text" id="mb-tag-input" placeholder="docker, kubernetes..." onkeydown="handleBlogTagInput(event)" />
+        </div>
+      </div>
+      <div class="form-row">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:.82rem;color:var(--text-2);">
+          <input type="checkbox" id="mb-pinned" ${b.pinned?'checked':''} style="accent-color:var(--accent);" />
+          Pin this post (show at top of list)
+        </label>
+      </div>
+    </div>
+    <div style="background:rgba(91,155,255,.07);border:1px solid rgba(91,155,255,.2);border-radius:6px;padding:12px 14px;font-size:.76rem;color:var(--blue);font-family:var(--ff-mono);">
+      ℹ Remember to create <code style="color:var(--accent)">content/posts/${b.slug||'your-slug'}.md</code> in your repository.
+    </div>
+  `;
+
+  document.getElementById('modalFooter').innerHTML = `
+    <button class="tb-btn" onclick="closeModal()">cancel</button>
+    <button class="tb-btn accent" onclick="saveBlog(${isEdit ? i : 'null'})">
+      ${isEdit ? '✓ update post' : '+ add post'}
+    </button>
+  `;
+
+  openModal();
+}
+
+function autoSlug(inp) {
+  const slugEl = document.getElementById('mb-slug');
+  if (!slugEl || slugEl.dataset.manual) return;
+  slugEl.value = inp.value.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+}
+
+function handleBlogTagInput(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const inp = document.getElementById('mb-tag-input');
+    const val = inp.value.trim().replace(/,$/, '');
+    if (!val) return;
+    const editor = document.getElementById('mb-tags-editor');
+    const chip = document.createElement('span');
+    chip.className = 'tag-chip';
+    chip.innerHTML = `${escHtml(val)}<button onclick="this.parentElement.remove()" type="button">✕</button>`;
+    editor.insertBefore(chip, inp);
+    inp.value = '';
+  }
+}
+
+function getBlogTags() {
+  return Array.from(document.querySelectorAll('#mb-tags-editor .tag-chip'))
+    .map(c => c.textContent.replace('✕','').trim())
+    .filter(Boolean);
+}
+
+function saveBlog(idx) {
+  const title = document.getElementById('mb-title').value.trim();
+  const slug  = document.getElementById('mb-slug').value.trim();
+  if (!title || !slug) { toast('Title and slug are required', 'error'); return; }
+
+  const post = {
+    slug,
+    title,
+    date:     document.getElementById('mb-date').value     || new Date().toISOString().slice(0,10),
+    readTime: document.getElementById('mb-readtime').value || '5 min read',
+    excerpt:  document.getElementById('mb-excerpt').value  || '',
+    tags:     getBlogTags(),
+    pinned:   document.getElementById('mb-pinned').checked,
+  };
+
+  if (idx !== null && idx !== undefined) {
+    state.blogs[idx] = post;
+    toast('Blog post updated ✓', 'success');
+    logChange(`Updated blog: ${post.title}`);
+  } else {
+    state.blogs.unshift(post);
+    toast('Blog post added ✓', 'success');
+    logChange(`Added blog: ${post.title}`);
+  }
+
+  saveToLS(KEYS.blogs, state.blogs);
+  updateBadges();
+  closeModal();
+  renderBlogs();
+}
+
+function deleteBlog(i) {
+  const b = state.blogs[i];
+  if (!confirm(`Delete blog post "${b.title}"?`)) return;
+  state.blogs.splice(i, 1);
+  saveToLS(KEYS.blogs, state.blogs);
+  updateBadges();
+  renderBlogs();
+  toast('Post deleted', 'warning');
+  logChange(`Deleted blog: ${b.title}`);
+}
+
+function toggleBlogPin(i) {
+  state.blogs[i].pinned = !state.blogs[i].pinned;
+  saveToLS(KEYS.blogs, state.blogs);
+  renderBlogs();
+  toast(state.blogs[i].pinned ? 'Post pinned ✓' : 'Post unpinned', 'info');
+}
+
+/* ────────────────────────────────────────────
+   SETTINGS
+──────────────────────────────────────────── */
+function populateSettingsForm() {
+  const s = state.settings;
+  document.getElementById('siteTitle').value    = s.siteTitle    || '';
+  document.getElementById('ownerName').value    = s.ownerName    || '';
+  document.getElementById('tagline').value      = s.tagline      || '';
+  document.getElementById('siteUrl').value      = s.siteUrl      || '';
+  document.getElementById('githubUrl').value    = s.githubUrl    || '';
+  document.getElementById('linkedinUrl').value  = s.linkedinUrl  || '';
+  document.getElementById('contactEmail').value = s.contactEmail || '';
+  document.getElementById('twitterUrl').value   = s.twitterUrl   || '';
+  document.getElementById('adminApiUrl').value  = s.adminApiUrl  || '';
+}
+
+function saveSettings() {
+  state.settings = {
+    siteTitle:    document.getElementById('siteTitle').value.trim(),
+    ownerName:    document.getElementById('ownerName').value.trim(),
+    tagline:      document.getElementById('tagline').value.trim(),
+    siteUrl:      document.getElementById('siteUrl').value.trim(),
+    githubUrl:    document.getElementById('githubUrl').value.trim(),
+    linkedinUrl:  document.getElementById('linkedinUrl').value.trim(),
+    contactEmail: document.getElementById('contactEmail').value.trim(),
+    twitterUrl:   document.getElementById('twitterUrl').value.trim(),
+    adminApiUrl:  document.getElementById('adminApiUrl').value.trim(),
+  };
+  saveToLS(KEYS.settings, state.settings);
+  toast('Settings saved ✓', 'success');
+  logChange('Updated settings');
+}
+
+/* ────────────────────────────────────────────
+   MODAL
+──────────────────────────────────────────── */
+function openModal() {
+  document.getElementById('modalOverlay').classList.add('show');
+  document.addEventListener('keydown', handleModalKeydown);
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+  document.removeEventListener('keydown', handleModalKeydown);
+}
+function handleModalBgClick(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+function handleModalKeydown(e) {
+  if (e.key === 'Escape') closeModal();
+}
+
+/* ────────────────────────────────────────────
+   TOAST
+──────────────────────────────────────────── */
+function toast(msg, type = 'info') {
+  const icons = { success: '✓', error: '✕', warning: '⚠', info: 'ℹ' };
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span>${icons[type]||'ℹ'}</span> ${escHtml(msg)}`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => {
+    el.classList.add('out');
+    setTimeout(() => el.remove(), 200);
+  }, 3200);
+}
+
+/* ────────────────────────────────────────────
+   UTILITIES
+──────────────────────────────────────────── */
+function escHtml(str) {
+  return String(str || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Make slug input mark as manual once edited
+document.addEventListener('focusin', e => {
+  if (e.target.id === 'mb-slug') e.target.dataset.manual = '1';
+});
+
+// Global keyboard shortcut: Ctrl+S = save all
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+    e.preventDefault();
+    saveAllData();
+  }
+});
+</script>
+</body>
+</html>

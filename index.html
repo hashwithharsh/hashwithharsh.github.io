@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hashwithharsh — Harsh Yadav</title>
+  <meta name="description" content="Harsh Yadav — DevOps & Cloud Engineering Student. Building, breaking, and documenting systems." />
+  <meta property="og:title" content="hashwithharsh — Harsh Yadav" />
+  <meta property="og:description" content="DevOps & Cloud Engineering Student. Architecting systems. Breaking things. Learning loudly." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#070707" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="alternate" type="application/rss+xml" title="hashwithharsh RSS Feed" href="/feed.xml" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>#</text></svg>" />
+</head>
+<body>
+
+<!-- ── Navigation ── -->
+<nav id="nav">
+  <div class="container">
+    <a href="index.html" class="nav-logo"><span>#</span>hashwithharsh</a>
+    <ul class="nav-links">
+      <li><a href="#about">about</a></li>
+      <li><a href="#stack">stack</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="blog.html">blog</a></li>
+      <li><a href="uses.html">uses</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">say hello →</a>
+    <div class="nav-hamburger" id="menuBtn" aria-label="open menu">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <span class="mobile-close" id="closeMenu">✕ close</span>
+  <a href="#about"    onclick="closeMobileMenu()">about</a>
+  <a href="#stack"    onclick="closeMobileMenu()">stack</a>
+  <a href="#projects" onclick="closeMobileMenu()">projects</a>
+  <a href="blog.html">blog</a>
+  <a href="#contact"  onclick="closeMobileMenu()">contact</a>
+</div>
+
+<!-- ─────────────────────────────
+     HERO
+───────────────────────────── -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-status">
+      <div class="status-dot"></div>
+      <span>currently tinkering with Terraform &amp; AWS</span>
+    </div>
+
+    <h1 class="hero-name" id="heroName">
+      <span class="line1">HARSH</span><br>
+      <span class="line2">YADAV<span class="accent-char">.</span></span>
+    </h1>
+
+    <div class="hero-terminal">
+      <span class="terminal-prompt">~/hashwithharsh</span>
+      <span class="terminal-prompt" style="color:var(--text-3)"> $</span>
+      <span class="terminal-text" id="typewriter"></span>
+      <span class="cursor"></span>
+    </div>
+
+    <p class="hero-desc">
+      DevOps &amp; Cloud Engineering student obsessed with infrastructure, 
+      pipelines, and the art of breaking things to understand them better.
+      I document everything — for you and for future me.
+    </p>
+
+    <div class="hero-ctas">
+      <a href="#projects" class="btn btn-accent">view projects ↓</a>
+      <a href="blog.html" class="btn">read the blog →</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    scroll
+  </div>
+</section>
+
+<!-- ─────────────────────────────
+     ABOUT
+───────────────────────────── -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <span class="section-label">// about me</span>
+        <h2>I break things <em>on purpose</em>.<br>Then fix them. Then write about it.</h2>
+        <p>
+          I'm a self-driven DevOps and Cloud Engineering student who believes the fastest way to 
+          learn infrastructure is to build something real, watch it fail spectacularly, and reverse-engineer 
+          why. Every container I debug, every pipeline I write, every cluster I wrestle with — 
+          <strong>it becomes a blog post so the next person doesn't have to suffer the same way I did.</strong>
+        </p>
+        <p>
+          <strong>hashwithharsh</strong> started as a place to dump my notes. It became something I'm proud of. 
+          The name? It's a bash comment, an ID selector, a color code, and a tag — all in one character. 
+          That's what I like: things that do more than they look like.
+        </p>
+        <p>
+          Right now I'm deep in AWS, Kubernetes, Terraform, and GitHub Actions. If it can be automated, 
+          I'm automating it. If it runs in a container, I'm probably over-engineering it.
+        </p>
+
+        <div class="about-stats reveal reveal-delay-1">
+          <div class="stat-box">
+            <div class="stat-num" data-target="12"><span>0</span></div>
+            <div class="stat-label">projects built</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" data-target="24"><span>0</span></div>
+            <div class="stat-label">blog posts</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" data-target="6"><span>0</span></div>
+            <div class="stat-label">cloud certifications</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num" data-target="365"><span>0</span></div>
+            <div class="stat-label">days of daily learning</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-terminal reveal reveal-delay-2">
+        <div class="terminal-header">
+          <div class="terminal-dot t-red"></div>
+          <div class="terminal-dot t-yellow"></div>
+          <div class="terminal-dot t-green"></div>
+          <span class="terminal-title">harsh-yadav — whoami</span>
+        </div>
+        <div class="terminal-body">
+          <span class="t-prompt">~</span> <span class="t-cmd">cat ./profile.json</span>
+          <span class="t-br"></span>
+          {<br>
+          &nbsp;&nbsp;<span class="t-key">"name"</span>: <span class="t-val">"Harsh Yadav"</span>,<br>
+          &nbsp;&nbsp;<span class="t-key">"role"</span>: <span class="t-val">"DevOps &amp; Cloud Student"</span>,<br>
+          &nbsp;&nbsp;<span class="t-key">"location"</span>: <span class="t-val">"India 🇮🇳"</span>,<br>
+          &nbsp;&nbsp;<span class="t-key">"currently_learning"</span>: [<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"Terraform"</span>,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"Kubernetes"</span>,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"AWS Solutions"</span><br>
+          &nbsp;&nbsp;],<br>
+          &nbsp;&nbsp;<span class="t-key">"open_to"</span>: [<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"internships"</span>,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"collaborations"</span>,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"open_source"</span><br>
+          &nbsp;&nbsp;],<br>
+          &nbsp;&nbsp;<span class="t-key">"coffee_driven"</span>: <span class="t-val">true</span><br>
+          }<br>
+          <span class="t-br"></span>
+          <span class="t-prompt">~</span> <span class="t-cmd">echo $AVAILABILITY</span><br>
+          <span class="t-output" style="color:var(--accent)">✓ Open to opportunities</span><br>
+          <span class="t-br"></span>
+          <span class="t-comment"># reach out if you want to build something real</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────
+     STACK
+───────────────────────────── -->
+<section id="stack">
+  <div class="container">
+    <div class="stack-intro">
+      <div class="reveal">
+        <span class="section-label">// tech stack</span>
+        <h2>Tools I use<br>daily in the lab.</h2>
+      </div>
+    </div>
+
+    <div class="stack-grid reveal reveal-delay-1">
+      <div class="stack-category">
+        <div class="stack-cat-label">containers &amp; orchestration</div>
+        <div class="stack-items">
+          <span class="stack-tag">Docker</span>
+          <span class="stack-tag">Kubernetes</span>
+          <span class="stack-tag">Helm</span>
+          <span class="stack-tag">containerd</span>
+        </div>
+      </div>
+      <div class="stack-category">
+        <div class="stack-cat-label">cloud platforms</div>
+        <div class="stack-items">
+          <span class="stack-tag">AWS</span>
+          <span class="stack-tag">EC2</span>
+          <span class="stack-tag">S3</span>
+          <span class="stack-tag">Lambda</span>
+          <span class="stack-tag">EKS</span>
+          <span class="stack-tag">CloudFormation</span>
+        </div>
+      </div>
+      <div class="stack-category">
+        <div class="stack-cat-label">infrastructure as code</div>
+        <div class="stack-items">
+          <span class="stack-tag">Terraform</span>
+          <span class="stack-tag">Ansible</span>
+          <span class="stack-tag">Packer</span>
+        </div>
+      </div>
+      <div class="stack-category">
+        <div class="stack-cat-label">ci / cd</div>
+        <div class="stack-items">
+          <span class="stack-tag">GitHub Actions</span>
+          <span class="stack-tag">Jenkins</span>
+          <span class="stack-tag">ArgoCD</span>
+          <span class="stack-tag">GitLab CI</span>
+        </div>
+      </div>
+      <div class="stack-category">
+        <div class="stack-cat-label">monitoring &amp; observability</div>
+        <div class="stack-items">
+          <span class="stack-tag">Prometheus</span>
+          <span class="stack-tag">Grafana</span>
+          <span class="stack-tag">Loki</span>
+          <span class="stack-tag">Alertmanager</span>
+        </div>
+      </div>
+      <div class="stack-category">
+        <div class="stack-cat-label">os &amp; scripting</div>
+        <div class="stack-items">
+          <span class="stack-tag">Linux</span>
+          <span class="stack-tag">Bash</span>
+          <span class="stack-tag">Python</span>
+          <span class="stack-tag">YAML</span>
+          <span class="stack-tag">Git</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stack-ticker reveal">
+      <div class="ticker-track" id="ticker">
+        <!-- JS will populate -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────
+     PROJECTS
+───────────────────────────── -->
+<section id="projects">
+  <div class="container">
+    <div class="projects-header reveal">
+      <div>
+        <span class="section-label">// projects</span>
+        <h2>Things I've built<br>and broken.</h2>
+      </div>
+      <a href="projects.html" class="view-all">all projects</a>
+    </div>
+    <div class="projects-grid reveal reveal-delay-1" id="projectsGrid">
+      <div class="loading-state" style="grid-column:1/-1">
+        <div class="loading-spinner"></div>
+        <span>loading projects...</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────
+     BLOG
+───────────────────────────── -->
+<section id="blog">
+  <div class="container">
+    <div class="blog-header reveal">
+      <div>
+        <span class="section-label">// knowledge base</span>
+        <h2>Writing from the<br>trenches.</h2>
+      </div>
+      <a href="blog.html" class="view-all">all posts</a>
+    </div>
+    <div class="blog-list reveal reveal-delay-1" id="blogList">
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <span>loading posts...</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────
+     NOW
+───────────────────────────── -->
+<section id="now" style="border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-label">// /now</span>
+      <h2 style="font-size:clamp(2rem,3.5vw,2.6rem); margin-bottom:48px;">What I'm doing<br>right now.</h2>
+    </div>
+    <div style="
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1px;
+      background:var(--border);
+      border:1px solid var(--border);
+      border-radius:10px;
+      overflow:hidden;
+    " class="reveal reveal-delay-1">
+
+      <div style="background:var(--bg); padding:32px;">
+        <div style="font-family:var(--ff-mono); font-size:.68rem; color:var(--accent); letter-spacing:.1em; text-transform:uppercase; margin-bottom:20px;">// studying</div>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:14px;">
+          <li style="display:flex; align-items:flex-start; gap:10px; font-size:.9rem; color:var(--text-2); font-weight:300;">
+            <span style="color:var(--accent); margin-top:2px; flex-shrink:0;">→</span>
+            AWS Solutions Architect — working through SAA-C03 prep
+          </li>
+          <li style="display:flex; align-items:flex-start; gap:10px; font-size:.9rem; color:var(--text-2); font-weight:300;">
+            <span style="color:var(--accent); margin-top:2px; flex-shrink:0;">→</span>
+            Kubernetes CKA exam content — networking + troubleshooting
+          </li>
+          <li style="display:flex; align-items:flex-start; gap:10px; font-size:.9rem; color:var(--text-2); font-weight:300;">
+            <span style="color:var(--accent); margin-top:2px; flex-shrink:0;">→</span>
+            GitOps with ArgoCD — following the official guide + experimenting
+          </li>
+        </ul>
+      </div>
+
+      <div style="background:var(--bg); padding:32px;">
+        <div style="font-family:var(--ff-mono); font-size:.68rem; color:var(--accent); letter-spacing:.1em; text-transform:uppercase; margin-bottom:20px;">// building</div>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:14px;">
+          <li style="display:flex; align-items:flex-start; gap:10px; font-size:.9rem; color:var(--text-2); font-weight:300;">
+            <span style="color:var(--accent); margin-top:2px; flex-shrink:0;">→</span>
+            Homelab Kubernetes cluster on old laptops using k3s
+          </li>
+          <li style="display:flex; align-items:flex-start; gap:10px; font-size:.9rem; color:var(--text-2); font-weight:300;">
+            <span style="color:var(--accent); margin-top:2px; flex-shrink:0;">→</span>
+            Full observability stack — Prometheus, Grafana, Loki, Alertmanager
+          </li>
+          <li style="display:flex; align-items:flex-start; gap:10px; font-size:.9rem; color:var(--text-2); font-weight:300;">
+            <span style="color:var(--accent); margin-top:2px; flex-shrink:0;">→</span>
+            This website — tweaking the design and writing more posts
+          </li>
+        </ul>
+      </div>
+
+      <div style="background:var(--bg); padding:32px;">
+        <div style="font-family:var(--ff-mono); font-size:.68rem; color:var(--accent); letter-spacing:.1em; text-transform:uppercase; margin-bottom:20px;">// reading</div>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:14px;">
+          <li style="display:flex; align-items:flex-start; gap:10px; font-size:.9rem; color:var(--text-2); font-weight:300;">
+            <span style="color:var(--accent); margin-top:2px; flex-shrink:0;">→</span>
+            <em>The Phoenix Project</em> — finally started it, understand the hype now
+          </li>
+          <li style="display:flex; align-items:flex-start; gap:10px; font-size:.9rem; color:var(--text-2); font-weight:300;">
+            <span style="color:var(--accent); margin-top:2px; flex-shrink:0;">→</span>
+            Kubernetes docs — the official docs are genuinely good, underrated
+          </li>
+          <li style="display:flex; align-items:flex-start; gap:10px; font-size:.9rem; color:var(--text-2); font-weight:300;">
+            <span style="color:var(--accent); margin-top:2px; flex-shrink:0;">→</span>
+            High Scalability blog — real architectures from production systems
+          </li>
+        </ul>
+      </div>
+
+    </div>
+    <p style="font-family:var(--ff-mono); font-size:.7rem; color:var(--text-3); margin-top:20px; text-align:right;">
+      Last updated: April 2025 · inspired by <a href="https://nownownow.com" target="_blank" rel="noopener" style="color:var(--text-3); border-bottom:1px solid var(--border-2);">nownownow.com</a>
+    </p>
+  </div>
+</section>
+
+<!-- ─────────────────────────────
+     CONTACT
+───────────────────────────── -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-left reveal">
+        <span class="section-label">// contact</span>
+        <h2>Got something<br>worth <em>breaking</em><br>together?</h2>
+        <p>
+          I'm actively looking for internships, open-source projects to contribute to, 
+          and people who want to build real infrastructure — not just toy projects. 
+          If you've got a messy cloud setup, a pipeline that barely works, 
+          or an idea you want to experiment on, <strong>let's talk.</strong>
+        </p>
+        <div class="contact-avail">
+          <div class="avail-item">Open to DevOps / Cloud internships</div>
+          <div class="avail-item">Open-source contributions welcome</div>
+          <div class="avail-item">Happy to collaborate on infra experiments</div>
+          <div class="avail-item">Will write about what we build</div>
+        </div>
+      </div>
+
+      <div class="reveal reveal-delay-2">
+        <form class="contact-form" id="contactForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fname">your name</label>
+              <input type="text" id="fname" name="name" placeholder="what do I call you?" required />
+            </div>
+            <div class="form-group">
+              <label for="femail">email address</label>
+              <input type="email" id="femail" name="email" placeholder="your@email.com" required />
+            </div>
+          </div>
+          <div class="form-group full">
+            <label for="fsubject">what's this about</label>
+            <input type="text" id="fsubject" name="subject" placeholder="Internship / Collab / Just saying hi" />
+          </div>
+          <div class="form-group full">
+            <label for="fmessage">the actual message</label>
+            <textarea id="fmessage" name="message" placeholder="Tell me what you're building, breaking, or thinking about..." required></textarea>
+          </div>
+          <div class="form-submit">
+            <span class="form-note">~ I usually reply within 24h</span>
+            <button type="submit" class="btn btn-accent" id="submitBtn">
+              send it →
+            </button>
+          </div>
+          <div id="form-success">✓ Message received. I'll get back to you soon.</div>
+          <div id="form-error">Something went wrong. Try emailing me directly.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <span class="footer-logo"><span>#</span>hashwithharsh</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/harshyadav" target="_blank" rel="noopener">github</a></li>
+        <li><a href="https://linkedin.com/in/harshyadav" target="_blank" rel="noopener">linkedin</a></li>
+        <li><a href="https://twitter.com/hashwithharsh" target="_blank" rel="noopener">twitter</a></li>
+        <li><a href="rss.html">rss</a></li>
+        <li><a href="mailto:harsh@hashwithharsh.dev">email</a></li>
+      </ul>
+      <span class="footer-copy">© 2025 Harsh Yadav</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/content.js"></script>
+<script src="js/main.js"></script>
+<script>
+  // Load featured projects + blog on homepage
+  document.addEventListener('DOMContentLoaded', async () => {
+    // Projects
+    const projects = await fetchProjects();
+    const featured = projects.filter(p => p.featured).slice(0, 3);
+    renderProjectCards(featured, 'projectsGrid');
+
+    // Blog
+    const blogs = await fetchBlogs();
+    renderBlogItems(blogs.slice(0, 3), 'blogList');
+
+    // Ticker
+    buildTicker([
+      'Docker','Kubernetes','Terraform','AWS','GitHub Actions',
+      'Prometheus','Grafana','Ansible','Linux','Python','Helm','ArgoCD',
+      'Jenkins','Loki','Bash','GitLab CI','EKS','EC2','S3','Lambda'
+    ]);
+  });
+</script>
+<script src="js/admin-trigger.js"></script>
+</body>
+</html>

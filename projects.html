@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects — hashwithharsh</title>
+  <meta name="description" content="DevOps and Cloud projects by Harsh Yadav — real infrastructure experiments and builds." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="alternate" type="application/rss+xml" title="hashwithharsh RSS Feed" href="/feed.xml" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>#</text></svg>" />
+</head>
+<body>
+
+<nav id="nav">
+  <div class="container">
+    <a href="index.html" class="nav-logo"><span>#</span>hashwithharsh</a>
+    <ul class="nav-links">
+      <li><a href="index.html#about">about</a></li>
+      <li><a href="index.html#stack">stack</a></li>
+      <li><a href="projects.html" style="color:var(--text)">projects</a></li>
+      <li><a href="blog.html">blog</a></li>
+      <li><a href="uses.html">uses</a></li>
+    </ul>
+    <a href="index.html#contact" class="nav-cta">say hello →</a>
+    <div class="nav-hamburger" id="menuBtn">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <span class="mobile-close" id="closeMenu">✕ close</span>
+  <a href="index.html">home</a>
+  <a href="projects.html">projects</a>
+  <a href="blog.html">blog</a>
+  <a href="index.html#contact">contact</a>
+</div>
+
+<div class="page-hero" style="background:var(--surface); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <span class="section-label">// projects</span>
+    <h1>Things I've<br>built &amp; broken.</h1>
+    <p class="mt-16">
+      Infrastructure experiments, automation tools, and DevOps projects. 
+      All real, all tested (mostly), all on GitHub.
+    </p>
+  </div>
+</div>
+
+<section style="padding-top:60px;">
+  <div class="container">
+    <!-- Filter -->
+    <div class="blog-filter" id="projectFilter">
+      <button class="filter-btn active" data-tag="all">all projects</button>
+    </div>
+
+    <div class="projects-full-grid" id="projectsFull">
+      <div class="loading-state" style="grid-column:1/-1">
+        <div class="loading-spinner"></div>
+        <span>loading projects...</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <span class="footer-logo"><span>#</span>hashwithharsh</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/harshyadav" target="_blank" rel="noopener">github</a></li>
+        <li><a href="https://linkedin.com/in/harshyadav" target="_blank" rel="noopener">linkedin</a></li>
+        <li><a href="rss.html">rss</a></li>
+        <li><a href="mailto:harsh@hashwithharsh.dev">email</a></li>
+      </ul>
+      <span class="footer-copy">© 2025 Harsh Yadav</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/content.js"></script>
+<script src="js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const projects = await fetchProjects();
+  let active = 'all';
+
+  // Build tag filter
+  const allTags = [...new Set(projects.flatMap(p => p.tags))].sort();
+  const filterBar = document.getElementById('projectFilter');
+  allTags.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.dataset.tag = tag;
+    btn.textContent = '#' + tag;
+    filterBar.appendChild(btn);
+  });
+
+  filterBar.addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    active = btn.dataset.tag;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filtered = active === 'all' ? projects : projects.filter(p => p.tags.includes(active));
+    renderProjectCards(filtered, 'projectsFull');
+  });
+
+  renderProjectCards(projects, 'projectsFull');
+});
+</script>
+<script src="js/admin-trigger.js"></script>
+</body>
+</html>

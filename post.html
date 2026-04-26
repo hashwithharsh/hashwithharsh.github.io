@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post — hashwithharsh</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="alternate" type="application/rss+xml" title="hashwithharsh RSS Feed" href="/feed.xml" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>#</text></svg>" />
+  <!-- Syntax highlighting for code blocks -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+</head>
+<body>
+
+<nav id="nav">
+  <div class="container">
+    <a href="index.html" class="nav-logo"><span>#</span>hashwithharsh</a>
+    <ul class="nav-links">
+      <li><a href="index.html#about">about</a></li>
+      <li><a href="projects.html">projects</a></li>
+      <li><a href="blog.html" style="color:var(--text)">blog</a></li>
+    </ul>
+    <a href="index.html#contact" class="nav-cta">say hello →</a>
+    <div class="nav-hamburger" id="menuBtn">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <span class="mobile-close" id="closeMenu">✕ close</span>
+  <a href="index.html">home</a>
+  <a href="projects.html">projects</a>
+  <a href="blog.html">blog</a>
+</div>
+
+<!-- Post Header (filled by JS) -->
+<div class="post-header" id="postHeader">
+  <div class="loading-state">
+    <div class="loading-spinner"></div>
+    <span>loading post...</span>
+  </div>
+</div>
+
+<!-- Reading progress bar -->
+<div id="readingProgress" style="
+  position:fixed;
+  top:var(--nav-h);
+  left:0; right:0;
+  height:2px;
+  background:var(--accent);
+  transform-origin:left;
+  transform:scaleX(0);
+  z-index:999;
+  transition:transform .1s linear;
+"></div>
+
+<!-- Post Body (rendered markdown) -->
+<div class="post-body" id="postBody">
+  <div class="loading-state">
+    <div class="loading-spinner"></div>
+  </div>
+</div>
+
+<!-- Post Footer Nav -->
+<div style="border-top:1px solid var(--border); padding: 48px 0; background:var(--surface);">
+  <div class="container" style="max-width:760px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+    <a href="blog.html" class="btn" style="font-size:.78rem;">← all posts</a>
+    <a href="index.html#contact" class="btn btn-accent" style="font-size:.78rem;">discuss this →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <span class="footer-logo"><span>#</span>hashwithharsh</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/harshyadav" target="_blank" rel="noopener">github</a></li>
+        <li><a href="https://linkedin.com/in/harshyadav" target="_blank" rel="noopener">linkedin</a></li>
+        <li><a href="mailto:harsh@hashwithharsh.dev">email</a></li>
+      </ul>
+      <span class="footer-copy">© 2025 Harsh Yadav</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Marked.js for Markdown parsing -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="js/content.js"></script>
+<script src="js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get('slug');
+
+  if (!slug) {
+    window.location.href = 'blog.html';
+    return;
+  }
+
+  // Find post metadata
+  const blogs = await fetchBlogs();
+  const meta = blogs.find(b => b.slug === slug);
+
+  // Render header
+  const header = document.getElementById('postHeader');
+  if (meta) {
+    document.title = meta.title + ' — hashwithharsh';
+    // Dynamic Open Graph tags
+    const setMeta = (prop, content, attr = 'property') => {
+      let el = document.querySelector(`meta[${attr}="${prop}"]`);
+      if (!el) { el = document.createElement('meta'); el.setAttribute(attr, prop); document.head.appendChild(el); }
+      el.setAttribute('content', content);
+    };
+    setMeta('og:title',       meta.title);
+    setMeta('og:description', meta.excerpt);
+    setMeta('og:type',        'article');
+    setMeta('og:url',         window.location.href);
+    setMeta('article:published_time', meta.date, 'name');
+    setMeta('twitter:card',   'summary', 'name');
+    setMeta('twitter:title',  meta.title, 'name');
+    setMeta('twitter:description', meta.excerpt, 'name');
+
+    header.innerHTML = `
+      <div class="post-header-tags">
+        ${meta.tags.map(t => `<span class="blog-tag">${t}</span>`).join('')}
+      </div>
+      <h1>${meta.title}</h1>
+      <div class="post-meta">
+        <span>${formatDate(meta.date)}</span>
+        <span>·</span>
+        <span>${meta.readTime}</span>
+        <span>·</span>
+        <span>by Harsh Yadav</span>
+      </div>
+    `;
+  }
+
+  // Fetch and render markdown
+  try {
+    const md = await fetchPost(slug);
+    const body = document.getElementById('postBody');
+
+    // Configure marked with highlight.js
+    marked.setOptions({
+      highlight: (code, lang) => {
+        if (lang && hljs.getLanguage(lang)) {
+          return hljs.highlight(code, { language: lang }).value;
+        }
+        return hljs.highlightAuto(code).value;
+      },
+      breaks: true,
+      gfm: true,
+    });
+
+    body.innerHTML = marked.parse(md);
+    hljs.highlightAll();
+    addCopyButtons();
+    buildTOC();
+  } catch (e) {
+    document.getElementById('postBody').innerHTML = `
+      <p style="color:var(--text-2); text-align:center; padding: 60px 0;">
+        Post not found. <a href="blog.html" style="color:var(--accent);">Back to blog →</a>
+      </p>
+    `;
+  }
+
+  // Reading progress
+  window.addEventListener('scroll', () => {
+    const body = document.body;
+    const html = document.documentElement;
+    const height = Math.max(body.scrollHeight, html.scrollHeight) - window.innerHeight;
+    const progress = window.scrollY / height;
+    document.getElementById('readingProgress').style.transform = `scaleX(${progress})`;
+  });
+});
+
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+}
+</script>
+<script src="js/admin-trigger.js"></script>
+</body>
+</html>
