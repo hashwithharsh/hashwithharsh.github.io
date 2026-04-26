@@ -17,11 +17,31 @@ const mobileMenu = document.getElementById('mobileMenu');
 const closeMenu  = document.getElementById('closeMenu');
 
 if (menuBtn && mobileMenu) {
-  menuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
-  if (closeMenu) closeMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.add('open');
+    menuBtn.classList.add('active');
+  });
+  if (closeMenu) {
+    closeMenu.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      menuBtn.classList.remove('active');
+    });
+  }
+  
+  // Close menu when clicking menu links
+  const menuLinks = mobileMenu.querySelectorAll('a');
+  menuLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      menuBtn.classList.remove('active');
+    });
+  });
 }
 function closeMobileMenu() {
-  if (mobileMenu) mobileMenu.classList.remove('open');
+  if (mobileMenu) {
+    mobileMenu.classList.remove('open');
+    if (menuBtn) menuBtn.classList.remove('active');
+  }
 }
 
 // ── Typewriter effect ───────────────────────
@@ -72,26 +92,14 @@ window.addEventListener('load', () => {
   const heroCtas = document.querySelector('.hero-ctas');
   const heroStatus = document.querySelector('.hero-status');
 
-  // Animate the whole hero-name h1, NOT individual spans (line1/line2).
-  // Animating child spans leaves the parent h1 block in normal flow at full
-  // size — its rendered glyphs bleed outside the box and block the buttons.
-  const heroName = document.querySelector('.hero-name');
-  const els = [heroStatus, heroName, heroDesc, heroCtas].filter(Boolean);
-
-  // Set initial hidden state first
-  els.forEach((el) => {
+  const els = [heroStatus, line1, line2, heroDesc, heroCtas].filter(Boolean);
+  els.forEach((el, i) => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(24px)';
-  });
-
-  // Double rAF: ensures browser paints opacity:0 before transition fires.
-  requestAnimationFrame(() => {
+    el.style.transition = `opacity .7s cubic-bezier(.23,1,.32,1) ${i * .12 + .1}s, transform .7s cubic-bezier(.23,1,.32,1) ${i * .12 + .1}s`;
     requestAnimationFrame(() => {
-      els.forEach((el, i) => {
-        el.style.transition = `opacity .7s cubic-bezier(.23,1,.32,1) ${i * .12 + .1}s, transform .7s cubic-bezier(.23,1,.32,1) ${i * .12 + .1}s`;
-        el.style.opacity = '1';
-        el.style.transform = 'none';
-      });
+      el.style.opacity = '1';
+      el.style.transform = 'none';
     });
   });
 });

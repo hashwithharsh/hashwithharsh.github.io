@@ -796,6 +796,14 @@ input, textarea, select { font-family: var(--ff-body); }
         <span class="nav-badge" id="blogsBadge">–</span>
       </div>
 
+      <div class="sidebar-section-title">content files</div>
+      <div class="nav-item" data-section="project-markdown" onclick="showSection('project-markdown', this)">
+        <span class="icon">📄</span> Project Markdown
+      </div>
+      <div class="nav-item" data-section="blog-markdown" onclick="showSection('blog-markdown', this)">
+        <span class="icon">✍</span> Blog Markdown
+      </div>
+
       <div class="sidebar-section-title">config</div>
       <div class="nav-item" data-section="settings" onclick="showSection('settings', this)">
         <span class="icon">⚙</span> Settings
@@ -1012,6 +1020,88 @@ input, textarea, select { font-family: var(--ff-body); }
         </div>
         <div class="list-items" id="blogsListAdmin">
           <!-- JS rendered -->
+        </div>
+      </section>
+
+      <!-- ── PROJECT MARKDOWN ── -->
+      <section class="section-panel" id="sec-project-markdown">
+        <div class="section-hdr">
+          <div class="section-hdr-left">
+            <div class="section-tag">// project content</div>
+            <h2>Project Markdown Files</h2>
+          </div>
+          <div class="actions">
+            <button class="tb-btn accent" onclick="document.getElementById('projectMdUpload').click()">+ upload markdown</button>
+          </div>
+        </div>
+        <input type="file" id="projectMdUpload" accept=".md" style="display:none" onchange="handleProjectMdUpload(event)" />
+        
+        <div style="background:var(--surface);border:1px solid rgba(91,155,255,.2);border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:.78rem;color:var(--blue);font-family:var(--ff-mono);">
+          ℹ Upload or create .md files for projects. Files should match your project IDs. For example: <code style="color:var(--accent)">k8s-monitoring-stack.md</code>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div>
+            <div style="margin-bottom:12px;">
+              <div class="section-tag" style="margin-bottom:8px;">available projects</div>
+              <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:6px;max-height:400px;overflow-y:auto;">
+                <div id="projectsList" style="padding:12px;font-size:.82rem;">
+                  <!-- JS rendered -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="margin-bottom:12px;">
+              <div class="section-tag" style="margin-bottom:8px;">editor</div>
+              <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:10px;">
+                <input type="text" id="projectMdId" placeholder="select or enter project ID..." style="background:var(--surface-3);border:1px solid var(--border-2);border-radius:4px;padding:8px 10px;color:var(--text);outline:none;" readonly />
+                <textarea id="projectMdContent" placeholder="markdown content..." style="flex:1;background:var(--surface-3);border:1px solid var(--border-2);border-radius:4px;padding:10px;color:var(--text);font-family:var(--ff-mono);font-size:.8rem;resize:vertical;min-height:280px;outline:none;"></textarea>
+                <button class="tb-btn accent" onclick="saveProjectMarkdown()" style="width:100%;">save markdown →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── BLOG MARKDOWN ── -->
+      <section class="section-panel" id="sec-blog-markdown">
+        <div class="section-hdr">
+          <div class="section-hdr-left">
+            <div class="section-tag">// blog content</div>
+            <h2>Blog Markdown Files</h2>
+          </div>
+          <div class="actions">
+            <button class="tb-btn accent" onclick="document.getElementById('blogMdUpload').click()">+ upload markdown</button>
+          </div>
+        </div>
+        <input type="file" id="blogMdUpload" accept=".md" style="display:none" onchange="handleBlogMdUpload(event)" />
+        
+        <div style="background:var(--surface);border:1px solid rgba(91,155,255,.2);border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:.78rem;color:var(--blue);font-family:var(--ff-mono);">
+          ℹ Upload or create .md files for blog posts. Files should match your blog slugs. For example: <code style="color:var(--accent)">docker-networking-deep-dive.md</code>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div>
+            <div style="margin-bottom:12px;">
+              <div class="section-tag" style="margin-bottom:8px;">available blog posts</div>
+              <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:6px;max-height:400px;overflow-y:auto;">
+                <div id="blogsList" style="padding:12px;font-size:.82rem;">
+                  <!-- JS rendered -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="margin-bottom:12px;">
+              <div class="section-tag" style="margin-bottom:8px;">editor</div>
+              <div style="background:var(--surface);border:1px solid var(--border-2);border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:10px;">
+                <input type="text" id="blogMdSlug" placeholder="select or enter blog slug..." style="background:var(--surface-3);border:1px solid var(--border-2);border-radius:4px;padding:8px 10px;color:var(--text);outline:none;" readonly />
+                <textarea id="blogMdContent" placeholder="markdown content..." style="flex:1;background:var(--surface-3);border:1px solid var(--border-2);border-radius:4px;padding:10px;color:var(--text);font-family:var(--ff-mono);font-size:.8rem;resize:vertical;min-height:280px;outline:none;"></textarea>
+                <button class="tb-btn accent" onclick="saveBlogMarkdown()" style="width:100%;">save markdown →</button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1317,6 +1407,7 @@ function bootAdminPanel() {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('adminShell').classList.add('show');
   loadAllData();
+  loadMarkdownStorage();
   renderDashboard();
   updateSessionInfo();
 }
@@ -1455,6 +1546,8 @@ function showSection(id, el) {
   if (id === 'projects')  renderProjects();
   if (id === 'blogs')     renderBlogs();
   if (id === 'stack')     populateStackEditor();
+  if (id === 'project-markdown') renderProjectsList();
+  if (id === 'blog-markdown') renderBlogsList();
 }
 
 /* ────────────────────────────────────────────
@@ -1769,6 +1862,10 @@ function openProjectModal(i) {
         <input type="text" id="mp-year" value="${escHtml(p.year||'')}" placeholder="2025" />
       </div>
       <div class="form-row">
+        <label>project date</label>
+        <input type="date" id="mp-date" value="${p.date||''}" />
+      </div>
+      <div class="form-row">
         <label>status</label>
         <select id="mp-status">
           <option value="active"   ${p.status==='active'  ?'selected':''}>active</option>
@@ -1839,6 +1936,7 @@ function saveProject(idx) {
     github:      document.getElementById('mp-github').value.trim() || null,
     demo:        document.getElementById('mp-demo').value.trim()   || null,
     year:        document.getElementById('mp-year').value.trim()   || String(new Date().getFullYear()),
+    date:        document.getElementById('mp-date').value.trim()   || new Date().toISOString().slice(0,10),
     status:      document.getElementById('mp-status').value,
     tags:        getProjectTags(),
     featured:    document.getElementById('mp-featured').checked,
@@ -2053,6 +2151,171 @@ function toggleBlogPin(i) {
   saveToLS(KEYS.blogs, state.blogs);
   renderBlogs();
   toast(state.blogs[i].pinned ? 'Post pinned ✓' : 'Post unpinned', 'info');
+}
+
+/* ────────────────────────────────────────────
+   MARKDOWN MANAGEMENT
+──────────────────────────────────────────── */
+const mdStorage = {
+  projects: {},
+  blogs:    {},
+};
+
+function loadMarkdownStorage() {
+  const saved = localStorage.getItem('hwh_markdown');
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      mdStorage.projects = data.projects || {};
+      mdStorage.blogs    = data.blogs    || {};
+    } catch { /* ignore */ }
+  }
+}
+
+function saveMarkdownStorage() {
+  localStorage.setItem('hwh_markdown', JSON.stringify(mdStorage));
+}
+
+function renderProjectsList() {
+  const list = document.getElementById('projectsList');
+  if (!list) return;
+  list.innerHTML = state.projects.map(p => `
+    <div style="padding:8px;cursor:pointer;border-radius:4px;border-left:2px solid transparent;transition:all var(--fast);" 
+         onmouseover="this.style.backgroundColor='var(--surface-3)';this.style.borderLeftColor='var(--accent)'" 
+         onmouseout="this.style.backgroundColor='transparent';this.style.borderLeftColor='transparent'"
+         onclick="loadProjectMarkdown('${p.id}')">
+      <div style="font-size:.82rem;color:var(--text);font-weight:500;">${escHtml(p.title)}</div>
+      <div style="font-size:.7rem;color:var(--text-3);margin-top:2px;">${p.id}</div>
+    </div>
+  `).join('');
+}
+
+function renderBlogsList() {
+  const list = document.getElementById('blogsList');
+  if (!list) return;
+  list.innerHTML = state.blogs.map(b => `
+    <div style="padding:8px;cursor:pointer;border-radius:4px;border-left:2px solid transparent;transition:all var(--fast);"
+         onmouseover="this.style.backgroundColor='var(--surface-3)';this.style.borderLeftColor='var(--accent)'"
+         onmouseout="this.style.backgroundColor='transparent';this.style.borderLeftColor='transparent'"
+         onclick="loadBlogMarkdown('${b.slug}')">
+      <div style="font-size:.82rem;color:var(--text);font-weight:500;">${escHtml(b.title)}</div>
+      <div style="font-size:.7rem;color:var(--text-3);margin-top:2px;">${b.slug}</div>
+    </div>
+  `).join('');
+}
+
+function loadProjectMarkdown(projectId) {
+  const project = state.projects.find(p => p.id === projectId);
+  if (!project) return;
+  
+  document.getElementById('projectMdId').value = projectId;
+  document.getElementById('projectMdContent').value = mdStorage.projects[projectId] || '';
+  document.getElementById('projectMdContent').focus();
+}
+
+function loadBlogMarkdown(slug) {
+  const blog = state.blogs.find(b => b.slug === slug);
+  if (!blog) return;
+  
+  document.getElementById('blogMdSlug').value = slug;
+  document.getElementById('blogMdContent').value = mdStorage.blogs[slug] || '';
+  document.getElementById('blogMdContent').focus();
+}
+
+function saveProjectMarkdown() {
+  const projectId = document.getElementById('projectMdId').value.trim();
+  const content = document.getElementById('projectMdContent').value;
+  
+  if (!projectId) {
+    toast('Please select or enter a project ID', 'error');
+    return;
+  }
+  
+  mdStorage.projects[projectId] = content;
+  saveMarkdownStorage();
+  
+  // Generate download link
+  const filename = projectId + '.md';
+  const blob = new Blob([content], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+  
+  toast(`Markdown saved locally and downloaded as ${filename}`, 'success');
+  logChange(`Saved markdown for project: ${projectId}`);
+}
+
+function saveBlogMarkdown() {
+  const slug = document.getElementById('blogMdSlug').value.trim();
+  const content = document.getElementById('blogMdContent').value;
+  
+  if (!slug) {
+    toast('Please select or enter a blog slug', 'error');
+    return;
+  }
+  
+  mdStorage.blogs[slug] = content;
+  saveMarkdownStorage();
+  
+  // Generate download link
+  const filename = slug + '.md';
+  const blob = new Blob([content], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+  
+  toast(`Markdown saved locally and downloaded as ${filename}`, 'success');
+  logChange(`Saved markdown for blog: ${slug}`);
+}
+
+function handleProjectMdUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const content = e.target.result;
+    const filename = file.name.replace(/\.md$/i, '');
+    
+    document.getElementById('projectMdId').value = filename;
+    document.getElementById('projectMdContent').value = content;
+    
+    mdStorage.projects[filename] = content;
+    saveMarkdownStorage();
+    
+    toast(`Markdown uploaded: ${file.name}`, 'success');
+    logChange(`Uploaded project markdown: ${filename}`);
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function handleBlogMdUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const content = e.target.result;
+    const filename = file.name.replace(/\.md$/i, '');
+    
+    document.getElementById('blogMdSlug').value = filename;
+    document.getElementById('blogMdContent').value = content;
+    
+    mdStorage.blogs[filename] = content;
+    saveMarkdownStorage();
+    
+    toast(`Markdown uploaded: ${file.name}`, 'success');
+    logChange(`Uploaded blog markdown: ${filename}`);
+  };
+  reader.readAsText(file);
+  event.target.value = '';
 }
 
 /* ────────────────────────────────────────────

@@ -8,7 +8,8 @@
     "demo": null,
     "featured": true,
     "status": "active",
-    "year": "2025"
+    "year": "2025",
+    "date": "2025-02-15"
   },
   {
     "id": "terraform-aws-vpc",
@@ -19,7 +20,8 @@
     "demo": null,
     "featured": true,
     "status": "active",
-    "year": "2025"
+    "year": "2025",
+    "date": "2025-02-10"
   },
   {
     "id": "cicd-pipeline-template",
@@ -30,7 +32,8 @@
     "demo": null,
     "featured": true,
     "status": "active",
-    "year": "2025"
+    "year": "2025",
+    "date": "2025-02-05"
   },
   {
     "id": "docker-compose-lab",
@@ -41,7 +44,8 @@
     "demo": null,
     "featured": false,
     "status": "active",
-    "year": "2024"
+    "year": "2024",
+    "date": "2024-12-20"
   },
   {
     "id": "bash-automation-scripts",
@@ -52,7 +56,8 @@
     "demo": null,
     "featured": false,
     "status": "active",
-    "year": "2024"
+    "year": "2024",
+    "date": "2024-11-15"
   },
   {
     "id": "ansible-server-setup",
@@ -63,6 +68,7 @@
     "demo": null,
     "featured": false,
     "status": "wip",
-    "year": "2025"
+    "year": "2025",
+    "date": "2025-03-20"
   }
 ]
