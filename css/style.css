@@ -318,6 +318,7 @@ section { padding: 110px 0; }
   letter-spacing: -.04em;
   color: var(--text);
   margin-bottom: 32px;
+  pointer-events: none;   /* text is display only — never intercepts clicks */
 }
 .hero-name .dim { color: var(--surface-3); }
 .hero-name .accent-char { color: var(--accent); }
@@ -350,12 +351,19 @@ section { padding: 110px 0; }
   line-height: 1.65;
   margin-bottom: 44px;
   font-weight: 300;
+  pointer-events: none;  /* display only */
 }
 
 .hero-ctas {
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 10;
+}
+.hero-ctas a {
+  pointer-events: auto; /* always clickable, even if parent layers interfere */
+  cursor: pointer;
 }
 
 .hero-scroll {
