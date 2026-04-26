@@ -271,27 +271,21 @@ section { padding: 110px 0; }
   padding-top: var(--nav-h);
   position: relative;
   overflow: hidden;
+  /* Grid baked into background - no pseudo-element, no stacking layer, no click blocking */
+  background-image:
+    linear-gradient(rgba(26,26,26,.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,26,26,.35) 1px, transparent 1px);
+  background-size: 60px 60px;
 }
 
 #hero .container {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  isolation: isolate;
 }
 
-/* Subtle grid background */
-#hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;           /* explicitly below .container which is z-index:1 */
-  background-image:
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 60px 60px;
-  opacity: .35;
-  mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, black 30%, transparent 80%);
-  pointer-events: none;
-}
+/* Pseudo-element removed - grid is now a CSS background property */
+#hero::before { display: none; }
 
 .hero-status {
   display: inline-flex;
