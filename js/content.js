@@ -3,7 +3,7 @@
    Content loading: localStorage-first CMS
    ============================================= */
 
-const BASE_URL = '';
+const CONTENT_BASE_URL = new URL('content/', window.location.href);
 const KEYS = {
   blogs:    'hwh_blogs',
   projects: 'hwh_projects',
@@ -29,7 +29,7 @@ async function fetchBlogs() {
     } catch { /* fall through to file fetch */ }
   }
   try {
-    const res = await fetch(`${BASE_URL}/content/blogs.json`);
+    const res = await fetch(new URL('blogs.json', CONTENT_BASE_URL));
     if (!res.ok) throw new Error('Failed');
     return await res.json();
   } catch (e) {
@@ -55,7 +55,7 @@ async function fetchProjects() {
     } catch { /* fall through to file fetch */ }
   }
   try {
-    const res = await fetch(`${BASE_URL}/content/projects.json`);
+    const res = await fetch(new URL('projects.json', CONTENT_BASE_URL));
     if (!res.ok) throw new Error('Failed');
     return await res.json();
   } catch (e) {
@@ -65,7 +65,7 @@ async function fetchProjects() {
 }
 
 async function fetchPost(slug) {
-  const res = await fetch(`${BASE_URL}/content/posts/${slug}.md`);
+  const res = await fetch(new URL(`posts/${encodeURIComponent(slug)}.md`, CONTENT_BASE_URL));
   if (!res.ok) throw new Error(`Post "${slug}" not found`);
   return await res.text();
 }
