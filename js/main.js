@@ -73,13 +73,24 @@ window.addEventListener('load', () => {
   const heroStatus = document.querySelector('.hero-status');
 
   const els = [heroStatus, line1, line2, heroDesc, heroCtas].filter(Boolean);
-  els.forEach((el, i) => {
+
+  // Set initial hidden state first
+  els.forEach((el) => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(24px)';
-    el.style.transition = `opacity .7s cubic-bezier(.23,1,.32,1) ${i * .12 + .1}s, transform .7s cubic-bezier(.23,1,.32,1) ${i * .12 + .1}s`;
+  });
+
+  // Double rAF ensures the browser has actually painted the opacity:0 state
+  // before we apply the transition. Without this, a single rAF fires before
+  // paint, the transition never triggers, and elements stay permanently
+  // invisible and un-clickable (including the CTA buttons).
+  requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      el.style.opacity = '1';
-      el.style.transform = 'none';
+      els.forEach((el, i) => {
+        el.style.transition = `opacity .7s cubic-bezier(.23,1,.32,1) ${i * .12 + .1}s, transform .7s cubic-bezier(.23,1,.32,1) ${i * .12 + .1}s`;
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
     });
   });
 });
