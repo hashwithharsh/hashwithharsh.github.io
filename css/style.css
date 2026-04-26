@@ -273,6 +273,11 @@ section { padding: 110px 0; }
   overflow: hidden;
 }
 
+#hero .container {
+  position: relative;
+  z-index: 1;
+}
+
 /* Subtle grid background */
 #hero::before {
   content: '';
@@ -284,6 +289,7 @@ section { padding: 110px 0; }
   background-size: 60px 60px;
   opacity: .35;
   mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, black 30%, transparent 80%);
+  pointer-events: none;
 }
 
 .hero-status {

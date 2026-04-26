@@ -1123,10 +1123,8 @@ input, textarea, select { font-family: var(--ff-body); }
 ═══════════════════════════════════════════ -->
 <script>
 /* ─── Constants ─────────────────────────── */
-const SESSION_KEY  = 'hwh_admin_session';
-const AUTH_API     = localStorage.getItem('hwh_settings')
-  ? (JSON.parse(localStorage.getItem('hwh_settings')).adminApiUrl || 'https://hashwithharsh-api.vercel.app/api/admin-auth')
-  : 'https://hashwithharsh-api.vercel.app/api/admin-auth';
+const SESSION_KEY      = 'hwh_admin_session';
+const DEFAULT_AUTH_API = 'https://hashwithharsh-api.vercel.app/api/admin-auth';
 
 const KEYS = {
   session:  'hwh_admin_session',
@@ -1223,11 +1221,16 @@ function doLogout() {
   window.location.href = 'index.html';
 }
 
-async function doLogin(password) {
-  const apiUrl = (JSON.parse(localStorage.getItem(KEYS.settings) || '{}').adminApiUrl)
-    || 'https://hashwithharsh-api.vercel.app/api/admin-auth';
+function getAdminApiUrl() {
+  try {
+    return JSON.parse(localStorage.getItem(KEYS.settings) || '{}').adminApiUrl || DEFAULT_AUTH_API;
+  } catch {
+    return DEFAULT_AUTH_API;
+  }
+}
 
-  const res  = await fetch(apiUrl, {
+async function doLogin(password) {
+  const res  = await fetch(getAdminApiUrl(), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ password, action: 'login' }),
@@ -1237,12 +1240,40 @@ async function doLogin(password) {
   return data;
 }
 
+async function verifySession() {
+  const s = getSession();
+  if (!s || !s.token || s.expiry <= Date.now()) {
+    localStorage.removeItem(KEYS.session);
+    return false;
+  }
+
+  try {
+    const res = await fetch(getAdminApiUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'verify', token: s.token }),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.valid) {
+      localStorage.removeItem(KEYS.session);
+      return false;
+    }
+    if (data.expiry && data.expiry !== s.expiry) {
+      localStorage.setItem(KEYS.session, JSON.stringify({ token: s.token, expiry: data.expiry }));
+    }
+    return true;
+  } catch {
+    localStorage.removeItem(KEYS.session);
+    return false;
+  }
+}
+
 /* ────────────────────────────────────────────
    INIT
 ──────────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', async () => {
   // Check auth
-  if (isAuthed()) {
+  if (await verifySession()) {
     bootAdminPanel();
   } else {
     // Show login form
@@ -1306,7 +1337,7 @@ function loadAllData() {
     updateBadges();
     renderProjects();
   } else {
-    fetch('/content/projects.json')
+    fetch('content/projects.json')
       .then(r => r.ok ? r.json() : [])
       .then(data => { state.projects = data; updateBadges(); renderProjects(); })
       .catch(() => { state.projects = []; updateBadges(); });
@@ -1319,7 +1350,7 @@ function loadAllData() {
     updateBadges();
     renderBlogs();
   } else {
-    fetch('/content/blogs.json')
+    fetch('content/blogs.json')
       .then(r => r.ok ? r.json() : [])
       .then(data => { state.blogs = data; updateBadges(); renderBlogs(); })
       .catch(() => { state.blogs = []; updateBadges(); });

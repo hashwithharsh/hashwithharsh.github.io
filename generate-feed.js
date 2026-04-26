@@ -1,22 +1,26 @@
 #!/usr/bin/env node
 /**
  * generate-feed.js
- * Run: node scripts/generate-feed.js
+ * Run: node generate-feed.js
  * Generates feed.xml in the project root from content/blogs.json
  * 
  * Add to GitHub Actions deploy.yml:
- *   - run: node scripts/generate-feed.js
+ *   - run: node generate-feed.js
  */
 
-const fs   = require('fs');
-const path = require('path');
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname  = path.dirname(__filename);
 
 const SITE_URL  = 'https://hashwithharsh.dev';
 const SITE_NAME = 'hashwithharsh';
 const AUTHOR    = 'Harsh Yadav';
 
 const blogs = JSON.parse(
-  fs.readFileSync(path.join(__dirname, '../content/blogs.json'), 'utf8')
+  fs.readFileSync(path.join(__dirname, 'content/blogs.json'), 'utf8')
 );
 
 function escapeXml(str) {
@@ -64,6 +68,6 @@ ${items}
   </channel>
 </rss>`;
 
-const outputPath = path.join(__dirname, '../feed.xml');
+const outputPath = path.join(__dirname, 'feed.xml');
 fs.writeFileSync(outputPath, feed);
 console.log(`✓ Generated feed.xml with ${blogs.length} posts → ${outputPath}`);
