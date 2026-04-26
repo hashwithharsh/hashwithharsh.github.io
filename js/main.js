@@ -72,7 +72,11 @@ window.addEventListener('load', () => {
   const heroCtas = document.querySelector('.hero-ctas');
   const heroStatus = document.querySelector('.hero-status');
 
-  const els = [heroStatus, line1, line2, heroDesc, heroCtas].filter(Boolean);
+  // Animate the whole hero-name h1, NOT individual spans (line1/line2).
+  // Animating child spans leaves the parent h1 block in normal flow at full
+  // size — its rendered glyphs bleed outside the box and block the buttons.
+  const heroName = document.querySelector('.hero-name');
+  const els = [heroStatus, heroName, heroDesc, heroCtas].filter(Boolean);
 
   // Set initial hidden state first
   els.forEach((el) => {
@@ -80,10 +84,7 @@ window.addEventListener('load', () => {
     el.style.transform = 'translateY(24px)';
   });
 
-  // Double rAF ensures the browser has actually painted the opacity:0 state
-  // before we apply the transition. Without this, a single rAF fires before
-  // paint, the transition never triggers, and elements stay permanently
-  // invisible and un-clickable (including the CTA buttons).
+  // Double rAF: ensures browser paints opacity:0 before transition fires.
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       els.forEach((el, i) => {
