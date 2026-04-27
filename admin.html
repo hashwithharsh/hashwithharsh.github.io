@@ -849,7 +849,7 @@ input, textarea, select { font-family: var(--ff-body); }
         <div class="section-tag" style="margin-bottom:12px;">// recent changes</div>
         <div id="recentChanges" style="background:var(--surface);border:1px solid var(--border-2);border-radius:8px;padding:20px;">
           <div style="font-size:.8rem;color:var(--text-3);font-family:var(--ff-mono);">
-            // nothing changed yet. start editing and it’ll show up here.
+            // no changes tracked yet. edit content to begin.
           </div>
         </div>
       </section>
@@ -1008,7 +1008,7 @@ input, textarea, select { font-family: var(--ff-body); }
           </div>
         </div>
         <div style="background:var(--surface);border:1px solid rgba(91,155,255,.2);border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:.78rem;color:var(--blue);font-family:var(--ff-mono);">
-          ℹ ℹ Changes here are saved locally. If you want them live, copy the JSON into your repo.. To persist permanently, copy the JSON below to <code style="color:var(--accent)">content/blogs.json</code> in your repo.
+          ℹ Blog metadata is saved to localStorage. To persist permanently, copy the JSON below to <code style="color:var(--accent)">content/blogs.json</code> in your repo.
         </div>
         <div class="list-items" id="blogsListAdmin">
           <!-- JS rendered -->
@@ -1150,28 +1150,27 @@ let state = {
 const DEFAULTS = {
   hero: {
     name: 'HARSH YADAV',
-    status: 'currently debugging something that should’ve worked already',
-    description: "I’m a DevOps student trying to understand how real systems actually work — not just how to run commands, but why things break when they do.",
+    status: 'currently tinkering with Terraform & AWS',
+    description: "DevOps & Cloud Engineering student obsessed with infrastructure, pipelines, and the art of breaking things to understand them better. I document everything — for you and for future me.",
     cta1Text: 'view projects ↓',
     cta1Href: '#projects',
     cta2Text: 'read the blog →',
     cta2Href: 'blog.html',
-   phrases: [
-  'whoami --learning-devops',
-  'kubectl get pods --why-is-this-broken',
-  'terraform apply (hope for the best)',
-  'docker logs --help',
-  'fix → break → fix again',
-  'note to self: document this'
-],
+    phrases: [
+      'whoami --devops-student',
+      'kubectl get pods --all',
+      'terraform apply --auto-approve',
+      'docker build -t hashwithharsh .',
+      'cat /etc/passion | grep cloud',
+      'git push origin main  # ship it',
+    ],
   },
   about: {
     paragraphs: [
-  "I didn’t really start with a plan. I just tried things, followed commands, and then got stuck when something didn’t work the way I expected.",
-  "That’s where most of my learning happens — not when things work, but when I have to figure out why they don’t.",
-  "Lately I’ve been working with AWS, Kubernetes, and Terraform. I’m less interested in just using them, and more in understanding what’s happening underneath.",
-  "This site is basically a record of that process — what confused me, what broke, and what finally started to make sense."
-],
+      "I'm a self-driven DevOps and Cloud Engineering student who believes the fastest way to learn infrastructure is to build something real, watch it fail spectacularly, and reverse-engineer why.",
+      "hashwithharsh started as a place to dump my notes. It became something I'm proud of.",
+      "Right now I'm deep in AWS, Kubernetes, Terraform, and GitHub Actions. If it can be automated, I'm automating it.",
+    ],
     stats: [
       { label: 'projects built',       value: 12 },
       { label: 'blog posts',           value: 24 },
@@ -1196,7 +1195,7 @@ const DEFAULTS = {
   settings: {
     siteTitle:   'hashwithharsh',
     ownerName:   'Harsh Yadav',
-    tagline: 'learning DevOps by building and breaking things',
+    tagline:     'DevOps & Cloud Engineering Student',
     siteUrl:     'https://hashwithharsh.dev',
     githubUrl:   'https://github.com/harshyadav',
     linkedinUrl: 'https://linkedin.com/in/harshyadav',
