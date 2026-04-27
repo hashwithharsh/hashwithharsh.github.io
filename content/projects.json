@@ -8,8 +8,7 @@
     "demo": null,
     "featured": true,
     "status": "active",
-    "year": "2025",
-    "date": "2025-02-15"
+    "date": "2025-03-20"
   },
   {
     "id": "terraform-aws-vpc",
@@ -20,8 +19,7 @@
     "demo": null,
     "featured": true,
     "status": "active",
-    "year": "2025",
-    "date": "2025-02-10"
+    "date": "2025-02-14"
   },
   {
     "id": "cicd-pipeline-template",
@@ -32,8 +30,7 @@
     "demo": null,
     "featured": true,
     "status": "active",
-    "year": "2025",
-    "date": "2025-02-05"
+    "date": "2025-01-08"
   },
   {
     "id": "docker-compose-lab",
@@ -44,8 +41,7 @@
     "demo": null,
     "featured": false,
     "status": "active",
-    "year": "2024",
-    "date": "2024-12-20"
+    "date": "2024-11-22"
   },
   {
     "id": "bash-automation-scripts",
@@ -56,8 +52,7 @@
     "demo": null,
     "featured": false,
     "status": "active",
-    "year": "2024",
-    "date": "2024-11-15"
+    "date": "2024-09-05"
   },
   {
     "id": "ansible-server-setup",
@@ -68,7 +63,17 @@
     "demo": null,
     "featured": false,
     "status": "wip",
-    "year": "2025",
-    "date": "2025-03-20"
+    "date": "2025-04-01"
+  },
+  {
+    "id": "harsh-yadav",
+    "title": "Ansible Server Hardening Playbook",
+    "description": "Ansible playbooks for automating Linux server provisioning and security hardening. Idempotent, tested on Ubuntu 22.04 and Amazon Linux 2.",
+    "tags": ["ansible", "linux", "security", "iac"],
+    "github": "https://github.com/harshyadav/ansible-hardening",
+    "demo": null,
+    "featured": false,
+    "status": "wip",
+    "date": "2025-04-01"
   }
 ]

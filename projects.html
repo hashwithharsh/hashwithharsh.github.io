@@ -39,19 +39,21 @@
 <div class="page-hero" style="background:var(--surface); border-bottom:1px solid var(--border);">
   <div class="container">
     <span class="section-label">// projects</span>
-    <h1>Things I've<br>built &amp; broken.</h1>
+    <h1>Things I’ve Built<br>(and sometimes broken)</h1>
     <p class="mt-16">
-      Infrastructure experiments, automation tools, and DevOps projects. 
-      All real, all tested (mostly), all on GitHub.
+      These aren’t just projects I followed from tutorials.
+  Each one started with confusion, errors, and a lot of debugging.
     </p>
   </div>
 </div>
 
 <section style="padding-top:60px;">
   <div class="container">
-    <!-- Filter -->
+
+    <!-- Filter bar — "all projects" starts active (highlighted) -->
     <div class="blog-filter" id="projectFilter">
       <button class="filter-btn active" data-tag="all">all projects</button>
+      <!-- Tag buttons appended by JS -->
     </div>
 
     <div class="projects-full-grid" id="projectsFull">
@@ -60,6 +62,7 @@
         <span>loading projects...</span>
       </div>
     </div>
+
   </div>
 </section>
 
@@ -83,29 +86,39 @@
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
   const projects = await fetchProjects();
-  let active = 'all';
+  let active     = 'all';
 
-  // Build tag filter
-  const allTags = [...new Set(projects.flatMap(p => p.tags))].sort();
+  // Build tag filter buttons from all unique tags
+  const allTags   = [...new Set(projects.flatMap(p => p.tags))].sort();
   const filterBar = document.getElementById('projectFilter');
+
   allTags.forEach(tag => {
     const btn = document.createElement('button');
-    btn.className = 'filter-btn';
+    btn.className   = 'filter-btn';
     btn.dataset.tag = tag;
     btn.textContent = '#' + tag;
     filterBar.appendChild(btn);
   });
 
+  // Filter click handler
   filterBar.addEventListener('click', e => {
     const btn = e.target.closest('.filter-btn');
     if (!btn) return;
+
     active = btn.dataset.tag;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+
+    // Update active highlight
+    document.querySelectorAll('#projectFilter .filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    const filtered = active === 'all' ? projects : projects.filter(p => p.tags.includes(active));
+
+    // Re-render grid
+    const filtered = active === 'all'
+      ? projects
+      : projects.filter(p => p.tags.includes(active));
     renderProjectCards(filtered, 'projectsFull');
   });
 
+  // Initial render — all projects
   renderProjectCards(projects, 'projectsFull');
 });
 </script>

@@ -17,44 +17,24 @@ const mobileMenu = document.getElementById('mobileMenu');
 const closeMenu  = document.getElementById('closeMenu');
 
 if (menuBtn && mobileMenu) {
-  menuBtn.addEventListener('click', () => {
-    mobileMenu.classList.add('open');
-    menuBtn.classList.add('active');
-  });
-  if (closeMenu) {
-    closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.remove('open');
-      menuBtn.classList.remove('active');
-    });
-  }
-  
-  // Close menu when clicking menu links
-  const menuLinks = mobileMenu.querySelectorAll('a');
-  menuLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      mobileMenu.classList.remove('open');
-      menuBtn.classList.remove('active');
-    });
-  });
+  menuBtn.addEventListener('click', () => mobileMenu.classList.add('open'));
+  if (closeMenu) closeMenu.addEventListener('click', () => mobileMenu.classList.remove('open'));
 }
 function closeMobileMenu() {
-  if (mobileMenu) {
-    mobileMenu.classList.remove('open');
-    if (menuBtn) menuBtn.classList.remove('active');
-  }
+  if (mobileMenu) mobileMenu.classList.remove('open');
 }
 
 // ── Typewriter effect ───────────────────────
 const typewriterEl = document.getElementById('typewriter');
 if (typewriterEl) {
   const phrases = [
-    'whoami --devops-student',
-    'kubectl get pods --all',
-    'terraform apply --auto-approve',
-    'docker build -t hashwithharsh .',
-    'cat /etc/passion | grep cloud',
-    'git push origin main  # ship it',
-  ];
+  'whoami --learning-devops',
+  'kubectl get pods --why-is-this-broken',
+  'terraform apply (hope for the best)',
+  'docker logs --help',
+  'fix → break → fix again',
+  'note to self: document this'
+];
   let phraseIdx = 0, charIdx = 0, deleting = false, pauseCount = 0;
 
   function typeLoop() {
@@ -308,11 +288,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Ensure mobile menu never blocks clicks
+// NOTE: must exclude the hamburger button — without this, the open and close
+// fire on the exact same click event as it bubbles up to document.
 document.addEventListener("click", (e) => {
-  const menu = document.getElementById("mobileMenu");
+  const menu      = document.getElementById("mobileMenu");
+  const hamburger = document.getElementById("menuBtn");
   if (!menu) return;
 
-  if (menu.classList.contains("open") && !menu.contains(e.target)) {
+  if (
+    menu.classList.contains("open") &&
+    !menu.contains(e.target) &&
+    !hamburger?.contains(e.target)
+  ) {
     menu.classList.remove("open");
   }
 });

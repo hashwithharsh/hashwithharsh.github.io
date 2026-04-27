@@ -40,9 +40,9 @@
 <div class="page-hero" style="background:var(--surface); border-bottom:1px solid var(--border);">
   <div class="container">
     <span class="section-label">// knowledge base</span>
-    <h1>Writing from<br>the trenches.</h1>
+    <h1>Stuff I Learned<br>the Hard Way.</h1>
     <p class="mt-16">
-      Real DevOps and cloud problems I've hit, solved, and documented. 
+      Real DevOps and cloud problems I've hit, solved, and documented.
       No watered-down tutorials — just what actually happened and why.
     </p>
   </div>
@@ -53,9 +53,13 @@
     <div class="search-wrap">
       <input type="search" id="blogSearch" placeholder="search posts, tags, topics..." autocomplete="off" />
     </div>
+
+    <!-- Filter bar — "all posts" starts active (highlighted) -->
     <div class="blog-filter" id="filterBar">
       <button class="filter-btn active" data-tag="all">all posts</button>
+      <!-- Tag buttons appended by JS -->
     </div>
+
     <div class="blog-full-list" id="blogFull">
       <div class="loading-state">
         <div class="loading-spinner"></div>
@@ -85,30 +89,46 @@
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
   const blogs = await fetchBlogs();
-  let active = 'all';
+  let active  = 'all';
 
-  // Build tag filter
-  const allTags = [...new Set(blogs.flatMap(b => b.tags))].sort();
+  // Build tag filter buttons
+  const allTags  = [...new Set(blogs.flatMap(b => b.tags))].sort();
   const filterBar = document.getElementById('filterBar');
+
   allTags.forEach(tag => {
     const btn = document.createElement('button');
-    btn.className = 'filter-btn';
+    btn.className   = 'filter-btn';
     btn.dataset.tag = tag;
     btn.textContent = '#' + tag;
     filterBar.appendChild(btn);
   });
 
+  // Filter click handler
   filterBar.addEventListener('click', e => {
     const btn = e.target.closest('.filter-btn');
     if (!btn) return;
+
     active = btn.dataset.tag;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+
+    // Update active highlight
+    document.querySelectorAll('#filterBar .filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    const filtered = active === 'all' ? blogs : blogs.filter(b => b.tags.includes(active));
+
+    // Re-render list
+    const filtered = active === 'all'
+      ? blogs
+      : blogs.filter(b => b.tags.includes(active));
     renderBlogItems(filtered, 'blogFull');
+
+    // Clear search input on filter change
+    const search = document.getElementById('blogSearch');
+    if (search) search.value = '';
   });
 
+  // Initial render — all posts
   renderBlogItems(blogs, 'blogFull');
+
+  // Search (operates on current tag filter)
   initBlogSearch(blogs, 'blogFull');
 });
 </script>
