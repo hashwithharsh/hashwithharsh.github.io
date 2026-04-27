@@ -1,18 +1,5 @@
 [
   {
-    "id": "retset-1777318478990",
-    "title": "retset",
-    "description": "tstst",
-    "github": "sts",
-    "demo": "tsts",
-    "date": "2026-04-27",
-    "year": "2026",
-    "status": "active",
-    "tags": [],
-    "featured": false,
-    "pinned": false
-  },
-  {
     "id": "k8s-monitoring-stack",
     "title": "K8s Monitoring Stack",
     "description": "Full observability setup for a multi-node Kubernetes cluster. Prometheus scrapes metrics, Grafana visualizes, Alertmanager pages when things break.",
