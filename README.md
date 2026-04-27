@@ -24,8 +24,10 @@ hashwithharsh/
 ├── content/
 │   ├── blogs.json      ← blog post metadata (title, date, slug, tags, excerpt)
 │   ├── projects.json   ← project metadata
+│   ├── project/
+│        └── *.md        ← actual projects content (fetched on demand)
 │   └── posts/
-│       └── *.md        ← actual blog post content (fetched on demand)
+│        └── *.md        ← actual blog post content (fetched on demand)
 │
 ├── api/
 │   └── contact.js      ← Vercel serverless function (contact form email)
@@ -71,9 +73,9 @@ git push -u origin main
 
 ---
 
-### 2. Vercel Serverless API (contact form)
+### 2. Vercel Serverless API (contact form + GitHub sync)
 
-The API folder deploys separately to Vercel to handle the contact form.
+The API folder deploys separately to Vercel to handle the contact form and GitHub auto-sync.
 
 ```bash
 # Install Vercel CLI
@@ -92,12 +94,20 @@ vercel --prod
 | `RESEND_API_KEY` | Get free at [resend.com](https://resend.com) — 3k emails/month free |
 | `CONTACT_EMAIL` | Your email address (where form submissions go) |
 | `ALLOWED_ORIGIN` | Your GitHub Pages URL, e.g. `https://harshyadav.github.io` |
+| `GITHUB_TOKEN` | GitHub Personal Access Token with `repo` scope (for auto-sync) |
+| `GITHUB_REPO` | Repository in format `owner/repo`, e.g. `harshyadav/hashwithharsh` |
+| `GITHUB_BRANCH` | Branch name (default: `main`) |
+| `ADMIN_PASSWORD` | Admin panel password |
+| `ADMIN_SESSION_SECRET` | Random secret for session signing |
 
-**After deployment:**  
+**After deployment:**
 Update `main.js` line with your actual Vercel API URL:
 ```js
 const CONTACT_API = 'https://YOUR_PROJECT.vercel.app/api/contact';
 ```
+
+**GitHub Auto-Sync:**
+See [GITHUB_SYNC_SETUP.md](GITHUB_SYNC_SETUP.md) for detailed setup instructions.
 
 ---
 
@@ -155,6 +165,7 @@ Status options: `"active"` | `"wip"` | `"archived"`
 - [ ] Add your blog posts as `.md` files in `content/posts/`
 - [ ] Set up Vercel environment variables (see above)
 - [ ] Point your domain DNS to GitHub Pages
+- [ ] Set up GitHub auto-sync (see [GITHUB_SYNC_SETUP.md](GITHUB_SYNC_SETUP.md))
 
 ---
 

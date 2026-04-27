@@ -4,6 +4,10 @@
     {
       "src": "/api/contact",
       "dest": "/api/contact.js"
+    },
+    {
+      "src": "/api/github-sync",
+      "dest": "/api/github-sync.js"
     }
   ]
 }

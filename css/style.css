@@ -14,7 +14,7 @@
   --border:       #1a1a1a;
   --border-2:     #252525;
   --text:         #e2e2e2;
-  --text-2:       #b8b8b8;
+  --text-2:       #888;
   --text-3:       #444;
   --accent:       #b5ff4d;
   --accent-dim:   rgba(181,255,77,.10);
@@ -123,9 +123,9 @@ section { padding: 110px 0; }
   font-family: var(--ff-mono);
   font-size: .8rem;
   font-weight: 500;
-  letter-spacing: 0.3px;
+  letter-spacing: .05em;
   border: 1px solid var(--border-2);
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   transition: all var(--fast) var(--ease);
   background: transparent;
@@ -290,7 +290,7 @@ section { padding: 110px 0; }
     linear-gradient(var(--border) 1px, transparent 1px),
     linear-gradient(90deg, var(--border) 1px, transparent 1px);
   background-size: 60px 60px;
-  opacity: .18;
+  opacity: .35;
   mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, black 30%, transparent 80%);
   pointer-events: none;
 }
@@ -336,7 +336,7 @@ section { padding: 110px 0; }
   gap: 10px;
   font-family: var(--ff-mono);
   font-size: clamp(.78rem, 1.2vw, .92rem);
-  text-shadow: 0 0 6px rgba(181,255,77,0.3);
+  text-shadow: 0 0 8px rgba(181,255,77,0.4);
   color: var(--text-2);
   margin-bottom: 48px;
   overflow: hidden;
@@ -1846,7 +1846,7 @@ body::before {
     linear-gradient(90deg, var(--border) 1px, transparent 1px);
 
   background-size: 60px 60px;
-  opacity: 0.15;
+  opacity: 0.3;
 
   animation: gridMove 20s linear infinite;
   pointer-events: none;
@@ -1866,29 +1866,4 @@ body::before {
   to {
     background-position: 60px 60px;
   }
-}
-
-/* SUBTLE HUMAN INTERACTION */
-.item-card {
-  transition: transform 0.2s ease;
-}
-
-.item-card:hover {
-  transform: translateY(-4px);
-}
-
-section:nth-child(odd) {
-  padding-top: 90px;
-}
-
-section:nth-child(even) {
-  padding-top: 110px;
-}
-/* BETTER READING RHYTHM */
-p {
-  line-height: 1.7;
-}
-
-.hero-desc {
-  line-height: 1.8;
 }

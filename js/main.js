@@ -28,13 +28,13 @@ function closeMobileMenu() {
 const typewriterEl = document.getElementById('typewriter');
 if (typewriterEl) {
   const phrases = [
-  'whoami --learning-devops',
-  'kubectl get pods --why-is-this-broken',
-  'terraform apply (hope for the best)',
-  'docker logs --help',
-  'fix → break → fix again',
-  'note to self: document this'
-];
+    'whoami --devops-student',
+    'kubectl get pods --all',
+    'terraform apply --auto-approve',
+    'docker build -t hashwithharsh .',
+    'cat /etc/passion | grep cloud',
+    'git push origin main  # ship it',
+  ];
   let phraseIdx = 0, charIdx = 0, deleting = false, pauseCount = 0;
 
   function typeLoop() {

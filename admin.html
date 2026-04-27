@@ -760,7 +760,12 @@ input, textarea, select { font-family: var(--ff-body); }
       <span>#</span>hashwithharsh
       <span class="topbar-badge">admin</span>
     </div>
+    <div id="syncIndicator" style="font-size:.7rem;color:var(--text-3);font-family:var(--ff-mono);display:flex;align-items:center;gap:6px;">
+      <span id="syncDot" style="width:6px;height:6px;border-radius:50%;background:var(--border-2);"></span>
+      <span id="syncText">not synced</span>
+    </div>
     <button class="tb-btn" onclick="exportData()" title="Download all data as JSON">⬇ export</button>
+    <button class="tb-btn" id="syncBtn" onclick="syncToGitHub()" title="Sync changes to GitHub">↻ sync to github</button>
     <button class="tb-btn accent" onclick="saveAllData()">💾 save all</button>
     <button class="tb-btn danger" onclick="doLogout()">⏻ logout</button>
   </div>
@@ -849,7 +854,7 @@ input, textarea, select { font-family: var(--ff-body); }
         <div class="section-tag" style="margin-bottom:12px;">// recent changes</div>
         <div id="recentChanges" style="background:var(--surface);border:1px solid var(--border-2);border-radius:8px;padding:20px;">
           <div style="font-size:.8rem;color:var(--text-3);font-family:var(--ff-mono);">
-            // nothing changed yet. start editing and it’ll show up here.
+            // no changes tracked yet. edit content to begin.
           </div>
         </div>
       </section>
@@ -932,20 +937,6 @@ input, textarea, select { font-family: var(--ff-body); }
         </div>
 
         <div class="edit-block">
-          <div class="edit-block-title">section heading</div>
-          <div class="form-grid single">
-            <div class="form-row">
-              <label>main heading (HTML allowed for &lt;em&gt;)</label>
-              <input type="text" id="aboutHeading" placeholder="Most things I build..." />
-            </div>
-            <div class="form-row">
-              <label>closing sub-note (small muted text)</label>
-              <input type="text" id="aboutSubNote" placeholder="Still figuring things out..." />
-            </div>
-          </div>
-        </div>
-
-        <div class="edit-block">
           <div class="edit-block-title">bio paragraphs</div>
           <div class="editable-list" id="aboutParas"></div>
           <button class="add-row-btn" onclick="addAboutPara()">+ add paragraph</button>
@@ -1022,7 +1013,7 @@ input, textarea, select { font-family: var(--ff-body); }
           </div>
         </div>
         <div style="background:var(--surface);border:1px solid rgba(91,155,255,.2);border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:.78rem;color:var(--blue);font-family:var(--ff-mono);">
-          ℹ ℹ Changes here are saved locally. If you want them live, copy the JSON into your repo.. To persist permanently, copy the JSON below to <code style="color:var(--accent)">content/blogs.json</code> in your repo.
+          ℹ Blog metadata is saved to localStorage. To persist permanently, copy the JSON below to <code style="color:var(--accent)">content/blogs.json</code> in your repo.
         </div>
         <div class="list-items" id="blogsListAdmin">
           <!-- JS rendered -->
@@ -1082,6 +1073,35 @@ input, textarea, select { font-family: var(--ff-body); }
               <label>twitter / x (optional)</label>
               <input type="text" id="twitterUrl" placeholder="https://twitter.com/harshyadav" />
             </div>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <div class="settings-group-title">github auto-sync</div>
+          <div class="form-grid">
+            <div class="form-row" style="grid-column:1/-1">
+              <label>github sync api url</label>
+              <input type="text" id="githubApiUrl" placeholder="https://hashwithharsh-api.vercel.app/api/github-sync" />
+              <div class="form-hint">Your Vercel serverless function URL for GitHub sync</div>
+            </div>
+            <div class="form-row">
+              <label>auto-sync on save</label>
+              <select id="autoSync">
+                <option value="true">enabled</option>
+                <option value="false">disabled</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>sync status</label>
+              <div id="syncStatus" style="font-size:.75rem;color:var(--text-3);font-family:var(--ff-mono);padding:8px 0;">not configured</div>
+            </div>
+          </div>
+          <div style="margin-top:16px;">
+            <button class="tb-btn" onclick="testGitHubConnection()">test connection</button>
+            <button class="tb-btn accent" onclick="syncToGitHub()">sync now</button>
+          </div>
+          <div style="margin-top:14px;font-size:.76rem;color:var(--text-3);line-height:1.6;">
+            Configure GitHub credentials in your Vercel environment variables: <code style="color:var(--accent)">GITHUB_TOKEN</code>, <code style="color:var(--accent)">GITHUB_REPO</code>, <code style="color:var(--accent)">GITHUB_BRANCH</code>
           </div>
         </div>
 
@@ -1164,30 +1184,27 @@ let state = {
 const DEFAULTS = {
   hero: {
     name: 'HARSH YADAV',
-    status: "currently debugging something that should've worked already",
-    description: "I’m a DevOps student focused on understanding how real systems actually work — not just running commands, but figuring out why things break when they do.",
+    status: 'currently tinkering with Terraform & AWS',
+    description: "DevOps & Cloud Engineering student obsessed with infrastructure, pipelines, and the art of breaking things to understand them better. I document everything — for you and for future me.",
     cta1Text: 'view projects ↓',
-    cta1Href: 'projects.html',
+    cta1Href: '#projects',
     cta2Text: 'read the blog →',
     cta2Href: 'blog.html',
-   phrases: [
-  'whoami --learning-devops',
-  'kubectl get pods --why-is-this-broken',
-  'terraform apply (hope for the best)',
-  'docker logs --help',
-  'fix → break → fix again',
-  'note to self: document this'
-],
+    phrases: [
+      'whoami --devops-student',
+      'kubectl get pods --all',
+      'terraform apply --auto-approve',
+      'docker build -t hashwithharsh .',
+      'cat /etc/passion | grep cloud',
+      'git push origin main  # ship it',
+    ],
   },
   about: {
-    heading: "Most things I build <em>don't work the first time</em>. That's usually where I learn the most.",
-    subNote: "Still figuring things out — and honestly, that's the best part.",
     paragraphs: [
-  "I didn’t get into DevOps by following a clear path. I started by trying things, breaking them, and then spending way too much time figuring out what actually went wrong.",
-  "Most of what I’ve learned comes from debugging — not just fixing issues, but understanding why they happened in the first place. That’s what I enjoy the most.",
-  "Right now I’m exploring AWS, Kubernetes, and Terraform. Not just to use them, but to understand how everything connects behind the scenes.",
-  "This site is where I document what I’m learning, what confused me, and what finally started to click."
-],
+      "I'm a self-driven DevOps and Cloud Engineering student who believes the fastest way to learn infrastructure is to build something real, watch it fail spectacularly, and reverse-engineer why.",
+      "hashwithharsh started as a place to dump my notes. It became something I'm proud of.",
+      "Right now I'm deep in AWS, Kubernetes, Terraform, and GitHub Actions. If it can be automated, I'm automating it.",
+    ],
     stats: [
       { label: 'projects built',       value: 12 },
       { label: 'blog posts',           value: 24 },
@@ -1212,13 +1229,14 @@ const DEFAULTS = {
   settings: {
     siteTitle:   'hashwithharsh',
     ownerName:   'Harsh Yadav',
-    tagline: 'learning DevOps by building and breaking things',
+    tagline:     'DevOps & Cloud Engineering Student',
     siteUrl:     'https://hashwithharsh.dev',
     githubUrl:   'https://github.com/harshyadav',
     linkedinUrl: 'https://linkedin.com/in/harshyadav',
     contactEmail:'harsh@hashwithharsh.dev',
-    twitterUrl:  'https://twitter.com/hashwithharsh',
+    twitterUrl:  '',
     adminApiUrl: 'https://hashwithharsh-api.vercel.app/api/admin-auth',
+    githubApiUrl: 'https://hashwithharsh-api.vercel.app/api/github-sync',
   },
 };
 
@@ -1484,6 +1502,26 @@ function renderDashboard() {
   const session = getSession();
   const expiresIn = session ? Math.round((session.expiry - Date.now()) / 3600000) : 0;
 
+  // Calculate sync status
+  let syncStatus = 'not configured';
+  let syncColor = 'var(--text-3)';
+  if (githubConfig.lastSync) {
+    const diff = Date.now() - githubConfig.lastSync;
+    if (diff < 60000) {
+      syncStatus = 'just now';
+      syncColor = 'var(--green)';
+    } else if (diff < 3600000) {
+      syncStatus = `${Math.floor(diff / 60000)}m ago`;
+      syncColor = 'var(--green)';
+    } else if (diff < 86400000) {
+      syncStatus = `${Math.floor(diff / 3600000)}h ago`;
+      syncColor = 'var(--yellow)';
+    } else {
+      syncStatus = `${Math.floor(diff / 86400000)}d ago`;
+      syncColor = 'var(--text-3)';
+    }
+  }
+
   grid.innerHTML = `
     <div class="stat-card">
       <span class="stat-card-icon">◧</span>
@@ -1501,9 +1539,9 @@ function renderDashboard() {
       <div class="stat-card-lbl">pinned projects</div>
     </div>
     <div class="stat-card">
-      <span class="stat-card-icon">⏱</span>
-      <div class="stat-card-val">${expiresIn}h</div>
-      <div class="stat-card-lbl">session expires in</div>
+      <span class="stat-card-icon">↻</span>
+      <div class="stat-card-val" style="color:${syncColor}">${syncStatus}</div>
+      <div class="stat-card-lbl">last sync</div>
     </div>
   `;
   updateBadges();
@@ -1592,8 +1630,6 @@ function saveHero() {
 ──────────────────────────────────────────── */
 function populateAboutForm() {
   const a = state.about;
-  document.getElementById('aboutHeading').value  = a.heading  || '';
-  document.getElementById('aboutSubNote').value  = a.subNote  || '';
   renderAboutParas();
   renderAboutStats();
   const t = a.terminal || {};
@@ -1638,8 +1674,6 @@ function renderAboutStats() {
 
 function saveAbout() {
   state.about = {
-    heading:    document.getElementById('aboutHeading').value,
-    subNote:    document.getElementById('aboutSubNote').value,
     paragraphs: Array.from(document.querySelectorAll('#aboutParas textarea')).map(t => t.value).filter(Boolean),
     stats: state.about.stats,
     terminal: {
@@ -2093,6 +2127,7 @@ function populateSettingsForm() {
   document.getElementById('contactEmail').value = s.contactEmail || '';
   document.getElementById('twitterUrl').value   = s.twitterUrl   || '';
   document.getElementById('adminApiUrl').value  = s.adminApiUrl  || '';
+  populateGitHubSettings();
 }
 
 function saveSettings() {
@@ -2166,6 +2201,337 @@ document.addEventListener('keydown', e => {
     saveAllData();
   }
 });
+
+/* ────────────────────────────────────────────
+   GITHUB SYNC
+──────────────────────────────────────────── */
+const GITHUB_SYNC_KEY = 'hwh_github_sync';
+
+let githubConfig = {
+  apiUrl: '',
+  autoSync: true,
+  lastSync: null,
+  syncEnabled: false,
+};
+
+function loadGitHubConfig() {
+  try {
+    const saved = localStorage.getItem(GITHUB_SYNC_KEY);
+    if (saved) {
+      githubConfig = { ...githubConfig, ...JSON.parse(saved) };
+    }
+  } catch {}
+  updateSyncStatusUI();
+}
+
+function saveGitHubConfig() {
+  githubConfig.apiUrl = document.getElementById('githubApiUrl').value.trim();
+  githubConfig.autoSync = document.getElementById('autoSync').value === 'true';
+  localStorage.setItem(GITHUB_SYNC_KEY, JSON.stringify(githubConfig));
+  updateSyncStatusUI();
+  toast('GitHub config saved', 'success');
+}
+
+function getGitHubApiUrl() {
+  return githubConfig.apiUrl || 'https://hashwithharsh-api.vercel.app/api/github-sync';
+}
+
+function updateSyncStatusUI() {
+  const el = document.getElementById('syncStatus');
+  const dot = document.getElementById('syncDot');
+  const text = document.getElementById('syncText');
+
+  if (!el) return;
+
+  if (!githubConfig.apiUrl) {
+    el.innerHTML = '<span style="color:var(--text-3)">not configured</span>';
+    if (dot) dot.style.background = 'var(--border-2)';
+    if (text) text.textContent = 'not configured';
+    return;
+  }
+
+  if (githubConfig.lastSync) {
+    const now = Date.now();
+    const diff = now - githubConfig.lastSync;
+    let timeStr;
+
+    if (diff < 60000) {
+      timeStr = 'just now';
+    } else if (diff < 3600000) {
+      const mins = Math.floor(diff / 60000);
+      timeStr = `${mins}m ago`;
+    } else if (diff < 86400000) {
+      const hours = Math.floor(diff / 3600000);
+      timeStr = `${hours}h ago`;
+    } else {
+      const days = Math.floor(diff / 86400000);
+      timeStr = `${days}d ago`;
+    }
+
+    el.innerHTML = `<span style="color:var(--green)">✓ last sync: ${timeStr}</span>`;
+    if (dot) dot.style.background = 'var(--green)';
+    if (text) text.textContent = `synced ${timeStr}`;
+  } else {
+    el.innerHTML = '<span style="color:var(--yellow)">⚠ never synced</span>';
+    if (dot) dot.style.background = 'var(--yellow)';
+    if (text) text.textContent = 'pending sync';
+  }
+}
+
+async function testGitHubConnection() {
+  const btn = event.target;
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> testing...';
+
+  try {
+    const res = await fetch(getGitHubApiUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'status',
+        verifyToken: getSession()?.token,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Connection failed');
+    }
+
+    githubConfig.syncEnabled = true;
+    saveGitHubConfig();
+
+    toast(`Connected to ${data.repo.full_name} ✓`, 'success');
+    logChange(`GitHub connection verified: ${data.repo.full_name}`);
+  } catch (e) {
+    githubConfig.syncEnabled = false;
+    toast(`Connection failed: ${e.message}`, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+}
+
+async function syncToGitHub() {
+  const btn = document.getElementById('syncBtn');
+  const originalText = btn.innerHTML;
+  const originalDisabled = btn.disabled;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> syncing...';
+
+  // Update sync indicator
+  const syncDot = document.getElementById('syncDot');
+  const syncText = document.getElementById('syncText');
+  if (syncDot) syncDot.style.background = 'var(--blue)';
+  if (syncText) syncText.textContent = 'syncing...';
+
+  try {
+    // Sync all data files
+    const results = [];
+
+    // Sync projects.json
+    const projectsResult = await syncFile('content/projects.json', JSON.stringify(state.projects, null, 2), 'Update projects');
+    results.push(projectsResult);
+
+    // Sync blogs.json
+    const blogsResult = await syncFile('content/blogs.json', JSON.stringify(state.blogs, null, 2), 'Update blogs');
+    results.push(blogsResult);
+
+    // Sync project markdown files
+    for (const project of state.projects) {
+      const projectPath = `content/projects/${project.id}.md`;
+      try {
+        const projectContent = await fetch(projectPath).then(r => r.text()).catch(() => null);
+        if (projectContent) {
+          const projectResult = await syncFile(projectPath, projectContent, `Update project: ${project.title}`);
+          results.push(projectResult);
+        }
+      } catch (e) {
+        console.warn(`Could not sync project markdown: ${projectPath}`, e);
+      }
+    }
+
+    // Sync blog markdown files
+    for (const blog of state.blogs) {
+      const blogPath = `content/posts/${blog.slug}.md`;
+      try {
+        const blogContent = await fetch(blogPath).then(r => r.text()).catch(() => null);
+        if (blogContent) {
+          const blogResult = await syncFile(blogPath, blogContent, `Update blog: ${blog.title}`);
+          results.push(blogResult);
+        }
+      } catch (e) {
+        console.warn(`Could not sync blog markdown: ${blogPath}`, e);
+      }
+    }
+
+    // Check if all succeeded
+    const failed = results.filter(r => !r.success);
+    if (failed.length > 0) {
+      throw new Error(`${failed.length} file(s) failed to sync`);
+    }
+
+    githubConfig.lastSync = Date.now();
+    saveGitHubConfig();
+
+    toast(`Synced ${results.length} file(s) to GitHub ✓`, 'success');
+    logChange(`Synced ${results.length} file(s) to GitHub`);
+
+    // Update sync indicator
+    if (syncDot) syncDot.style.background = 'var(--green)';
+    if (syncText) syncText.textContent = 'synced';
+  } catch (e) {
+    toast(`Sync failed: ${e.message}`, 'error');
+    console.error('GitHub sync error:', e);
+
+    // Update sync indicator to show error
+    if (syncDot) syncDot.style.background = 'var(--red)';
+    if (syncText) syncText.textContent = 'sync failed';
+  } finally {
+    btn.disabled = originalDisabled;
+    btn.innerHTML = originalText;
+  }
+}
+
+async function syncFile(path, content, message) {
+  try {
+    // First, get the current SHA
+    const shaRes = await fetch(getGitHubApiUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'read',
+        path,
+        verifyToken: getSession()?.token,
+      }),
+    });
+
+    let sha = null;
+    if (shaRes.ok) {
+      const shaData = await shaRes.json();
+      sha = shaData.sha;
+    }
+
+    // Write the file
+    const writeRes = await fetch(getGitHubApiUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'write',
+        path,
+        content,
+        message,
+        sha,
+        verifyToken: getSession()?.token,
+      }),
+    });
+
+    const writeData = await writeRes.json();
+
+    if (!writeRes.ok) {
+      return { success: false, path, error: writeData.error };
+    }
+
+    return { success: true, path, commit: writeData.commit };
+  } catch (e) {
+    return { success: false, path, error: e.message };
+  }
+}
+
+async function syncMarkdownFile(path, content, message) {
+  if (!githubConfig.autoSync || !githubConfig.syncEnabled) {
+    return;
+  }
+
+  try {
+    const result = await syncFile(path, content, message);
+    if (result.success) {
+      console.log(`Synced ${path} to GitHub`);
+    } else {
+      console.warn(`Failed to sync ${path}:`, result.error);
+    }
+  } catch (e) {
+    console.warn(`Failed to sync ${path}:`, e);
+  }
+}
+
+// Auto-sync hook - call this after saving data
+async function autoSyncIfNeeded() {
+  if (!githubConfig.autoSync || !githubConfig.syncEnabled) {
+    return;
+  }
+
+  // Debounce sync to avoid multiple rapid syncs
+  if (window.syncTimeout) {
+    clearTimeout(window.syncTimeout);
+  }
+
+  window.syncTimeout = setTimeout(async () => {
+    await syncToGitHub();
+  }, 2000);
+}
+
+// Override saveAllData to include auto-sync
+const originalSaveAllData = saveAllData;
+saveAllData = function() {
+  originalSaveAllData();
+  autoSyncIfNeeded();
+};
+
+// Override individual save functions to trigger auto-sync
+const originalSaveHero = saveHero;
+saveHero = function() {
+  originalSaveHero();
+  autoSyncIfNeeded();
+};
+
+const originalSaveAbout = saveAbout;
+saveAbout = function() {
+  originalSaveAbout();
+  autoSyncIfNeeded();
+};
+
+const originalSaveStack = saveStack;
+saveStack = function() {
+  originalSaveStack();
+  autoSyncIfNeeded();
+};
+
+const originalSaveProject = saveProject;
+saveProject = function(idx) {
+  originalSaveProject(idx);
+  autoSyncIfNeeded();
+};
+
+const originalSaveBlog = saveBlog;
+saveBlog = function(idx) {
+  originalSaveBlog(idx);
+  autoSyncIfNeeded();
+};
+
+const originalSaveSettings = saveSettings;
+saveSettings = function() {
+  originalSaveSettings();
+  saveGitHubConfig();
+};
+
+// Load GitHub config on boot
+const originalBootAdminPanel = bootAdminPanel;
+bootAdminPanel = function() {
+  originalBootAdminPanel();
+  loadGitHubConfig();
+  populateGitHubSettings();
+};
+
+function populateGitHubSettings() {
+  document.getElementById('githubApiUrl').value = githubConfig.apiUrl || '';
+  document.getElementById('autoSync').value = githubConfig.autoSync ? 'true' : 'false';
+  updateSyncStatusUI();
+}
+
 </script>
 </body>
 </html>
