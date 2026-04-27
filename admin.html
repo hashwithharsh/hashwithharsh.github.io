@@ -849,7 +849,7 @@ input, textarea, select { font-family: var(--ff-body); }
         <div class="section-tag" style="margin-bottom:12px;">// recent changes</div>
         <div id="recentChanges" style="background:var(--surface);border:1px solid var(--border-2);border-radius:8px;padding:20px;">
           <div style="font-size:.8rem;color:var(--text-3);font-family:var(--ff-mono);">
-            // no changes tracked yet. edit content to begin.
+            // nothing changed yet. start editing and it’ll show up here.
           </div>
         </div>
       </section>
@@ -932,6 +932,20 @@ input, textarea, select { font-family: var(--ff-body); }
         </div>
 
         <div class="edit-block">
+          <div class="edit-block-title">section heading</div>
+          <div class="form-grid single">
+            <div class="form-row">
+              <label>main heading (HTML allowed for &lt;em&gt;)</label>
+              <input type="text" id="aboutHeading" placeholder="Most things I build..." />
+            </div>
+            <div class="form-row">
+              <label>closing sub-note (small muted text)</label>
+              <input type="text" id="aboutSubNote" placeholder="Still figuring things out..." />
+            </div>
+          </div>
+        </div>
+
+        <div class="edit-block">
           <div class="edit-block-title">bio paragraphs</div>
           <div class="editable-list" id="aboutParas"></div>
           <button class="add-row-btn" onclick="addAboutPara()">+ add paragraph</button>
@@ -1008,7 +1022,7 @@ input, textarea, select { font-family: var(--ff-body); }
           </div>
         </div>
         <div style="background:var(--surface);border:1px solid rgba(91,155,255,.2);border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:.78rem;color:var(--blue);font-family:var(--ff-mono);">
-          ℹ Blog metadata is saved to localStorage. To persist permanently, copy the JSON below to <code style="color:var(--accent)">content/blogs.json</code> in your repo.
+          ℹ ℹ Changes here are saved locally. If you want them live, copy the JSON into your repo.. To persist permanently, copy the JSON below to <code style="color:var(--accent)">content/blogs.json</code> in your repo.
         </div>
         <div class="list-items" id="blogsListAdmin">
           <!-- JS rendered -->
@@ -1150,27 +1164,30 @@ let state = {
 const DEFAULTS = {
   hero: {
     name: 'HARSH YADAV',
-    status: 'currently tinkering with Terraform & AWS',
-    description: "DevOps & Cloud Engineering student obsessed with infrastructure, pipelines, and the art of breaking things to understand them better. I document everything — for you and for future me.",
+    status: "currently debugging something that should've worked already",
+    description: "I’m a DevOps student focused on understanding how real systems actually work — not just running commands, but figuring out why things break when they do.",
     cta1Text: 'view projects ↓',
-    cta1Href: '#projects',
+    cta1Href: 'projects.html',
     cta2Text: 'read the blog →',
     cta2Href: 'blog.html',
-    phrases: [
-      'whoami --devops-student',
-      'kubectl get pods --all',
-      'terraform apply --auto-approve',
-      'docker build -t hashwithharsh .',
-      'cat /etc/passion | grep cloud',
-      'git push origin main  # ship it',
-    ],
+   phrases: [
+  'whoami --learning-devops',
+  'kubectl get pods --why-is-this-broken',
+  'terraform apply (hope for the best)',
+  'docker logs --help',
+  'fix → break → fix again',
+  'note to self: document this'
+],
   },
   about: {
+    heading: "Most things I build <em>don't work the first time</em>. That's usually where I learn the most.",
+    subNote: "Still figuring things out — and honestly, that's the best part.",
     paragraphs: [
-      "I'm a self-driven DevOps and Cloud Engineering student who believes the fastest way to learn infrastructure is to build something real, watch it fail spectacularly, and reverse-engineer why.",
-      "hashwithharsh started as a place to dump my notes. It became something I'm proud of.",
-      "Right now I'm deep in AWS, Kubernetes, Terraform, and GitHub Actions. If it can be automated, I'm automating it.",
-    ],
+  "I didn’t get into DevOps by following a clear path. I started by trying things, breaking them, and then spending way too much time figuring out what actually went wrong.",
+  "Most of what I’ve learned comes from debugging — not just fixing issues, but understanding why they happened in the first place. That’s what I enjoy the most.",
+  "Right now I’m exploring AWS, Kubernetes, and Terraform. Not just to use them, but to understand how everything connects behind the scenes.",
+  "This site is where I document what I’m learning, what confused me, and what finally started to click."
+],
     stats: [
       { label: 'projects built',       value: 12 },
       { label: 'blog posts',           value: 24 },
@@ -1195,12 +1212,12 @@ const DEFAULTS = {
   settings: {
     siteTitle:   'hashwithharsh',
     ownerName:   'Harsh Yadav',
-    tagline:     'DevOps & Cloud Engineering Student',
+    tagline: 'learning DevOps by building and breaking things',
     siteUrl:     'https://hashwithharsh.dev',
     githubUrl:   'https://github.com/harshyadav',
     linkedinUrl: 'https://linkedin.com/in/harshyadav',
     contactEmail:'harsh@hashwithharsh.dev',
-    twitterUrl:  '',
+    twitterUrl:  'https://twitter.com/hashwithharsh',
     adminApiUrl: 'https://hashwithharsh-api.vercel.app/api/admin-auth',
   },
 };
@@ -1575,6 +1592,8 @@ function saveHero() {
 ──────────────────────────────────────────── */
 function populateAboutForm() {
   const a = state.about;
+  document.getElementById('aboutHeading').value  = a.heading  || '';
+  document.getElementById('aboutSubNote').value  = a.subNote  || '';
   renderAboutParas();
   renderAboutStats();
   const t = a.terminal || {};
@@ -1619,6 +1638,8 @@ function renderAboutStats() {
 
 function saveAbout() {
   state.about = {
+    heading:    document.getElementById('aboutHeading').value,
+    subNote:    document.getElementById('aboutSubNote').value,
     paragraphs: Array.from(document.querySelectorAll('#aboutParas textarea')).map(t => t.value).filter(Boolean),
     stats: state.about.stats,
     terminal: {
