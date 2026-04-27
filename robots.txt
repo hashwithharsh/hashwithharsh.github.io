@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://hashwithharsh.dev/sitemap.xml
