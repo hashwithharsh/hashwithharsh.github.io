@@ -404,6 +404,35 @@ input, textarea, select { font-family: var(--ff-body); }
 .form-row textarea::placeholder { color: var(--text-3); }
 .form-hint { font-size: .72rem; color: var(--text-3); margin-top: 2px; }
 
+/* File upload input */
+.form-row input[type="file"] {
+  background: var(--surface-3);
+  border: 1px dashed var(--border-2);
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: border-color var(--fast);
+}
+.form-row input[type="file"]:hover {
+  border-color: rgba(181,255,77,.3);
+}
+.form-row input[type="file"]::file-selector-button {
+  background: var(--surface-4);
+  border: 1px solid var(--border-2);
+  color: var(--text-2);
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-family: var(--ff-mono);
+  font-size: .7rem;
+  transition: all var(--fast);
+}
+.form-row input[type="file"]::file-selector-button:hover {
+  background: var(--surface-3);
+  border-color: var(--border-3);
+  color: var(--text);
+}
+
 /* Inline editable fields */
 .edit-block {
   background: var(--surface);
@@ -1839,6 +1868,14 @@ function openProjectModal(i) {
           <input type="text" id="mp-tag-input" placeholder="docker, kubernetes..." onkeydown="handleProjectTagInput(event)" />
         </div>
       </div>
+      <div class="form-row" style="grid-column:1/-1">
+        <label>project markdown file (.md)</label>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <input type="file" id="mp-file" accept=".md" style="flex:1;font-size:.8rem;" />
+          <button class="tb-btn" onclick="uploadProjectMarkdown()" id="mp-upload-btn" style="display:none;">upload</button>
+        </div>
+        <div id="mp-file-status" style="font-size:.72rem;color:var(--text-3);margin-top:4px;"></div>
+      </div>
       <div class="form-row">
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:.82rem;color:var(--text-2);">
           <input type="checkbox" id="mp-featured" ${p.featured?'checked':''} style="accent-color:var(--accent);" />
@@ -1856,6 +1893,12 @@ function openProjectModal(i) {
   `;
 
   openModal();
+
+  // Add file input event listener
+  const fileInput = document.getElementById('mp-file');
+  if (fileInput) {
+    fileInput.addEventListener('change', handleProjectFileSelect);
+  }
 }
 
 function handleProjectTagInput(e) {
@@ -1877,6 +1920,82 @@ function removeProjectTag(btn, tag) {
   btn.parentElement.remove();
 }
 
+// Store uploaded markdown content
+let uploadedProjectMarkdown = null;
+let uploadedBlogMarkdown = null;
+
+function handleProjectFileSelect(event) {
+  const file = event.target.files[0];
+  const statusEl = document.getElementById('mp-file-status');
+  const uploadBtn = document.getElementById('mp-upload-btn');
+
+  if (!file) {
+    statusEl.textContent = '';
+    uploadBtn.style.display = 'none';
+    return;
+  }
+
+  if (!file.name.endsWith('.md')) {
+    statusEl.innerHTML = '<span style="color:var(--red)">Please select a .md file</span>';
+    uploadBtn.style.display = 'none';
+    return;
+  }
+
+  statusEl.innerHTML = `<span style="color:var(--green)">Selected: ${file.name}</span>`;
+  uploadBtn.style.display = 'inline-flex';
+
+  // Read file content
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    uploadedProjectMarkdown = e.target.result;
+  };
+  reader.readAsText(file);
+}
+
+async function uploadProjectMarkdown() {
+  const title = document.getElementById('mp-title').value.trim();
+  const statusEl = document.getElementById('mp-file-status');
+  const uploadBtn = document.getElementById('mp-upload-btn');
+
+  if (!title) {
+    toast('Please enter a project title first', 'error');
+    return;
+  }
+
+  if (!uploadedProjectMarkdown) {
+    toast('No file selected', 'error');
+    return;
+  }
+
+  // Generate project ID
+  const projectId = title.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'') + '-' + Date.now();
+  const path = `content/projects/${projectId}.md`;
+
+  try {
+    statusEl.innerHTML = '<span style="color:var(--blue)">Uploading...</span>';
+    uploadBtn.disabled = true;
+
+    const result = await syncFile(path, uploadedProjectMarkdown, `Add project markdown: ${title}`);
+
+    if (result.success) {
+      statusEl.innerHTML = '<span style="color:var(--green)">✓ Uploaded successfully</span>';
+      toast('Markdown file uploaded to GitHub ✓', 'success');
+      logChange(`Uploaded project markdown: ${title}`);
+
+      // Store the project ID for when saving
+      document.getElementById('mp-upload-btn').dataset.projectId = projectId;
+    } else {
+      statusEl.innerHTML = `<span style="color:var(--red)">✗ Failed: ${result.error}</span>`;
+      toast('Upload failed', 'error');
+    }
+  } catch (e) {
+    statusEl.innerHTML = `<span style="color:var(--red)">✗ Failed: ${e.message}</span>`;
+    toast('Upload failed', 'error');
+  } finally {
+    uploadBtn.disabled = false;
+  }
+}
+
 function getProjectTags() {
   return Array.from(document.querySelectorAll('#mp-tags-editor .tag-chip'))
     .map(c => c.textContent.replace('✕', '').trim())
@@ -1889,8 +2008,13 @@ function saveProject(idx) {
   if (!title || !desc) { toast('Title and description are required', 'error'); return; }
 
   const dateVal = document.getElementById('mp-date').value || new Date().toISOString().slice(0,10);
+
+  // Check if markdown was uploaded
+  const uploadBtn = document.getElementById('mp-upload-btn');
+  const uploadedProjectId = uploadBtn?.dataset.projectId;
+
   const proj = {
-    id:          idx !== null ? (state.projects[idx]?.id || title.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'') + '-' + Date.now()) : title.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'') + '-' + Date.now(),
+    id:          uploadedProjectId || (idx !== null ? (state.projects[idx]?.id || title.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'') + '-' + Date.now()) : title.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'') + '-' + Date.now()),
     title,
     description: desc,
     github:      document.getElementById('mp-github').value.trim() || null,
@@ -1917,6 +2041,13 @@ function saveProject(idx) {
   updateBadges();
   closeModal();
   renderProjects();
+
+  // Clear uploaded markdown
+  uploadedProjectMarkdown = null;
+
+  // Mark files for sync
+  markFileModified('content/projects.json');
+  markFileModified(`content/projects/${proj.id}.md`);
 }
 
 function deleteProject(i) {
@@ -1928,6 +2059,9 @@ function deleteProject(i) {
   renderProjects();
   toast('Project deleted', 'warning');
   logChange(`Deleted project: ${p.title}`);
+
+  // Mark files for sync
+  markFileModified('content/projects.json');
 }
 
 function toggleProjectPin(i) {
@@ -1935,6 +2069,9 @@ function toggleProjectPin(i) {
   saveToLS(KEYS.projects, state.projects);
   renderProjects();
   toast(state.projects[i].pinned ? 'Project pinned ✓' : 'Project unpinned', 'info');
+
+  // Mark files for sync
+  markFileModified('content/projects.json');
 }
 
 function statusLabel(s) {
@@ -2016,6 +2153,14 @@ function openBlogModal(i) {
         </div>
       </div>
       <div class="form-row">
+        <label>blog markdown file (.md)</label>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <input type="file" id="mb-file" accept=".md" style="flex:1;font-size:.8rem;" />
+          <button class="tb-btn" onclick="uploadBlogMarkdown()" id="mb-upload-btn" style="display:none;">upload</button>
+        </div>
+        <div id="mb-file-status" style="font-size:.72rem;color:var(--text-3);margin-top:4px;"></div>
+      </div>
+      <div class="form-row">
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:.82rem;color:var(--text-2);">
           <input type="checkbox" id="mb-pinned" ${b.pinned?'checked':''} style="accent-color:var(--accent);" />
           Pin this post (show at top of list)
@@ -2023,7 +2168,7 @@ function openBlogModal(i) {
       </div>
     </div>
     <div style="background:rgba(91,155,255,.07);border:1px solid rgba(91,155,255,.2);border-radius:6px;padding:12px 14px;font-size:.76rem;color:var(--blue);font-family:var(--ff-mono);">
-      ℹ Remember to create <code style="color:var(--accent)">content/posts/${b.slug||'your-slug'}.md</code> in your repository.
+      ℹ Upload your markdown file above or create <code style="color:var(--accent)">content/posts/${b.slug||'your-slug'}.md</code> manually in your repository.
     </div>
   `;
 
@@ -2035,6 +2180,80 @@ function openBlogModal(i) {
   `;
 
   openModal();
+
+  // Add file input event listener
+  const fileInput = document.getElementById('mb-file');
+  if (fileInput) {
+    fileInput.addEventListener('change', handleBlogFileSelect);
+  }
+}
+
+function handleBlogFileSelect(event) {
+  const file = event.target.files[0];
+  const statusEl = document.getElementById('mb-file-status');
+  const uploadBtn = document.getElementById('mb-upload-btn');
+
+  if (!file) {
+    statusEl.textContent = '';
+    uploadBtn.style.display = 'none';
+    return;
+  }
+
+  if (!file.name.endsWith('.md')) {
+    statusEl.innerHTML = '<span style="color:var(--red)">Please select a .md file</span>';
+    uploadBtn.style.display = 'none';
+    return;
+  }
+
+  statusEl.innerHTML = `<span style="color:var(--green)">Selected: ${file.name}</span>`;
+  uploadBtn.style.display = 'inline-flex';
+
+  // Read file content
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    uploadedBlogMarkdown = e.target.result;
+  };
+  reader.readAsText(file);
+}
+
+async function uploadBlogMarkdown() {
+  const slug = document.getElementById('mb-slug').value.trim();
+  const title = document.getElementById('mb-title').value.trim();
+  const statusEl = document.getElementById('mb-file-status');
+  const uploadBtn = document.getElementById('mb-upload-btn');
+
+  if (!slug) {
+    toast('Please enter a slug first', 'error');
+    return;
+  }
+
+  if (!uploadedBlogMarkdown) {
+    toast('No file selected', 'error');
+    return;
+  }
+
+  const path = `content/posts/${slug}.md`;
+
+  try {
+    statusEl.innerHTML = '<span style="color:var(--blue)">Uploading...</span>';
+    uploadBtn.disabled = true;
+
+    const result = await syncFile(path, uploadedBlogMarkdown, `Add blog markdown: ${title || slug}`);
+
+    if (result.success) {
+      statusEl.innerHTML = '<span style="color:var(--green)">✓ Uploaded successfully</span>';
+      toast('Markdown file uploaded to GitHub ✓', 'success');
+      logChange(`Uploaded blog markdown: ${title || slug}`);
+    } else {
+      statusEl.innerHTML = `<span style="color:var(--red)">✗ Failed: ${result.error}</span>`;
+      toast('Upload failed', 'error');
+    }
+  } catch (e) {
+    statusEl.innerHTML = `<span style="color:var(--red)">✗ Failed: ${e.message}</span>`;
+    toast('Upload failed', 'error');
+  } finally {
+    uploadBtn.disabled = false;
+  }
 }
 
 function autoSlug(inp) {
@@ -2093,6 +2312,13 @@ function saveBlog(idx) {
   updateBadges();
   closeModal();
   renderBlogs();
+
+  // Clear uploaded markdown
+  uploadedBlogMarkdown = null;
+
+  // Mark files for sync
+  markFileModified('content/blogs.json');
+  markFileModified(`content/posts/${post.slug}.md`);
 }
 
 function deleteBlog(i) {
@@ -2104,6 +2330,10 @@ function deleteBlog(i) {
   renderBlogs();
   toast('Post deleted', 'warning');
   logChange(`Deleted blog: ${b.title}`);
+
+  // Mark files for sync
+  markFileModified('content/blogs.json');
+}
 }
 
 function toggleBlogPin(i) {
@@ -2111,6 +2341,9 @@ function toggleBlogPin(i) {
   saveToLS(KEYS.blogs, state.blogs);
   renderBlogs();
   toast(state.blogs[i].pinned ? 'Post pinned ✓' : 'Post unpinned', 'info');
+
+  // Mark files for sync
+  markFileModified('content/blogs.json');
 }
 
 /* ────────────────────────────────────────────
@@ -2213,6 +2446,38 @@ let githubConfig = {
   lastSync: null,
   syncEnabled: false,
 };
+
+// Track modified files - only these will be synced
+let modifiedFiles = new Set();
+
+function markFileModified(path) {
+  modifiedFiles.add(path);
+  updateSyncIndicator();
+}
+
+function clearModifiedFiles() {
+  modifiedFiles.clear();
+  updateSyncIndicator();
+}
+
+function updateSyncIndicator() {
+  const syncText = document.getElementById('syncText');
+  if (!syncText) return;
+
+  if (modifiedFiles.size > 0) {
+    syncText.textContent = `${modifiedFiles.size} file(s) pending`;
+  } else if (githubConfig.lastSync) {
+    const diff = Date.now() - githubConfig.lastSync;
+    let timeStr;
+    if (diff < 60000) timeStr = 'just now';
+    else if (diff < 3600000) timeStr = `${Math.floor(diff / 60000)}m ago`;
+    else if (diff < 86400000) timeStr = `${Math.floor(diff / 3600000)}h ago`;
+    else timeStr = `${Math.floor(diff / 86400000)}d ago`;
+    syncText.textContent = `synced ${timeStr}`;
+  } else {
+    syncText.textContent = 'not synced';
+  }
+}
 
 function loadGitHubConfig() {
   try {
@@ -2329,42 +2594,50 @@ async function syncToGitHub() {
   if (syncText) syncText.textContent = 'syncing...';
 
   try {
-    // Sync all data files
     const results = [];
 
-    // Sync projects.json
-    const projectsResult = await syncFile('content/projects.json', JSON.stringify(state.projects, null, 2), 'Update projects');
-    results.push(projectsResult);
-
-    // Sync blogs.json
-    const blogsResult = await syncFile('content/blogs.json', JSON.stringify(state.blogs, null, 2), 'Update blogs');
-    results.push(blogsResult);
-
-    // Sync project markdown files
-    for (const project of state.projects) {
-      const projectPath = `content/projects/${project.id}.md`;
-      try {
-        const projectContent = await fetch(projectPath).then(r => r.text()).catch(() => null);
-        if (projectContent) {
-          const projectResult = await syncFile(projectPath, projectContent, `Update project: ${project.title}`);
-          results.push(projectResult);
-        }
-      } catch (e) {
-        console.warn(`Could not sync project markdown: ${projectPath}`, e);
-      }
+    // If no files marked as modified, sync the main JSON files
+    if (modifiedFiles.size === 0) {
+      markFileModified('content/projects.json');
+      markFileModified('content/blogs.json');
     }
 
-    // Sync blog markdown files
-    for (const blog of state.blogs) {
-      const blogPath = `content/posts/${blog.slug}.md`;
+    // Sync only modified files
+    for (const path of modifiedFiles) {
       try {
-        const blogContent = await fetch(blogPath).then(r => r.text()).catch(() => null);
-        if (blogContent) {
-          const blogResult = await syncFile(blogPath, blogContent, `Update blog: ${blog.title}`);
-          results.push(blogResult);
+        let content, message;
+
+        if (path === 'content/projects.json') {
+          content = JSON.stringify(state.projects, null, 2);
+          message = 'Update projects';
+        } else if (path === 'content/blogs.json') {
+          content = JSON.stringify(state.blogs, null, 2);
+          message = 'Update blogs';
+        } else if (path.startsWith('content/projects/')) {
+          // Get project markdown content
+          const projectId = path.replace('content/projects/', '').replace('.md', '');
+          const project = state.projects.find(p => p.id === projectId);
+          if (project) {
+            content = await fetch(path).then(r => r.text()).catch(() => null);
+            message = `Update project: ${project.title}`;
+          }
+        } else if (path.startsWith('content/posts/')) {
+          // Get blog markdown content
+          const slug = path.replace('content/posts/', '').replace('.md', '');
+          const blog = state.blogs.find(b => b.slug === slug);
+          if (blog) {
+            content = await fetch(path).then(r => r.text()).catch(() => null);
+            message = `Update blog: ${blog.title}`;
+          }
+        }
+
+        if (content) {
+          const result = await syncFile(path, content, message);
+          results.push(result);
         }
       } catch (e) {
-        console.warn(`Could not sync blog markdown: ${blogPath}`, e);
+        console.warn(`Could not sync ${path}:`, e);
+        results.push({ success: false, path, error: e.message });
       }
     }
 
@@ -2376,6 +2649,9 @@ async function syncToGitHub() {
 
     githubConfig.lastSync = Date.now();
     saveGitHubConfig();
+
+    // Clear modified files after successful sync
+    clearModifiedFiles();
 
     toast(`Synced ${results.length} file(s) to GitHub ✓`, 'success');
     logChange(`Synced ${results.length} file(s) to GitHub`);

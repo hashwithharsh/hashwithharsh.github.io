@@ -3,29 +3,18 @@
     "id": "k8s-monitoring-stack",
     "title": "K8s Monitoring Stack",
     "description": "Full observability setup for a multi-node Kubernetes cluster. Prometheus scrapes metrics, Grafana visualizes, Alertmanager pages when things break.",
-    "tags": [
-      "kubernetes",
-      "prometheus",
-      "grafana",
-      "devops"
-    ],
+    "tags": ["kubernetes", "prometheus", "grafana", "devops"],
     "github": "https://github.com/harshyadav/k8s-monitoring",
     "demo": null,
     "featured": true,
     "status": "active",
-    "date": "2025-03-20",
-    "pinned": false
+    "date": "2025-03-20"
   },
   {
     "id": "terraform-aws-vpc",
     "title": "Terraform AWS VPC Module",
     "description": "A reusable Terraform module that provisions a production-ready VPC with public/private subnets, NAT gateways, and security groups across multiple availability zones.",
-    "tags": [
-      "terraform",
-      "aws",
-      "iac",
-      "networking"
-    ],
+    "tags": ["terraform", "aws", "iac", "networking"],
     "github": "https://github.com/harshyadav/terraform-aws-vpc",
     "demo": null,
     "featured": true,
@@ -36,12 +25,7 @@
     "id": "cicd-pipeline-template",
     "title": "GitHub Actions CI/CD Template",
     "description": "Opinionated CI/CD pipeline template for containerized apps. Build → test → scan → push to ECR → deploy to EKS. Includes Trivy security scanning.",
-    "tags": [
-      "ci-cd",
-      "github-actions",
-      "docker",
-      "kubernetes"
-    ],
+    "tags": ["ci-cd", "github-actions", "docker", "kubernetes"],
     "github": "https://github.com/harshyadav/cicd-template",
     "demo": null,
     "featured": true,
@@ -52,11 +36,7 @@
     "id": "docker-compose-lab",
     "title": "Docker Compose Dev Lab",
     "description": "A collection of Docker Compose setups for spinning up local development environments. Postgres, Redis, Kafka, ELK — all pre-configured and ready to go.",
-    "tags": [
-      "docker",
-      "devops",
-      "tooling"
-    ],
+    "tags": ["docker", "devops", "tooling"],
     "github": "https://github.com/harshyadav/docker-lab",
     "demo": null,
     "featured": false,
@@ -67,12 +47,7 @@
     "id": "bash-automation-scripts",
     "title": "DevOps Automation Scripts",
     "description": "A growing collection of bash scripts for automating common DevOps tasks: server setup, log rotation, backup pipelines, and health check monitors.",
-    "tags": [
-      "bash",
-      "linux",
-      "automation",
-      "devops"
-    ],
+    "tags": ["bash", "linux", "automation", "devops"],
     "github": "https://github.com/harshyadav/devops-scripts",
     "demo": null,
     "featured": false,
@@ -83,12 +58,7 @@
     "id": "ansible-server-setup",
     "title": "Ansible Server Hardening Playbook",
     "description": "Ansible playbooks for automating Linux server provisioning and security hardening. Idempotent, tested on Ubuntu 22.04 and Amazon Linux 2.",
-    "tags": [
-      "ansible",
-      "linux",
-      "security",
-      "iac"
-    ],
+    "tags": ["ansible", "linux", "security", "iac"],
     "github": "https://github.com/harshyadav/ansible-hardening",
     "demo": null,
     "featured": false,
@@ -99,12 +69,7 @@
     "id": "harsh-yadav",
     "title": "Ansible Server Hardening Playbook",
     "description": "Ansible playbooks for automating Linux server provisioning and security hardening. Idempotent, tested on Ubuntu 22.04 and Amazon Linux 2.",
-    "tags": [
-      "ansible",
-      "linux",
-      "security",
-      "iac"
-    ],
+    "tags": ["ansible", "linux", "security", "iac"],
     "github": "https://github.com/harshyadav/ansible-hardening",
     "demo": null,
     "featured": false,
