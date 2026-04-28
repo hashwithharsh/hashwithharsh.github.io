@@ -1,0 +1,66 @@
+[
+  {
+    "category": "containers & orchestration",
+    "items": [
+      "Docker",
+      "Kubernetes",
+      "Helm",
+      "containerd"
+    ]
+  },
+  {
+    "category": "cloud platforms",
+    "items": [
+      "AWS",
+      "EC2",
+      "S3",
+      "Lambda",
+      "EKS",
+      "CloudFormation"
+    ]
+  },
+  {
+    "category": "infrastructure as code",
+    "items": [
+      "Terraform",
+      "Ansible",
+      "Packer"
+    ]
+  },
+  {
+    "category": "ci / cd",
+    "items": [
+      "GitHub Actions",
+      "Jenkins",
+      "ArgoCD",
+      "GitLab CI"
+    ]
+  },
+  {
+    "category": "monitoring & observability",
+    "items": [
+      "Prometheus",
+      "Grafana",
+      "Loki",
+      "Alertmanager"
+    ]
+  },
+  {
+    "category": "os & scripting",
+    "items": [
+      "Linux",
+      "Bash",
+      "Python",
+      "YAML",
+      "Git"
+    ]
+  },
+  {
+    "category": "Gaming ",
+    "items": [
+      "Assassin's creed legacy",
+      "Detriot become human",
+      "Red dead redemption 2"
+    ]
+  }
+]
