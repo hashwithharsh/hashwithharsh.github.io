@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub Sync Test — hashwithharsh</title>
+  <style>
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: #070707;
+      color: #e2e2e2;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 { color: #b5ff4d; }
+    .test-section {
+      background: #0d0d0d;
+      border: 1px solid #1a1a1a;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .test-section h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      color: #999;
+    }
+    button {
+      background: #b5ff4d;
+      color: #0a0a0a;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover { background: #c9ff6a; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    input, textarea {
+      width: 100%;
+      background: #131313;
+      border: 1px solid #252525;
+      border-radius: 6px;
+      padding: 10px;
+      color: #e2e2e2;
+      font-family: inherit;
+      margin: 5px 0;
+      box-sizing: border-box;
+    }
+    .result {
+      background: #111;
+      border: 1px solid #252525;
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 0.8rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .result.success { border-color: #b5ff4d; color: #b5ff4d; }
+    .result.error { border-color: #ff4c4c; color: #ff4c4c; }
+    .result.info { border-color: #5b9bff; color: #5b9bff; }
+    .status {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      margin-left: 10px;
+    }
+    .status.syncing { background: rgba(91,155,255,.1); color: #5b9bff; }
+    .status.success { background: rgba(181,255,77,.1); color: #b5ff4d; }
+    .status.error { background: rgba(255,76,76,.1); color: #ff4c4c; }
+  </style>
+</head>
+<body>
+  <h1>🔄 GitHub Sync Test</h1>
+  <p>Test the GitHub auto-sync functionality for the admin panel.</p>
+
+  <div class="test-section">
+    <h2>1. Authentication</h2>
+    <p>Enter your admin password to get a session token:</p>
+    <input type="password" id="adminPassword" placeholder="Admin password" />
+    <button onclick="login()">Login</button>
+    <span id="authStatus" class="status"></span>
+    <div id="authResult" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>2. Upload Test File</h2>
+    <p>Test uploading a file to GitHub:</p>
+    <input type="text" id="testPath" placeholder="content/test-file.md" value="content/test-sync.md" />
+    <textarea id="testContent" rows="4" placeholder="File content..."># Test File
+
+This is a test file created by the GitHub sync test tool.
+
+Created at: ${new Date().toISOString()}
+</textarea>
+    <input type="text" id="testMessage" placeholder="Commit message" value="Test sync from admin panel" />
+    <button onclick="uploadTestFile()" id="uploadBtn" disabled>Upload File</button>
+    <span id="uploadStatus" class="status"></span>
+    <div id="uploadResult" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>3. Get File Test</h2>
+    <p>Test getting a file from GitHub:</p>
+    <input type="text" id="getPath" placeholder="content/test-file.md" value="content/test-sync.md" />
+    <button onclick="getTestFile()" id="getBtn" disabled>Get File</button>
+    <span id="getStatus" class="status"></span>
+    <div id="getResult" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>4. Delete Test File</h2>
+    <p>Test deleting a file from GitHub:</p>
+    <input type="text" id="deletePath" placeholder="content/test-file.md" value="content/test-sync.md" />
+    <button onclick="deleteTestFile()" id="deleteBtn" disabled>Delete File</button>
+    <span id="deleteStatus" class="status"></span>
+    <div id="deleteResult" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>5. Sync Blog Post Test</h2>
+    <p>Test syncing a blog post:</p>
+    <input type="text" id="blogSlug" placeholder="test-blog-post" value="test-sync-blog" />
+    <input type="text" id="blogTitle" placeholder="Blog Title" value="Test Sync Blog Post" />
+    <textarea id="blogContent" rows="4" placeholder="Blog content..."># Test Blog Post
+
+This is a test blog post created by the GitHub sync test tool.
+
+## Features
+
+- Auto-sync to GitHub
+- Optimized file syncing
+- Only sync changed files
+
+Created at: ${new Date().toISOString()}
+</textarea>
+    <button onclick="syncBlogTest()" id="syncBlogBtn" disabled>Sync Blog</button>
+    <span id="syncBlogStatus" class="status"></span>
+    <div id="syncBlogResult" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>6. Sync Project Test</h2>
+    <p>Test syncing a project:</p>
+    <input type="text" id="projectId" placeholder="test-project" value="test-sync-project" />
+    <input type="text" id="projectTitle" placeholder="Project Title" value="Test Sync Project" />
+    <textarea id="projectContent" rows="4" placeholder="Project content..."># Test Project
+
+This is a test project created by the GitHub sync test tool.
+
+## Description
+
+A test project to verify GitHub sync functionality.
+
+## Tech Stack
+
+- Docker
+- Kubernetes
+- Terraform
+
+Created at: ${new Date().toISOString()}
+</textarea>
+    <button onclick="syncProjectTest()" id="syncProjectBtn" disabled>Sync Project</button>
+    <span id="syncProjectStatus" class="status"></span>
+    <div id="syncProjectResult" class="result"></div>
+  </div>
+
+  <script src="js/github-sync.js"></script>
+  <script>
+    const API_BASE = 'https://hashwithharsh-api.vercel.app/api';
+    let sessionToken = null;
+
+    function showResult(elementId, message, type = 'info') {
+      const el = document.getElementById(elementId);
+      el.textContent = message;
+      el.className = 'result ' + type;
+    }
+
+    function showStatus(elementId, text, type = '') {
+      const el = document.getElementById(elementId);
+      el.textContent = text;
+      el.className = 'status ' + type;
+    }
+
+    async function login() {
+      const password = document.getElementById('adminPassword').value;
+      if (!password) {
+        showResult('authResult', 'Please enter a password', 'error');
+        return;
+      }
+
+      showStatus('authStatus', 'Logging in...', 'syncing');
+      showResult('authResult', 'Sending login request...', 'info');
+
+      try {
+        const response = await fetch(`${API_BASE}/admin-auth`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password, action: 'login' }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          sessionToken = data.token;
+          showStatus('authStatus', '✓ Authenticated', 'success');
+          showResult('authResult', `Login successful!\nToken: ${sessionToken.substring(0, 20)}...\nExpires: ${new Date(data.expiry).toLocaleString()}`, 'success');
+
+          // Enable other buttons
+          document.getElementById('uploadBtn').disabled = false;
+          document.getElementById('getBtn').disabled = false;
+          document.getElementById('deleteBtn').disabled = false;
+          document.getElementById('syncBlogBtn').disabled = false;
+          document.getElementById('syncProjectBtn').disabled = false;
+
+          // Initialize sync service
+          if (window.githubSync) {
+            await window.githubSync.init(sessionToken);
+            console.log('GitHub sync service initialized');
+          }
+        } else {
+          showStatus('authStatus', '✕ Failed', 'error');
+          showResult('authResult', `Login failed: ${data.error || 'Unknown error'}`, 'error');
+        }
+      } catch (error) {
+        showStatus('authStatus', '✕ Error', 'error');
+        showResult('authResult', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function uploadTestFile() {
+      if (!sessionToken) {
+        showResult('uploadResult', 'Please login first', 'error');
+        return;
+      }
+
+      const path = document.getElementById('testPath').value;
+      const content = document.getElementById('testContent').value;
+      const message = document.getElementById('testMessage').value;
+
+      showStatus('uploadStatus', 'Uploading...', 'syncing');
+      showResult('uploadResult', `Uploading ${path}...`, 'info');
+
+      try {
+        const response = await fetch(`${API_BASE}/github-files`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'upload',
+            path,
+            content,
+            message,
+            token: sessionToken,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          showStatus('uploadStatus', '✓ Success', 'success');
+          showResult('uploadResult', `File uploaded successfully!\n\nPath: ${path}\nSHA: ${data.content?.sha}\nCommit: ${data.content?.commit?.sha}`, 'success');
+        } else {
+          showStatus('uploadStatus', '✕ Failed', 'error');
+          showResult('uploadResult', `Upload failed: ${data.error || 'Unknown error'}`, 'error');
+        }
+      } catch (error) {
+        showStatus('uploadStatus', '✕ Error', 'error');
+        showResult('uploadResult', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function getTestFile() {
+      if (!sessionToken) {
+        showResult('getResult', 'Please login first', 'error');
+        return;
+      }
+
+      const path = document.getElementById('getPath').value;
+
+      showStatus('getStatus', 'Fetching...', 'syncing');
+      showResult('getResult', `Fetching ${path}...`, 'info');
+
+      try {
+        const response = await fetch(`${API_BASE}/github-files`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            path,
+            token: sessionToken,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.content) {
+          showStatus('getStatus', '✓ Success', 'success');
+          showResult('getResult', `File fetched successfully!\n\nPath: ${path}\nSHA: ${data.content.sha}\n\nContent:\n${data.content.content}`, 'success');
+        } else if (response.status === 404) {
+          showStatus('getStatus', '✕ Not Found', 'error');
+          showResult('getResult', `File not found: ${path}`, 'error');
+        } else {
+          showStatus('getStatus', '✕ Failed', 'error');
+          showResult('getResult', `Fetch failed: ${data.error || 'Unknown error'}`, 'error');
+        }
+      } catch (error) {
+        showStatus('getStatus', '✕ Error', 'error');
+        showResult('getResult', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function deleteTestFile() {
+      if (!sessionToken) {
+        showResult('deleteResult', 'Please login first', 'error');
+        return;
+      }
+
+      const path = document.getElementById('deletePath').value;
+
+      if (!confirm(`Are you sure you want to delete ${path}?`)) {
+        return;
+      }
+
+      showStatus('deleteStatus', 'Deleting...', 'syncing');
+      showResult('deleteResult', `Deleting ${path}...`, 'info');
+
+      try {
+        const response = await fetch(`${API_BASE}/github-files`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            path,
+            message: `Delete ${path}`,
+            token: sessionToken,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          showStatus('deleteStatus', '✓ Success', 'success');
+          showResult('deleteResult', `File deleted successfully!\n\nPath: ${path}\nCommit: ${data.content?.commit?.sha}`, 'success');
+        } else {
+          showStatus('deleteStatus', '✕ Failed', 'error');
+          showResult('deleteResult', `Delete failed: ${data.error || 'Unknown error'}`, 'error');
+        }
+      } catch (error) {
+        showStatus('deleteStatus', '✕ Error', 'error');
+        showResult('deleteResult', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function syncBlogTest() {
+      if (!sessionToken || !window.githubSync) {
+        showResult('syncBlogResult', 'Please login first or sync service not available', 'error');
+        return;
+      }
+
+      const slug = document.getElementById('blogSlug').value;
+      const title = document.getElementById('blogTitle').value;
+      const content = document.getElementById('blogContent').value;
+
+      showStatus('syncBlogStatus', 'Syncing...', 'syncing');
+      showResult('syncBlogResult', `Syncing blog post: ${title}...`, 'info');
+
+      try {
+        const blog = { slug, title };
+        const result = await window.githubSync.syncBlog(blog, content);
+
+        if (result.success) {
+          showStatus('syncBlogStatus', '✓ Success', 'success');
+          showResult('syncBlogResult', `Blog synced successfully!\n\nSlug: ${slug}\nTitle: ${title}\nPath: content/posts/${slug}.md`, 'success');
+        } else if (result.skipped) {
+          showStatus('syncBlogStatus', '⊘ Skipped', 'info');
+          showResult('syncBlogResult', `Sync skipped: ${result.reason || 'Unknown reason'}`, 'info');
+        } else {
+          showStatus('syncBlogStatus', '✕ Failed', 'error');
+          showResult('syncBlogResult', `Sync failed: ${result.error || 'Unknown error'}`, 'error');
+        }
+      } catch (error) {
+        showStatus('syncBlogStatus', '✕ Error', 'error');
+        showResult('syncBlogResult', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function syncProjectTest() {
+      if (!sessionToken || !window.githubSync) {
+        showResult('syncProjectResult', 'Please login first or sync service not available', 'error');
+        return;
+      }
+
+      const id = document.getElementById('projectId').value;
+      const title = document.getElementById('projectTitle').value;
+      const content = document.getElementById('projectContent').value;
+
+      showStatus('syncProjectStatus', 'Syncing...', 'syncing');
+      showResult('syncProjectResult', `Syncing project: ${title}...`, 'info');
+
+      try {
+        const project = { id, title };
+        const result = await window.githubSync.syncProject(project, content);
+
+        if (result.success) {
+          showStatus('syncProjectStatus', '✓ Success', 'success');
+          showResult('syncProjectResult', `Project synced successfully!\n\nID: ${id}\nTitle: ${title}\nPath: content/projects/${id}.md`, 'success');
+        } else if (result.skipped) {
+          showStatus('syncProjectStatus', '⊘ Skipped', 'info');
+          showResult('syncProjectResult', `Sync skipped: ${result.reason || 'Unknown reason'}`, 'info');
+        } else {
+          showStatus('syncProjectStatus', '✕ Failed', 'error');
+          showResult('syncProjectResult', `Sync failed: ${result.error || 'Unknown error'}`, 'error');
+        }
+      } catch (error) {
+        showStatus('syncProjectStatus', '✕ Error', 'error');
+        showResult('syncProjectResult', `Error: ${error.message}`, 'error');
+      }
+    }
+  </script>
+</body>
+</html>
