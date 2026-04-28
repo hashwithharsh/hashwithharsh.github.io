@@ -6,8 +6,12 @@
       "dest": "/api/contact.js"
     },
     {
-      "src": "/api/github-sync",
-      "dest": "/api/github-sync.js"
+      "src": "/api/admin-auth",
+      "dest": "/api/admin-auth.js"
+    },
+    {
+      "src": "/api/github-files",
+      "dest": "/api/github-files.js"
     }
   ]
 }

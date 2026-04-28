@@ -73,9 +73,9 @@ git push -u origin main
 
 ---
 
-### 2. Vercel Serverless API (contact form + GitHub sync)
+### 2. Vercel Serverless API (contact form + GitHub sync + Admin Auth)
 
-The API folder deploys separately to Vercel to handle the contact form and GitHub auto-sync.
+The API folder deploys separately to Vercel to handle the contact form, GitHub auto-sync, and admin panel authentication.
 
 ```bash
 # Install Vercel CLI
@@ -97,7 +97,7 @@ vercel --prod
 | `GITHUB_TOKEN` | GitHub Personal Access Token with `repo` scope (for auto-sync) |
 | `GITHUB_REPO` | Repository in format `owner/repo`, e.g. `harshyadav/hashwithharsh` |
 | `GITHUB_BRANCH` | Branch name (default: `main`) |
-| `ADMIN_PASSWORD` | Admin panel password |
+| `ADMIN_PASSWORD` | Admin panel password (required for admin login) |
 | `ADMIN_SESSION_SECRET` | Random secret for session signing |
 
 **After deployment:**
@@ -105,6 +105,9 @@ Update `main.js` line with your actual Vercel API URL:
 ```js
 const CONTACT_API = 'https://YOUR_PROJECT.vercel.app/api/contact';
 ```
+
+**Admin Panel Login:**
+See [ADMIN_LOGIN_SETUP.md](ADMIN_LOGIN_SETUP.md) for detailed setup instructions.
 
 **GitHub Auto-Sync:**
 See [GITHUB_SYNC_SETUP.md](GITHUB_SYNC_SETUP.md) for detailed setup instructions.
