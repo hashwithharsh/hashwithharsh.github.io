@@ -1,0 +1,33 @@
+{
+  "paragraphs": [
+    "I didn’t really start with a plan. I just tried things, followed commands,\n  and then got stuck when something didn’t work the way I expected.",
+    " That’s where most of my learning happens — not when things work, but when I have to\n  figure out why they don’t.",
+    "Lately I’ve been working with AWS, Kubernetes, and Terraform. I’m less interested in\n  just using them, and more in understanding what’s happening underneath.",
+    "This site is basically a record of that process — what confused me, what broke,\n  and what finally started to make sense.",
+    "still figuring things out, and that’s kind of the point"
+  ],
+  "stats": [
+    {
+      "label": "projects built",
+      "value": 12
+    },
+    {
+      "label": "blog posts",
+      "value": 24
+    },
+    {
+      "label": "cloud certifications",
+      "value": 6
+    },
+    {
+      "label": "days of daily learning",
+      "value": 365
+    }
+  ],
+  "terminal": {
+    "role": "DevOps & Cloud Student",
+    "location": "India 🇮🇳",
+    "avail": "✓ Open to opportunities",
+    "openTo": "internships, collaborations, open_source"
+  }
+}
