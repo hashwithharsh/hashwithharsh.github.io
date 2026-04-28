@@ -126,33 +126,64 @@
 
   /* ── Named sync helpers ──────────────────────── */
   async function syncBlogsJson(label) {
-    const blogs   = window.state?.blogs || [];
+    const blogs = window.state?.blogs || [];
+    if (!blogs.length) {
+      // Guard: never push an empty array unless state is truly empty
+      // (prevents wiping GitHub if admin state wasn't loaded yet)
+      const lsBlogs = localStorage.getItem('hwh_blogs');
+      const parsed  = lsBlogs ? JSON.parse(lsBlogs) : [];
+      if (parsed.length > 0 && blogs.length === 0) {
+        console.warn('[gh-sync] Skipping blogs.json push — state.blogs is empty but localStorage has data. Load state first.');
+        throw new Error('state.blogs is empty — reload the admin panel before syncing');
+      }
+    }
     const content = JSON.stringify(blogs, null, 2);
-    return ghPush('content/blogs.json', content, label || 'admin: update blogs.json');
+    const result  = await ghPush('content/blogs.json', content, label || 'admin: update blogs.json');
+    // After a successful push, remove the localStorage override so blog.html
+    // fetches the authoritative version from the repo on next visit.
+    localStorage.removeItem('hwh_blogs');
+    return result;
   }
 
   async function syncProjectsJson(label) {
     const projects = window.state?.projects || [];
-    const content  = JSON.stringify(projects, null, 2);
-    return ghPush('content/projects.json', content, label || 'admin: update projects.json');
+    if (!projects.length) {
+      const lsProjects = localStorage.getItem('hwh_projects');
+      const parsed     = lsProjects ? JSON.parse(lsProjects) : [];
+      if (parsed.length > 0 && projects.length === 0) {
+        console.warn('[gh-sync] Skipping projects.json push — state.projects is empty but localStorage has data.');
+        throw new Error('state.projects is empty — reload the admin panel before syncing');
+      }
+    }
+    const content = JSON.stringify(projects, null, 2);
+    const result  = await ghPush('content/projects.json', content, label || 'admin: update projects.json');
+    // Clear localStorage override so projects.html reads from repo
+    localStorage.removeItem('hwh_projects');
+    return result;
   }
 
   async function syncBlogMd(slug, mdContent) {
     if (!slug || !mdContent) return { skipped: 'empty' };
-    return ghPush(
+    const result = await ghPush(
       `content/posts/${slug}.md`,
       mdContent,
       `admin: update post "${slug}"`
     );
+    // Clear the localStorage draft — the repo is now the source of truth
+    localStorage.removeItem(`hwh_post_${slug}`);
+    return result;
   }
 
   async function syncProjectMd(id, mdContent) {
     if (!id || !mdContent) return { skipped: 'empty' };
-    return ghPush(
+    const result = await ghPush(
       `content/projects/${id}.md`,
       mdContent,
       `admin: update project "${id}"`
     );
+    // Clear the localStorage draft — the repo is now the source of truth
+    localStorage.removeItem(`hwh_proj_${id}`);
+    return result;
   }
 
   /* ── Sync ALL (full push) ──────────────────────  */

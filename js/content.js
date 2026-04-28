@@ -28,11 +28,15 @@ async function fetchBlogs() {
   if (override) {
     try {
       const data = JSON.parse(override);
-      return data.sort((a, b) => {
-        if (a.pinned && !b.pinned) return -1;
-        if (!a.pinned && b.pinned) return 1;
-        return new Date(b.date) - new Date(a.date);
-      });
+      // If localStorage has a non-empty array, trust it (admin is working locally)
+      // If it's empty [], fall through to network — avoids serving a wiped cache
+      if (data.length > 0) {
+        return data.sort((a, b) => {
+          if (a.pinned && !b.pinned) return -1;
+          if (!a.pinned && b.pinned) return 1;
+          return new Date(b.date) - new Date(a.date);
+        });
+      }
     } catch { /* fall through */ }
   }
   try {
@@ -50,13 +54,16 @@ async function fetchProjects() {
   if (override) {
     try {
       const data = JSON.parse(override);
-      return data.sort((a, b) => {
-        if (a.pinned && !b.pinned) return -1;
-        if (!a.pinned && b.pinned) return 1;
-        if (a.featured && !b.featured) return -1;
-        if (!a.featured && b.featured) return 1;
-        return 0;
-      });
+      // Same guard: don't serve an empty override — fall through to network
+      if (data.length > 0) {
+        return data.sort((a, b) => {
+          if (a.pinned && !b.pinned) return -1;
+          if (!a.pinned && b.pinned) return 1;
+          if (a.featured && !b.featured) return -1;
+          if (!a.featured && b.featured) return 1;
+          return 0;
+        });
+      }
     } catch { /* fall through */ }
   }
   try {
