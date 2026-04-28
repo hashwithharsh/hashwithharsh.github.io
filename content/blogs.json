@@ -3,13 +3,14 @@
     "slug": "docker-networking-deep-dive",
     "title": "Docker Networking: What Nobody Explains Clearly",
     "date": "2025-04-10",
+    "readTime": "9 min read",
+    "excerpt": "I spent 3 hours debugging a container networking issue. Here's everything I learned so you don't have to suffer the same way.",
     "tags": [
       "docker",
       "networking",
       "devops"
     ],
-    "excerpt": "I spent 3 hours debugging a container networking issue. Here's everything I learned so you don't have to suffer the same way.",
-    "readTime": "9 min read"
+    "pinned": false
   },
   {
     "slug": "kubernetes-from-scratch",
