@@ -93,21 +93,5 @@
     "featured": false,
     "status": "wip",
     "date": "2025-04-01"
-  },
-  {
-    "id": "harsh-yadav",
-    "title": "Ansible Server Hardening Playbook",
-    "description": "Ansible playbooks for automating Linux server provisioning and security hardening. Idempotent, tested on Ubuntu 22.04 and Amazon Linux 2.",
-    "tags": [
-      "ansible",
-      "linux",
-      "security",
-      "iac"
-    ],
-    "github": "https://github.com/harshyadav/ansible-hardening",
-    "demo": null,
-    "featured": false,
-    "status": "wip",
-    "date": "2025-04-01"
   }
 ]
