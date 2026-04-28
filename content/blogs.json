@@ -3,15 +3,24 @@
     "slug": "docker-networking-deep-dive",
     "title": "Docker Networking: What Nobody Explains Clearly",
     "date": "2025-04-10",
-    "tags": ["docker", "networking", "devops"],
+    "readTime": "9 min read",
     "excerpt": "I spent 3 hours debugging a container networking issue. Here's everything I learned so you don't have to suffer the same way.",
-    "readTime": "9 min read"
+    "tags": [
+      "docker",
+      "networking",
+      "devops"
+    ],
+    "pinned": false
   },
   {
     "slug": "kubernetes-from-scratch",
     "title": "Setting Up Kubernetes From Scratch (Without Losing Your Mind)",
     "date": "2025-03-28",
-    "tags": ["kubernetes", "devops", "cloud"],
+    "tags": [
+      "kubernetes",
+      "devops",
+      "cloud"
+    ],
     "excerpt": "kubeadm, flannel, kubectl — a step-by-step of standing up a real k8s cluster on bare metal and understanding what every piece actually does.",
     "readTime": "14 min read"
   },
@@ -19,7 +28,11 @@
     "slug": "terraform-aws-basics",
     "title": "Terraform + AWS: My First Real Infrastructure as Code",
     "date": "2025-03-14",
-    "tags": ["terraform", "aws", "iac"],
+    "tags": [
+      "terraform",
+      "aws",
+      "iac"
+    ],
     "excerpt": "State files, providers, and the moment I accidentally destroyed my dev environment. Everything I wish someone had told me before I started.",
     "readTime": "11 min read"
   },
@@ -27,7 +40,11 @@
     "slug": "github-actions-ci-pipeline",
     "title": "Building a Real CI/CD Pipeline with GitHub Actions",
     "date": "2025-02-20",
-    "tags": ["ci-cd", "github-actions", "devops"],
+    "tags": [
+      "ci-cd",
+      "github-actions",
+      "devops"
+    ],
     "excerpt": "From commit to deployed container in under 3 minutes. A practical walkthrough of a pipeline that actually works in production.",
     "readTime": "10 min read"
   },
@@ -35,7 +52,12 @@
     "slug": "prometheus-grafana-monitoring",
     "title": "Monitoring Your Cluster with Prometheus + Grafana",
     "date": "2025-02-05",
-    "tags": ["monitoring", "prometheus", "grafana", "kubernetes"],
+    "tags": [
+      "monitoring",
+      "prometheus",
+      "grafana",
+      "kubernetes"
+    ],
     "excerpt": "Setting up the full observability stack — scraping metrics, writing PromQL queries, and building dashboards you'd actually want to look at.",
     "readTime": "12 min read"
   },
@@ -43,16 +65,12 @@
     "slug": "linux-for-devops",
     "title": "Linux Skills Every DevOps Engineer Actually Needs",
     "date": "2025-01-18",
-    "tags": ["linux", "bash", "devops"],
+    "tags": [
+      "linux",
+      "bash",
+      "devops"
+    ],
     "excerpt": "Not a beginner's guide. This is the stuff that separates people who google everything from people who actually understand what's happening under the hood.",
     "readTime": "8 min read"
-  },
-  {
-    "slug": "kingofall-died",
-    "title": "kingofall-died",
-    "date": "2025-01-18",
-    "tags": ["linux", "bash", "devops"],
-    "excerpt": "Not a beginner's fuck. This is the stuff that separates people who google everything from people who actually understand what's happening under the hood.",
-    "readTime": "fuch min read"
   }
 ]
