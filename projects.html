@@ -85,6 +85,9 @@
 <script src="js/main.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async () => {
+  // Apply admin-synced social links / settings
+  applyGlobalSettings();
+
   const projects = await fetchProjects();
   let active     = 'all';
 

@@ -478,8 +478,13 @@
   });
 </script>
 <script>
-  // Load featured projects + blog on homepage
+  // Load all dynamic content (admin-editable sections + projects + blog)
   document.addEventListener('DOMContentLoaded', async () => {
+    // Apply admin-synced content (hero, about, stack, social links)
+    // This reads the JSON files written by GitHub sync — so changes in
+    // the admin panel reflect on the live site after a sync.
+    await applyDynamicContent();
+
     // Projects
     const projects = await fetchProjects();
     const featured = projects.filter(p => p.featured).slice(0, 3);
@@ -489,12 +494,14 @@
     const blogs = await fetchBlogs();
     renderBlogItems(blogs.slice(0, 3), 'blogList');
 
-    // Ticker
-    buildTicker([
-      'Docker','Kubernetes','Terraform','AWS','GitHub Actions',
-      'Prometheus','Grafana','Ansible','Linux','Python','Helm','ArgoCD',
-      'Jenkins','Loki','Bash','GitLab CI','EKS','EC2','S3','Lambda'
-    ]);
+    // Ticker — use stack data if available, otherwise default list
+    const stackData = await fetchStackData();
+    const tickerItems = stackData && stackData.length
+      ? stackData.flatMap(cat => cat.items || [])
+      : ['Docker','Kubernetes','Terraform','AWS','GitHub Actions',
+         'Prometheus','Grafana','Ansible','Linux','Python','Helm','ArgoCD',
+         'Jenkins','Loki','Bash','GitLab CI','EKS','EC2','S3','Lambda'];
+    buildTicker(tickerItems);
   });
 </script>
 <script src="js/admin-trigger.js"></script>

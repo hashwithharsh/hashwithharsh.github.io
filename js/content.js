@@ -189,3 +189,210 @@ function renderProjectCards(projects, containerId) {
     </a>`;
   }).join('');
 }
+
+// ── Dynamic Content Loaders ────────────────────
+// These fetch the JSON files written by the admin panel sync
+// and apply them to the live site DOM.
+
+async function fetchHeroData() {
+  try {
+    const res = await fetch(new URL('hero.json', CONTENT_BASE_URL), { cache: 'no-store' });
+    if (!res.ok) throw new Error('no hero.json');
+    return await res.json();
+  } catch { return null; }
+}
+
+async function fetchAboutData() {
+  try {
+    const res = await fetch(new URL('about.json', CONTENT_BASE_URL), { cache: 'no-store' });
+    if (!res.ok) throw new Error('no about.json');
+    return await res.json();
+  } catch { return null; }
+}
+
+async function fetchStackData() {
+  try {
+    const res = await fetch(new URL('stack.json', CONTENT_BASE_URL), { cache: 'no-store' });
+    if (!res.ok) throw new Error('no stack.json');
+    return await res.json();
+  } catch { return null; }
+}
+
+async function fetchSettingsData() {
+  try {
+    const res = await fetch(new URL('settings.json', CONTENT_BASE_URL), { cache: 'no-store' });
+    if (!res.ok) throw new Error('no settings.json');
+    return await res.json();
+  } catch { return null; }
+}
+
+// ── Apply Hero ─────────────────────────────────
+function applyHero(hero) {
+  if (!hero) return;
+
+  // Status badge
+  const statusEl = document.querySelector('.hero-status span');
+  if (statusEl && hero.status) statusEl.textContent = hero.status;
+
+  // Name lines
+  const line1 = document.querySelector('.hero-name .line1');
+  const line2El = document.querySelector('.hero-name .line2');
+  if (hero.name) {
+    const parts = hero.name.trim().split(/\s+/);
+    if (line1) line1.textContent = parts[0] || '';
+    if (line2El) {
+      // preserve the accent dot span
+      const accentSpan = line2El.querySelector('.accent-char');
+      line2El.childNodes.forEach(n => { if (n.nodeType === Node.TEXT_NODE) n.remove(); });
+      line2El.insertBefore(document.createTextNode((parts.slice(1).join(' ') || '') + (accentSpan ? '' : '.')), line2El.firstChild);
+      if (!accentSpan) {
+        const dot = document.createElement('span');
+        dot.className = 'accent-char';
+        dot.textContent = '.';
+        line2El.appendChild(dot);
+      }
+    }
+  }
+
+  // Description
+  const descEl = document.querySelector('.hero-desc');
+  if (descEl && hero.description) descEl.textContent = hero.description;
+
+  // CTAs
+  const ctas = document.querySelectorAll('.hero-ctas a');
+  if (ctas[0] && hero.cta1Text) {
+    ctas[0].textContent = hero.cta1Text;
+    if (hero.cta1Href) ctas[0].href = hero.cta1Href;
+  }
+  if (ctas[1] && hero.cta2Text) {
+    ctas[1].textContent = hero.cta2Text;
+    if (hero.cta2Href) ctas[1].href = hero.cta2Href;
+  }
+
+  // Typewriter phrases
+  if (hero.phrases && hero.phrases.length) {
+    window._heroTypewriterPhrases = hero.phrases;
+  }
+}
+
+// ── Apply About ────────────────────────────────
+function applyAbout(about) {
+  if (!about) return;
+
+  // Paragraphs — target the <p> tags inside about-text (skip the h2 and section-label)
+  const aboutText = document.querySelector('.about-text');
+  if (aboutText && about.paragraphs && about.paragraphs.length) {
+    const existingParas = aboutText.querySelectorAll('p');
+    about.paragraphs.forEach((text, i) => {
+      if (existingParas[i]) {
+        existingParas[i].innerHTML = text;
+      }
+    });
+  }
+
+  // Stats
+  if (about.stats && about.stats.length) {
+    const statBoxes = document.querySelectorAll('.stat-box');
+    about.stats.forEach((stat, i) => {
+      if (!statBoxes[i]) return;
+      const numEl = statBoxes[i].querySelector('.stat-num');
+      const labelEl = statBoxes[i].querySelector('.stat-label');
+      if (numEl) {
+        numEl.dataset.target = stat.value;
+        const span = numEl.querySelector('span');
+        if (span) span.textContent = stat.value;
+      }
+      if (labelEl && stat.label) labelEl.textContent = stat.label;
+    });
+  }
+
+  // Terminal block
+  const t = about.terminal;
+  if (t) {
+    const tVals = document.querySelectorAll('.about-terminal .t-val');
+    // role is first t-val, location is second
+    if (tVals[0] && t.role)     tVals[0].textContent = `"${t.role}"`;
+    if (tVals[1] && t.location) tVals[1].textContent = `"${t.location}"`;
+
+    // availability line
+    const availEl = document.querySelector('.about-terminal .t-output');
+    if (availEl && t.avail) availEl.textContent = t.avail;
+  }
+}
+
+// ── Apply Stack ────────────────────────────────
+function applyStack(stack) {
+  if (!stack || !stack.length) return;
+  const grid = document.querySelector('.stack-grid');
+  if (!grid) return;
+
+  grid.innerHTML = stack.map(cat => `
+    <div class="stack-category">
+      <div class="stack-cat-label">${escapeHtml(cat.category)}</div>
+      <div class="stack-items">
+        ${(cat.items || []).map(item => `<span class="stack-tag">${escapeHtml(item)}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Apply Settings (social links) ─────────────
+function applySettings(settings) {
+  if (!settings) return;
+
+  // Footer social links — update all pages
+  const footerLinks = document.querySelector('.footer-links');
+  if (!footerLinks) return;
+
+  const links = [];
+  if (settings.githubUrl)   links.push(`<li><a href="${settings.githubUrl}" target="_blank" rel="noopener">github</a></li>`);
+  if (settings.linkedinUrl) links.push(`<li><a href="${settings.linkedinUrl}" target="_blank" rel="noopener">linkedin</a></li>`);
+  if (settings.twitterUrl)  links.push(`<li><a href="${settings.twitterUrl}" target="_blank" rel="noopener">twitter</a></li>`);
+  // always keep rss and email
+  links.push(`<li><a href="rss.html">rss</a></li>`);
+  if (settings.contactEmail) {
+    links.push(`<li><a href="mailto:${settings.contactEmail}">email</a></li>`);
+  }
+  if (links.length) footerLinks.innerHTML = links.join('');
+
+  // Nav social icons (if any exist as <a class="nav-social"> etc.)
+  // Also update document title if siteTitle set
+  if (settings.siteTitle) {
+    const base = document.title.split('—')[1] || '';
+    if (!document.title.includes(settings.siteTitle)) {
+      // Only update if no specific page title prefix
+    }
+  }
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// ── Master: Apply All Dynamic Content ─────────
+// Call this from index.html after DOMContentLoaded.
+// Fetches all JSON files written by admin sync and patches the DOM.
+async function applyDynamicContent() {
+  const [hero, about, stack, settings] = await Promise.all([
+    fetchHeroData(),
+    fetchAboutData(),
+    fetchStackData(),
+    fetchSettingsData(),
+  ]);
+
+  applyHero(hero);
+  applyAbout(about);
+  applyStack(stack);
+  applySettings(settings);
+}
+
+// ── Apply settings on all pages (footer links) ─
+// Lighter version for non-homepage pages.
+async function applyGlobalSettings() {
+  const settings = await fetchSettingsData();
+  applySettings(settings);
+}

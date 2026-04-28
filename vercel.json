@@ -1,9 +1,8 @@
 {
   "version": 2,
   "routes": [
-    {
-      "src": "/api/contact",
-      "dest": "/api/contact.js"
-    }
+    { "src": "/api/contact",      "dest": "/api/contact.js" },
+    { "src": "/api/admin-auth",   "dest": "/api/admin-auth.js" },
+    { "src": "/api/github-files", "dest": "/api/github-files.js" }
   ]
 }

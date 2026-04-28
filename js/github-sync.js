@@ -295,6 +295,78 @@ class GitHubSyncService {
   }
 
   /**
+   * Sync hero section to GitHub
+   * @param {Object} hero - Hero section data
+   * @returns {Promise<Object>} Sync result
+   */
+  async syncHero(hero) {
+    if (!this.isEnabled()) {
+      return { success: false, skipped: true };
+    }
+
+    const content = JSON.stringify(hero, null, 2);
+    return await this.uploadFile(
+      'content/hero.json',
+      content,
+      'Update hero section'
+    );
+  }
+
+  /**
+   * Sync about section to GitHub
+   * @param {Object} about - About section data
+   * @returns {Promise<Object>} Sync result
+   */
+  async syncAbout(about) {
+    if (!this.isEnabled()) {
+      return { success: false, skipped: true };
+    }
+
+    const content = JSON.stringify(about, null, 2);
+    return await this.uploadFile(
+      'content/about.json',
+      content,
+      'Update about section'
+    );
+  }
+
+  /**
+   * Sync tech stack to GitHub
+   * @param {Array} stack - Tech stack data
+   * @returns {Promise<Object>} Sync result
+   */
+  async syncStack(stack) {
+    if (!this.isEnabled()) {
+      return { success: false, skipped: true };
+    }
+
+    const content = JSON.stringify(stack, null, 2);
+    return await this.uploadFile(
+      'content/stack.json',
+      content,
+      'Update tech stack'
+    );
+  }
+
+  /**
+   * Sync settings to GitHub
+   * @param {Object} settings - Settings data
+   * @returns {Promise<Object>} Sync result
+   */
+  async syncSettings(settings) {
+    if (!this.isEnabled()) {
+      return { success: false, skipped: true };
+    }
+
+    const content = JSON.stringify(settings, null, 2);
+    return await this.uploadFile(
+      'content/settings.json',
+      content,
+      'Update settings'
+    );
+  }
+
+  /**
    * Sync all content (full sync)
    * @param {Object} data - All content data
    * @returns {Promise<Object>} Sync result
