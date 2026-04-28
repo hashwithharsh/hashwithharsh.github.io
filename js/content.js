@@ -279,23 +279,22 @@ function applyHero(hero) {
 function applyAbout(about) {
   if (!about) return;
 
-  // Paragraphs — target the <p> tags inside about-text (skip the h2 and section-label)
-  const aboutText = document.querySelector('.about-text');
-  if (aboutText && about.paragraphs && about.paragraphs.length) {
-    const existingParas = aboutText.querySelectorAll('p');
+  // ── Paragraphs — use IDs for reliable targeting ────────────────
+  if (about.paragraphs && about.paragraphs.length) {
     about.paragraphs.forEach((text, i) => {
-      if (existingParas[i]) {
-        existingParas[i].innerHTML = text;
-      }
+      const el = document.getElementById(`about-para-${i}`);
+      if (el) el.innerHTML = text;
     });
   }
 
-  // Stats
+  // ── Stats — update data-target and visible value ───────────────
+  // The counter animation in main.js reads data-target, so updating it
+  // means future scroll-triggered animations use the new number too.
   if (about.stats && about.stats.length) {
     const statBoxes = document.querySelectorAll('.stat-box');
     about.stats.forEach((stat, i) => {
       if (!statBoxes[i]) return;
-      const numEl = statBoxes[i].querySelector('.stat-num');
+      const numEl   = statBoxes[i].querySelector('.stat-num');
       const labelEl = statBoxes[i].querySelector('.stat-label');
       if (numEl) {
         numEl.dataset.target = stat.value;
@@ -306,17 +305,26 @@ function applyAbout(about) {
     });
   }
 
-  // Terminal block
+  // ── Terminal — use IDs added to index.html ─────────────────────
   const t = about.terminal;
   if (t) {
-    const tVals = document.querySelectorAll('.about-terminal .t-val');
-    // role is first t-val, location is second
-    if (tVals[0] && t.role)     tVals[0].textContent = `"${t.role}"`;
-    if (tVals[1] && t.location) tVals[1].textContent = `"${t.location}"`;
-
-    // availability line
-    const availEl = document.querySelector('.about-terminal .t-output');
-    if (availEl && t.avail) availEl.textContent = t.avail;
+    const set = (id, val) => {
+      const el = document.getElementById(id);
+      if (el && val) el.textContent = val.startsWith('"') ? val : `"${val}"`;
+    };
+    if (t.role)     set('tv-role', t.role);
+    if (t.location) set('tv-location', t.location);
+    if (t.avail) {
+      const availEl = document.querySelector('.about-terminal .t-output');
+      if (availEl) availEl.textContent = t.avail;
+    }
+    if (t.openTo) {
+      const items = t.openTo.split(',').map(s => s.trim()).filter(Boolean);
+      items.forEach((item, i) => {
+        const el = document.getElementById(`tv-open-${i}`);
+        if (el) el.textContent = `"${item}"`;
+      });
+    }
   }
 }
 
