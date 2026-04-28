@@ -1,17 +1,17 @@
 {
   "name": "HARSH YADAV",
-  "status": "currently tinkering with Terraform & AWSaws",
-  "description": "DevOps & Cloud Engineering student obsessed with infrastructure, pipelines, and the art of breaking things to understand them better. I document everything — for you and for future me.",
+  "status": "currently debugging something that should’ve worked already.",
+  "description": "I’m a DevOps student trying to understand how real systems actually work —\nnot just how to run commands, but why things break when they do.",
   "cta1Text": "view projects ↓",
   "cta1Href": "#projects",
   "cta2Text": "read the blog →",
   "cta2Href": "blog.html",
   "phrases": [
-    "whoami --devops-student",
-    "kubectl get pods --all",
-    "terraform apply --auto-approve",
-    "docker build -t hashwithharsh .",
-    "cat /etc/passion | grep cloud",
-    "git push origin main  # ship it"
+    "whoami --learning-devops",
+    "kubectl get pods --why-is-this-broken",
+    "terraform apply (hope for the best)",
+    "docker logs --help",
+    "fix → break → fix again",
+    "note to self: document this"
   ]
 }
