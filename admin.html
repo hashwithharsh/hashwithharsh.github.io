@@ -3152,23 +3152,7 @@ async function syncAllToGitHub() {
 }
 
 async function syncBlogToGitHub(blog, isDelete = false) {
-  if (!window.githubSync || !window.githubSync.isAutoSyncEnabled()) {
-    return { skipped: true };
-  }
-
-  const session = getSession();
-  if (!session || !session.token) {
-    return { skipped: true, reason: 'not_logged_in' };
-  }
-
-  // Initialize if not already
-  if (!window.githubSync.token) {
-    await window.githubSync.init(session.token);
-  }
-
-  if (!window.githubSync.isEnabled()) {
-    return { skipped: true, reason: 'disabled' };
-  }
+  if (!await _ensureSync()) return { skipped: true };
 
   const mdKey = `hwh_blog_md_${blog.slug}`;
   const content = isDelete ? null : localStorage.getItem(mdKey);
@@ -3186,23 +3170,7 @@ async function syncBlogToGitHub(blog, isDelete = false) {
 }
 
 async function syncProjectToGitHub(project, isDelete = false) {
-  if (!window.githubSync || !window.githubSync.isAutoSyncEnabled()) {
-    return { skipped: true };
-  }
-
-  const session = getSession();
-  if (!session || !session.token) {
-    return { skipped: true, reason: 'not_logged_in' };
-  }
-
-  // Initialize if not already
-  if (!window.githubSync.token) {
-    await window.githubSync.init(session.token);
-  }
-
-  if (!window.githubSync.isEnabled()) {
-    return { skipped: true, reason: 'disabled' };
-  }
+  if (!await _ensureSync()) return { skipped: true };
 
   const mdKey = `hwh_project_md_${project.id}`;
   const content = isDelete ? null : localStorage.getItem(mdKey);
@@ -3220,23 +3188,7 @@ async function syncProjectToGitHub(project, isDelete = false) {
 }
 
 async function syncBlogsJsonToGitHub() {
-  if (!window.githubSync || !window.githubSync.isAutoSyncEnabled()) {
-    return { skipped: true };
-  }
-
-  const session = getSession();
-  if (!session || !session.token) {
-    return { skipped: true };
-  }
-
-  if (!window.githubSync.token) {
-    await window.githubSync.init(session.token);
-  }
-
-  if (!window.githubSync.isEnabled()) {
-    return { skipped: true };
-  }
-
+  if (!await _ensureSync()) return { skipped: true };
   try {
     return await window.githubSync.syncBlogsJson(state.blogs);
   } catch (error) {
@@ -3246,23 +3198,7 @@ async function syncBlogsJsonToGitHub() {
 }
 
 async function syncProjectsJsonToGitHub() {
-  if (!window.githubSync || !window.githubSync.isAutoSyncEnabled()) {
-    return { skipped: true };
-  }
-
-  const session = getSession();
-  if (!session || !session.token) {
-    return { skipped: true };
-  }
-
-  if (!window.githubSync.token) {
-    await window.githubSync.init(session.token);
-  }
-
-  if (!window.githubSync.isEnabled()) {
-    return { skipped: true };
-  }
-
+  if (!await _ensureSync()) return { skipped: true };
   try {
     return await window.githubSync.syncProjectsJson(state.projects);
   } catch (error) {
@@ -3275,126 +3211,94 @@ async function syncProjectsJsonToGitHub() {
    SECTION SYNC FUNCTIONS
 ──────────────────────────────────────────── */
 
-async function syncHeroToGitHub() {
-  if (!window.githubSync || !window.githubSync.isAutoSyncEnabled()) {
-    return { skipped: true };
-  }
-
+// ── Shared helper: ensure githubSync is initialised and enabled ──────────────
+async function _ensureSync() {
+  if (!window.githubSync) return false;
   const session = getSession();
   if (!session || !session.token) {
-    return { skipped: true };
+    toast('Not logged in — sync skipped', 'warn');
+    return false;
   }
-
   if (!window.githubSync.token) {
     await window.githubSync.init(session.token);
   }
-
   if (!window.githubSync.isEnabled()) {
-    return { skipped: true };
+    toast('GitHub sync is disabled — enable it in Settings', 'warn');
+    return false;
   }
+  return true;
+}
 
+// Called from save buttons — always attempts sync regardless of autoSync flag.
+// autoSync only blocks background/automatic triggers (e.g. on every keystroke).
+async function syncHeroToGitHub() {
+  if (!await _ensureSync()) return { skipped: true };
   try {
     const result = await window.githubSync.syncHero(state.hero);
     if (result.success) {
-      console.log('Hero synced to GitHub');
+      toast('Hero synced to GitHub ✓', 'success');
       logChange('Synced hero to GitHub');
+    } else if (!result.skipped) {
+      toast('Hero sync failed — check console', 'error');
     }
     return result;
   } catch (error) {
     console.error('Hero sync error:', error);
+    toast('Hero sync error: ' + error.message, 'error');
     return { success: false, error: error.message };
   }
 }
 
 async function syncAboutToGitHub() {
-  if (!window.githubSync || !window.githubSync.isAutoSyncEnabled()) {
-    return { skipped: true };
-  }
-
-  const session = getSession();
-  if (!session || !session.token) {
-    return { skipped: true };
-  }
-
-  if (!window.githubSync.token) {
-    await window.githubSync.init(session.token);
-  }
-
-  if (!window.githubSync.isEnabled()) {
-    return { skipped: true };
-  }
-
+  if (!await _ensureSync()) return { skipped: true };
   try {
     const result = await window.githubSync.syncAbout(state.about);
     if (result.success) {
-      console.log('About synced to GitHub');
+      toast('About synced to GitHub ✓', 'success');
       logChange('Synced about to GitHub');
+    } else if (!result.skipped) {
+      toast('About sync failed — check console', 'error');
     }
     return result;
   } catch (error) {
     console.error('About sync error:', error);
+    toast('About sync error: ' + error.message, 'error');
     return { success: false, error: error.message };
   }
 }
 
 async function syncStackToGitHub() {
-  if (!window.githubSync || !window.githubSync.isAutoSyncEnabled()) {
-    return { skipped: true };
-  }
-
-  const session = getSession();
-  if (!session || !session.token) {
-    return { skipped: true };
-  }
-
-  if (!window.githubSync.token) {
-    await window.githubSync.init(session.token);
-  }
-
-  if (!window.githubSync.isEnabled()) {
-    return { skipped: true };
-  }
-
+  if (!await _ensureSync()) return { skipped: true };
   try {
     const result = await window.githubSync.syncStack(state.stack);
     if (result.success) {
-      console.log('Stack synced to GitHub');
+      toast('Stack synced to GitHub ✓', 'success');
       logChange('Synced stack to GitHub');
+    } else if (!result.skipped) {
+      toast('Stack sync failed — check console', 'error');
     }
     return result;
   } catch (error) {
     console.error('Stack sync error:', error);
+    toast('Stack sync error: ' + error.message, 'error');
     return { success: false, error: error.message };
   }
 }
 
 async function syncSettingsToGitHub() {
-  if (!window.githubSync || !window.githubSync.isAutoSyncEnabled()) {
-    return { skipped: true };
-  }
-
-  const session = getSession();
-  if (!session || !session.token) {
-    return { skipped: true };
-  }
-
-  if (!window.githubSync.token) {
-    await window.githubSync.init(session.token);
-  }
-
-  if (!window.githubSync.isEnabled()) {
-    return { skipped: true };
-  }
-
+  if (!await _ensureSync()) return { skipped: true };
   try {
     const result = await window.githubSync.syncSettings(state.settings);
     if (result.success) {
-      console.log('Settings synced to GitHub');
+      toast('Settings synced to GitHub ✓', 'success');
       logChange('Synced settings to GitHub');
+    } else if (!result.skipped) {
+      toast('Settings sync failed — check console', 'error');
     }
     return result;
   } catch (error) {
     console.error('Settings sync error:', error);
+    toast('Settings sync error: ' + error.message, 'error');
     return { success: false, error: error.message };
   }
 }
