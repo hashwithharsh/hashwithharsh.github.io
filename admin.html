@@ -1448,15 +1448,19 @@ function bootAdminPanel() {
    DATA MANAGEMENT
 ──────────────────────────────────────────── */
 function loadAllData() {
-  state.hero     = JSON.parse(localStorage.getItem(KEYS.hero))     || { ...DEFAULTS.hero };
-  state.about    = JSON.parse(localStorage.getItem(KEYS.about))    || { ...DEFAULTS.about };
-  state.stack    = JSON.parse(localStorage.getItem(KEYS.stack))    || [...DEFAULTS.stack];
-  state.settings = JSON.parse(localStorage.getItem(KEYS.settings)) || { ...DEFAULTS.settings };
+  function safeParse(key, fallback) {
+    try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; }
+    catch { localStorage.removeItem(key); return null; } // clear corrupt entry
+  }
+  state.hero     = safeParse(KEYS.hero)     || { ...DEFAULTS.hero };
+  state.about    = safeParse(KEYS.about)    || JSON.parse(JSON.stringify(DEFAULTS.about));
+  state.stack    = safeParse(KEYS.stack)    || JSON.parse(JSON.stringify(DEFAULTS.stack));
+  state.settings = safeParse(KEYS.settings) || { ...DEFAULTS.settings };
 
   // Projects — try localStorage first, then fetch from JSON
-  const cachedProjects = localStorage.getItem(KEYS.projects);
-  if (cachedProjects) {
-    state.projects = JSON.parse(cachedProjects);
+  const cachedProjects = safeParse(KEYS.projects);
+  if (cachedProjects && cachedProjects.length > 0) {
+    state.projects = cachedProjects;
     updateBadges();
     renderProjects();
   } else {
@@ -1467,9 +1471,9 @@ function loadAllData() {
   }
 
   // Blogs — try localStorage first, then fetch from JSON
-  const cachedBlogs = localStorage.getItem(KEYS.blogs);
-  if (cachedBlogs) {
-    state.blogs = JSON.parse(cachedBlogs);
+  const cachedBlogs = safeParse(KEYS.blogs);
+  if (cachedBlogs && cachedBlogs.length > 0) {
+    state.blogs = cachedBlogs;
     updateBadges();
     renderBlogs();
   } else {
@@ -1494,9 +1498,11 @@ function saveAllData() {
   saveToLS(KEYS.hero,     state.hero);
   saveToLS(KEYS.about,    state.about);
   saveToLS(KEYS.stack,    state.stack);
-  saveToLS(KEYS.projects, state.projects);
-  saveToLS(KEYS.blogs,    state.blogs);
   saveToLS(KEYS.settings, state.settings);
+  // Only write blogs/projects to localStorage if there is actual data in state.
+  // Avoids re-introducing a stale empty override after GitHub sync cleared them.
+  if (state.blogs.length)    saveToLS(KEYS.blogs,    state.blogs);
+  if (state.projects.length) saveToLS(KEYS.projects, state.projects);
   toast('All data saved to localStorage ✓', 'success');
   logChange('Saved all data');
 }
@@ -1578,7 +1584,15 @@ function importData(event) {
 
 function clearAllData() {
   if (!confirm('Clear all locally stored admin data? This cannot be undone.')) return;
+  // Remove named keys (except session)
   Object.values(KEYS).forEach(k => { if (k !== KEYS.session) localStorage.removeItem(k); });
+  // Also purge all orphan hwh_post_* and hwh_proj_* markdown keys
+  const mdKeys = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && (k.startsWith('hwh_post_') || k.startsWith('hwh_proj_'))) mdKeys.push(k);
+  }
+  mdKeys.forEach(k => localStorage.removeItem(k));
   loadAllData();
   renderDashboard();
   toast('Local data cleared', 'warning');
@@ -2047,8 +2061,9 @@ function saveProject(idx) {
   if (!title || !desc) { toast('Title and description are required', 'error'); return; }
 
   const dateVal = document.getElementById('mp-date').value || new Date().toISOString().slice(0,10);
-  const newId   = idx !== null && idx !== undefined
-    ? (state.projects[idx]?.id || title.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'') + '-' + Date.now())
+  // For edits: always use the existing id. Only generate for new projects.
+  const newId   = (idx !== null && idx !== undefined)
+    ? (state.projects[idx]?.id || title.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,''))
     : title.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'') + '-' + Date.now();
 
   const proj = {
@@ -2303,14 +2318,24 @@ function saveBlog(idx) {
   const slug  = document.getElementById('mb-slug').value.trim();
   if (!title || !slug) { toast('Title and slug are required', 'error'); return; }
 
-  // Save MD content if provided
+  // Duplicate slug check — prevent silent overwrite of existing post
+  const slugConflict = state.blogs.findIndex(b => b.slug === slug);
+  if (slugConflict !== -1 && slugConflict !== idx) {
+    toast(`Slug "${slug}" is already used by another post. Choose a unique slug.`, 'error');
+    return;
+  }
+
+  // Save MD content if provided; always migrate/clean old slug key if slug changed
   const mdEl = document.getElementById('mbMdTextarea');
+  const oldSlug = (typeof idx === 'number') ? state.blogs[idx]?.slug : null;
+  const slugChanged = oldSlug && oldSlug !== slug;
+  if (slugChanged) {
+    // Migrate old MD key to new slug key
+    const oldMd = localStorage.getItem(`hwh_post_${oldSlug}`);
+    if (oldMd) localStorage.setItem(`hwh_post_${slug}`, oldMd);
+    localStorage.removeItem(`hwh_post_${oldSlug}`); // always clean up old key
+  }
   if (mdEl && mdEl.value.trim()) {
-    // If slug changed on edit, migrate old key
-    if (typeof idx === 'number' && state.blogs[idx]?.slug && state.blogs[idx].slug !== slug) {
-      const oldMd = localStorage.getItem(`hwh_post_${state.blogs[idx].slug}`);
-      if (oldMd) { localStorage.setItem(`hwh_post_${slug}`, oldMd); localStorage.removeItem(`hwh_post_${state.blogs[idx].slug}`); }
-    }
     localStorage.setItem(`hwh_post_${slug}`, mdEl.value);
   }
 

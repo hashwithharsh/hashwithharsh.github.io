@@ -480,6 +480,27 @@
 <script>
   // Load featured projects + blog on homepage
   document.addEventListener('DOMContentLoaded', async () => {
+    // ── Apply admin-editable hero data ──────────────────────────
+    const hero = getHeroData();
+    if (hero) {
+      const nameEl = document.getElementById('heroName');
+      if (nameEl && hero.name) nameEl.innerHTML = hero.name;
+      const statusEl = document.querySelector('.hero-status span:last-child');
+      if (statusEl && hero.status) statusEl.textContent = hero.status;
+      const descEl = document.querySelector('.hero-desc');
+      if (descEl && hero.description) descEl.textContent = hero.description;
+      const cta1 = document.querySelector('.hero-ctas a:first-child');
+      if (cta1) {
+        if (hero.cta1Text) cta1.textContent = hero.cta1Text;
+        if (hero.cta1Href) cta1.href = hero.cta1Href;
+      }
+      const cta2 = document.querySelector('.hero-ctas a:last-child');
+      if (cta2) {
+        if (hero.cta2Text) cta2.textContent = hero.cta2Text;
+        if (hero.cta2Href) cta2.href = hero.cta2Href;
+      }
+    }
+
     // Projects
     const projects = await fetchProjects();
     const featured = projects.filter(p => p.featured).slice(0, 3);
