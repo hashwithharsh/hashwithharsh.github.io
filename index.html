@@ -91,18 +91,18 @@
       <div class="about-text reveal">
         <span class="section-label">// about me</span>
         <h2>I break things <em>on purpose</em>.<br>Then fix them. Then write about it.</h2>
-        <p>
+        <p id="about-para-0">
           I'm a self-driven DevOps and Cloud Engineering student who believes the fastest way to 
           learn infrastructure is to build something real, watch it fail spectacularly, and reverse-engineer 
           why. Every container I debug, every pipeline I write, every cluster I wrestle with — 
           <strong>it becomes a blog post so the next person doesn't have to suffer the same way I did.</strong>
         </p>
-        <p>
+        <p id="about-para-1">
           <strong>hashwithharsh</strong> started as a place to dump my notes. It became something I'm proud of. 
           The name? It's a bash comment, an ID selector, a color code, and a tag — all in one character. 
           That's what I like: things that do more than they look like.
         </p>
-        <p>
+        <p id="about-para-2">
           Right now I'm deep in AWS, Kubernetes, Terraform, and GitHub Actions. If it can be automated, 
           I'm automating it. If it runs in a container, I'm probably over-engineering it.
         </p>
@@ -138,20 +138,20 @@
           <span class="t-prompt">~</span> <span class="t-cmd">cat ./profile.json</span>
           <span class="t-br"></span>
           {<br>
-          &nbsp;&nbsp;<span class="t-key">"name"</span>: <span class="t-val">"Harsh Yadav"</span>,<br>
-          &nbsp;&nbsp;<span class="t-key">"role"</span>: <span class="t-val">"DevOps &amp; Cloud Student"</span>,<br>
-          &nbsp;&nbsp;<span class="t-key">"location"</span>: <span class="t-val">"India 🇮🇳"</span>,<br>
+          &nbsp;&nbsp;<span class="t-key">"name"</span>: <span class="t-val" id="tv-name">"Harsh Yadav"</span>,<br>
+          &nbsp;&nbsp;<span class="t-key">"role"</span>: <span class="t-val" id="tv-role">"DevOps &amp; Cloud Student"</span>,<br>
+          &nbsp;&nbsp;<span class="t-key">"location"</span>: <span class="t-val" id="tv-location">"India 🇮🇳"</span>,<br>
           &nbsp;&nbsp;<span class="t-key">"currently_learning"</span>: [<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"Terraform"</span>,<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"Kubernetes"</span>,<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"AWS Solutions"</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val" id="tv-learn-0">"Terraform"</span>,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val" id="tv-learn-1">"Kubernetes"</span>,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val" id="tv-learn-2">"AWS Solutions"</span><br>
           &nbsp;&nbsp;],<br>
           &nbsp;&nbsp;<span class="t-key">"open_to"</span>: [<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"internships"</span>,<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"collaborations"</span>,<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val">"open_source"</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val" id="tv-open-0">"internships"</span>,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val" id="tv-open-1">"collaborations"</span>,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-val" id="tv-open-2">"open_source"</span><br>
           &nbsp;&nbsp;],<br>
-          &nbsp;&nbsp;<span class="t-key">"coffee_driven"</span>: <span class="t-val">true</span><br>
+          &nbsp;&nbsp;<span class="t-key">"coffee_driven"</span>: <span class="t-val" id="tv-coffee">true</span><br>
           }<br>
           <span class="t-br"></span>
           <span class="t-prompt">~</span> <span class="t-cmd">echo $AVAILABILITY</span><br>
