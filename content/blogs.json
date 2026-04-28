@@ -1,14 +1,5 @@
 [
   {
-    "slug": "linux-day-1--foundations--filesystem-navigation-notes",
-    "title": "Linux Day 1 — Foundations & Filesystem Navigation Notes",
-    "date": "2026-04-28",
-    "readTime": "5 min read",
-    "excerpt": "",
-    "tags": [],
-    "pinned": false
-  },
-  {
     "slug": "docker-networking-deep-dive",
     "title": "Docker Networking: What Nobody Explains Clearly",
     "date": "2025-04-10",
