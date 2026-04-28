@@ -1,0 +1,13 @@
+{
+  "siteTitle": "hashwithharsh",
+  "ownerName": "Harsh Yadav",
+  "tagline": "DevOps & Cloud Engineering Student",
+  "siteUrl": "https://hashwithharsh.dev",
+  "githubUrl": "https://github.com/hashwithharsh",
+  "linkedinUrl": "https://linkedin.com/in/harshyadav",
+  "contactEmail": "harsh@hashwithharsh.dev",
+  "twitterUrl": "",
+  "adminApiUrl": "https://hashwithharsh-api.vercel.app/api/admin-auth",
+  "githubSyncEnabled": true,
+  "githubAutoSync": true
+}
