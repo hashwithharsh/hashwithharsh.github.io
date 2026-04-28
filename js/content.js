@@ -1,6 +1,7 @@
 /* =============================================
-   hashwithharsh — content.js (v3)
-   Content loading: localStorage-first CMS
+   hashwithharsh — content.js (v4)
+   Content loading with real-time refresh
+   Always fetches latest content from GitHub
    ============================================= */
 
 // Derive the base URL from the page's own location, stripping the filename.
@@ -13,26 +14,25 @@ const KEYS = {
   hero:     'hwh_hero',
   about:    'hwh_about',
   stack:    'hwh_stack',
+  // Version keys to track when content was last updated
+  blogsVersion:    'hwh_blogs_version',
+  projectsVersion: 'hwh_projects_version',
 };
 
-// ── Fetch helpers (localStorage-first) ────────
+// ── Fetch helpers (always fetch from GitHub) ─────
 
 async function fetchBlogs() {
-  const override = localStorage.getItem(KEYS.blogs);
-  if (override) {
-    try {
-      const data = JSON.parse(override);
-      return data.sort((a, b) => {
-        if (a.pinned && !b.pinned) return -1;
-        if (!a.pinned && b.pinned) return 1;
-        return new Date(b.date) - new Date(a.date);
-      });
-    } catch { /* fall through */ }
-  }
   try {
     const res = await fetch(new URL('blogs.json', CONTENT_BASE_URL));
     if (!res.ok) throw new Error('Failed');
-    return await res.json();
+    const data = await res.json();
+
+    // Sort by pinned first, then by date
+    return data.sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      return new Date(b.date) - new Date(a.date);
+    });
   } catch (e) {
     console.error('Could not load blogs:', e);
     return [];
@@ -40,23 +40,19 @@ async function fetchBlogs() {
 }
 
 async function fetchProjects() {
-  const override = localStorage.getItem(KEYS.projects);
-  if (override) {
-    try {
-      const data = JSON.parse(override);
-      return data.sort((a, b) => {
-        if (a.pinned && !b.pinned) return -1;
-        if (!a.pinned && b.pinned) return 1;
-        if (a.featured && !b.featured) return -1;
-        if (!a.featured && b.featured) return 1;
-        return 0;
-      });
-    } catch { /* fall through */ }
-  }
   try {
     const res = await fetch(new URL('projects.json', CONTENT_BASE_URL));
     if (!res.ok) throw new Error('Failed');
-    return await res.json();
+    const data = await res.json();
+
+    // Sort by pinned first, then by featured
+    return data.sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      if (a.featured && !b.featured) return -1;
+      if (!a.featured && b.featured) return 1;
+      return 0;
+    });
   } catch (e) {
     console.error('Could not load projects:', e);
     return [];
@@ -64,14 +60,7 @@ async function fetchProjects() {
 }
 
 async function fetchPost(slug) {
-  // Check localStorage first for admin-uploaded content
-  const lsKey = `hwh_blog_md_${slug}`;
-  const lsContent = localStorage.getItem(lsKey);
-  if (lsContent) {
-    return lsContent;
-  }
-
-  // Fall back to fetching from file
+  // Always fetch from file to get latest content
   const res = await fetch(new URL(`posts/${encodeURIComponent(slug)}.md`, CONTENT_BASE_URL));
   if (!res.ok) throw new Error(`Post "${slug}" not found`);
   return await res.text();
@@ -79,14 +68,7 @@ async function fetchPost(slug) {
 
 // NEW: fetch project detail markdown
 async function fetchProjectPost(id) {
-  // Check localStorage first for admin-uploaded content
-  const lsKey = `hwh_project_md_${id}`;
-  const lsContent = localStorage.getItem(lsKey);
-  if (lsContent) {
-    return lsContent;
-  }
-
-  // Fall back to fetching from file
+  // Always fetch from file to get latest content
   const res = await fetch(new URL(`projects/${encodeURIComponent(id)}.md`, CONTENT_BASE_URL));
   if (!res.ok) throw new Error(`Project "${id}" not found`);
   return await res.text();

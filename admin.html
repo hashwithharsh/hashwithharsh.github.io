@@ -887,6 +887,116 @@ input, textarea, select { font-family: var(--ff-body); }
   .form-grid { grid-template-columns: 1fr; }
   .section-panel { padding: 20px; }
 }
+
+/* ────────────────────────────────────────────
+   MARKDOWN EDITOR STYLES
+──────────────────────────────────────────── */
+
+/* Modal Tabs */
+.modal-tabs {
+  display: flex; gap: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  background: var(--surface);
+  position: sticky; top: 61px; z-index: 1;
+}
+.modal-tab {
+  padding: 10px 18px; cursor: pointer;
+  font-family: var(--ff-mono); font-size: .72rem;
+  letter-spacing: .05em; color: var(--text-3);
+  border-bottom: 2px solid transparent;
+  background: none; border-top: none; border-left: none; border-right: none;
+  transition: color var(--fast), border-color var(--fast);
+  margin-bottom: -1px;
+}
+.modal-tab:hover { color: var(--text-2); }
+.modal-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* MD Editor */
+.md-editor-wrap {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.md-toolbar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 8px 10px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-2);
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+}
+.md-toolbar-btn {
+  padding: 4px 10px; border-radius: 3px;
+  font-family: var(--ff-mono); font-size: .68rem;
+  border: 1px solid var(--border-2);
+  background: transparent; color: var(--text-3);
+  cursor: pointer; transition: all var(--fast);
+  letter-spacing: .03em;
+}
+.md-toolbar-btn:hover { color: var(--text); border-color: var(--border-3); background: var(--surface-4); }
+.md-toolbar-btn.accent { color: var(--accent); border-color: rgba(181,255,77,.25); background: var(--accent-dim); }
+.md-toolbar-btn.danger { color: var(--red); border-color: rgba(255,76,76,.2); }
+.md-toolbar-btn.danger:hover { background: var(--red-dim); }
+.md-toolbar-sep { width: 1px; height: 18px; background: var(--border-2); margin: 0 2px; }
+.md-toolbar-label {
+  font-family: var(--ff-mono); font-size: .62rem;
+  color: var(--text-3); margin-left: auto;
+}
+.md-upload-zone {
+  border: 1.5px dashed var(--border-2); border-radius: 5px;
+  padding: 28px 20px; text-align: center;
+  cursor: pointer; transition: all var(--fast);
+  background: var(--surface-3);
+}
+.md-upload-zone:hover, .md-upload-zone.drag-over {
+  border-color: rgba(181,255,77,.4);
+  background: var(--accent-dim);
+}
+.md-upload-zone p { font-size: .8rem; color: var(--text-3); margin-bottom: 6px; }
+.md-upload-zone span { font-family: var(--ff-mono); font-size: .68rem; color: var(--text-3); }
+#mbMdTextarea, #mpMdTextarea {
+  width: 100%;
+  min-height: 280px;
+  resize: vertical;
+  background: var(--surface-3);
+  border: 1px solid var(--border-2);
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+  color: var(--text);
+  font-family: var(--ff-mono);
+  font-size: .8rem;
+  line-height: 1.6;
+  padding: 12px 14px;
+  outline: none;
+  tab-size: 2;
+  transition: border-color var(--fast), box-shadow var(--fast);
+}
+#mbMdTextarea:focus, #mpMdTextarea:focus {
+  border-color: rgba(181,255,77,.4);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.md-status-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--ff-mono); font-size: .65rem; color: var(--text-3);
+  padding: 6px 2px;
+}
+.md-status-saved { color: var(--green); }
+.md-status-unsaved { color: var(--yellow); }
+
+/* MD badge on list items */
+.md-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--ff-mono); font-size: .6rem;
+  padding: 2px 7px; border-radius: 3px;
+  background: var(--accent-dim); color: var(--accent);
+  border: 1px solid rgba(181,255,77,.2);
+}
+.md-badge.missing {
+  background: var(--surface-4); color: var(--text-3);
+  border-color: var(--border);
+}
 </style>
 </head>
 <body>
@@ -1957,6 +2067,7 @@ function renderProjects() {
     <div class="item-card ${p.pinned ? 'pinned' : ''}" id="proj-${i}">
       <div class="item-card-top">
         <span class="item-card-year">${p.date ? new Date(p.date).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}) : (p.year || '2025')}</span>
+        <span class="md-badge${hasMarkdown ? '' : ' missing'}" style="margin-left:auto;">${hasMarkdown ? '📄 .md' : '📄 none'}</span>
         <span class="item-card-status ${p.status || 'active'}">${statusLabel(p.status)}</span>
       </div>
       <h3>${escHtml(p.title)}</h3>
@@ -1981,95 +2092,106 @@ function openProjectModal(i) {
   };
 
   // Check if markdown content exists in localStorage
-  const existingMd = isEdit && p.id ? localStorage.getItem(`hwh_project_md_${p.id}`) : null;
+  const projId = isEdit ? (state.projects[i]?.id || '') : '';
+  const existingMd = projId ? (localStorage.getItem(`hwh_project_md_${projId}`) || '') : '';
+
+  // Widen modal for MD editor
+  document.getElementById('modalBox').style.maxWidth = '820px';
 
   document.getElementById('modalTitle').textContent = isEdit ? 'Edit Project' : 'Add New Project';
+
   document.getElementById('modalBody').innerHTML = `
-    <div class="form-grid">
-      <div class="form-row" style="grid-column:1/-1">
-        <label>project title *</label>
-        <input type="text" id="mp-title" value="${escHtml(p.title)}" placeholder="K8s Monitoring Stack" />
-      </div>
-      <div class="form-row" style="grid-column:1/-1">
-        <label>description *</label>
-        <textarea id="mp-desc" rows="3">${escHtml(p.description)}</textarea>
-      </div>
-      <div class="form-row">
-        <label>github url</label>
-        <input type="text" id="mp-github" value="${escHtml(p.github||'')}" placeholder="https://github.com/..." />
-      </div>
-      <div class="form-row">
-        <label>live demo url</label>
-        <input type="text" id="mp-demo" value="${escHtml(p.demo||'')}" placeholder="https://..." />
-      </div>
-      <div class="form-row">
-        <label>publish date</label>
-        <input type="date" id="mp-date" value="${p.date || new Date().toISOString().slice(0,10)}" />
-      </div>
-      <div class="form-row">
-        <label>status</label>
-        <select id="mp-status">
-          <option value="active"   ${p.status==='active'  ?'selected':''}>active</option>
-          <option value="wip"      ${p.status==='wip'     ?'selected':''}>in progress (wip)</option>
-          <option value="archived" ${p.status==='archived'?'selected':''}>archived</option>
-        </select>
-      </div>
-      <div class="form-row" style="grid-column:1/-1">
-        <label>tags (press Enter or comma to add)</label>
-        <div class="tags-editor" id="mp-tags-editor" onclick="document.getElementById('mp-tag-input').focus()">
-          ${(p.tags||[]).map(t=>`<span class="tag-chip">${escHtml(t)}<button onclick="removeProjectTag(this,'${escHtml(t)}')" type="button">✕</button></span>`).join('')}
-          <input type="text" id="mp-tag-input" placeholder="docker, kubernetes..." onkeydown="handleProjectTagInput(event)" />
+    <div class="modal-tabs" style="margin: -24px -24px 0; padding: 0 24px;">
+      <button class="modal-tab active" onclick="switchModalTab('mp-meta', this)">metadata</button>
+      <button class="modal-tab" onclick="switchModalTab('mp-content', this)">markdown content</button>
+    </div>
+
+    <!-- TAB: metadata -->
+    <div class="tab-pane active" id="mp-meta" style="padding-top:20px;">
+      <div class="form-grid">
+        <div class="form-row" style="grid-column:1/-1">
+          <label>project title *</label>
+          <input type="text" id="mp-title" value="${escHtml(p.title)}" placeholder="K8s Monitoring Stack" />
         </div>
-      </div>
-      <div class="form-row">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:.82rem;color:var(--text-2);">
-          <input type="checkbox" id="mp-featured" ${p.featured?'checked':''} style="accent-color:var(--accent);" />
-          Featured on homepage (shows in projects grid)
-        </label>
+        <div class="form-row" style="grid-column:1/-1">
+          <label>description *</label>
+          <textarea id="mp-desc" rows="3">${escHtml(p.description)}</textarea>
+        </div>
+        <div class="form-row">
+          <label>github url</label>
+          <input type="text" id="mp-github" value="${escHtml(p.github||'')}" placeholder="https://github.com/..." />
+        </div>
+        <div class="form-row">
+          <label>live demo url</label>
+          <input type="text" id="mp-demo" value="${escHtml(p.demo||'')}" placeholder="https://..." />
+        </div>
+        <div class="form-row">
+          <label>publish date</label>
+          <input type="date" id="mp-date" value="${p.date || new Date().toISOString().slice(0,10)}" />
+        </div>
+        <div class="form-row">
+          <label>status</label>
+          <select id="mp-status">
+            <option value="active"   ${p.status==='active'  ?'selected':''}>active</option>
+            <option value="wip"      ${p.status==='wip'     ?'selected':''}>in progress (wip)</option>
+            <option value="archived" ${p.status==='archived'?'selected':''}>archived</option>
+          </select>
+        </div>
+        <div class="form-row" style="grid-column:1/-1">
+          <label>tags (press Enter or comma to add)</label>
+          <div class="tags-editor" id="mp-tags-editor" onclick="document.getElementById('mp-tag-input').focus()">
+            ${(p.tags||[]).map(t=>`<span class="tag-chip">${escHtml(t)}<button onclick="removeProjectTag(this,'${escHtml(t)}')" type="button">✕</button></span>`).join('')}
+            <input type="text" id="mp-tag-input" placeholder="docker, kubernetes..." onkeydown="handleProjectTagInput(event)" />
+          </div>
+        </div>
+        <div class="form-row">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:.82rem;color:var(--text-2);">
+            <input type="checkbox" id="mp-featured" ${p.featured?'checked':''} style="accent-color:var(--accent);" />
+            Featured on homepage (shows in projects grid)
+          </label>
+        </div>
       </div>
     </div>
 
-    <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
-      <div style="font-family:var(--ff-mono);font-size:.7rem;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;">
-        // project content (markdown)
-      </div>
-
-      <div class="file-upload-area" id="mp-file-upload" onclick="document.getElementById('mp-file-input').click()">
-        <input type="file" id="mp-file-input" accept=".md,.markdown,.txt" onchange="handleProjectFileUpload(event)" />
-        <div class="file-upload-icon">📄</div>
-        <div class="file-upload-text">Drop your .md file here or click to upload</div>
-        <div class="file-upload-hint">Supports .md, .markdown, .txt files</div>
-      </div>
-
-      <div class="file-upload-preview${existingMd ? ' show' : ''}" id="mp-file-preview">
-        <div class="file-upload-preview-header">
-          <span class="file-upload-preview-name" id="mp-file-name">${existingMd ? (p.id + '.md') : ''}</span>
-          <button class="file-upload-preview-remove" onclick="removeProjectFile(event)">✕ remove</button>
+    <!-- TAB: markdown content -->
+    <div class="tab-pane" id="mp-content" style="padding-top:20px;">
+      <div class="md-editor-wrap">
+        <div class="md-toolbar">
+          <button class="md-toolbar-btn" onclick="mdInsert('mpMdTextarea','# ','')">H1</button>
+          <button class="md-toolbar-btn" onclick="mdInsert('mpMdTextarea','## ','')">H2</button>
+          <button class="md-toolbar-btn" onclick="mdInsert('mpMdTextarea','### ','')">H3</button>
+          <div class="md-toolbar-sep"></div>
+          <button class="md-toolbar-btn" onclick="mdWrap('mpMdTextarea','**')"><b>B</b></button>
+          <button class="md-toolbar-btn" onclick="mdWrap('mpMdTextarea','_')"><i>I</i></button>
+          <button class="md-toolbar-btn" onclick="mdWrap('mpMdTextarea','\`')">code</button>
+          <div class="md-toolbar-sep"></div>
+          <button class="md-toolbar-btn" onclick="mdInsert('mpMdTextarea','\`\`\`bash\n','\n\`\`\`')">block</button>
+          <button class="md-toolbar-btn" onclick="mdInsert('mpMdTextarea','- ','')">list</button>
+          <button class="md-toolbar-btn" onclick="mdInsert('mpMdTextarea','> ','')">quote</button>
+          <button class="md-toolbar-btn" onclick="mdInsert('mpMdTextarea','[text](url)','')">link</button>
+          <div class="md-toolbar-sep"></div>
+          <button class="md-toolbar-btn accent" onclick="document.getElementById('mpMdFile').click()">⬆ upload .md</button>
+          <input type="file" id="mpMdFile" accept=".md,.txt" style="display:none" onchange="loadMdFile(event,'mpMdTextarea','mpMdStatus')" />
+          <button class="md-toolbar-btn" onclick="downloadMd('mpMdTextarea', projIdForModal())">⬇ download</button>
+          ${existingMd ? `<button class="md-toolbar-btn danger" onclick="clearMdContent('mpMdTextarea','mpMdStatus')">✕ clear</button>` : ''}
+          <span class="md-toolbar-label" id="mpMdStatus">${existingMd ? '💾 draft stored' : '// no content yet'}</span>
         </div>
-        <div class="file-upload-preview-stats" id="mp-file-stats">
-          ${existingMd ? `${existingMd.length} characters · ${Math.ceil(existingMd.split(/\s+/).length / 200)} min read` : ''}
+        <div class="md-upload-zone" id="mpDropZone" style="${existingMd ? 'display:none' : ''}"
+             onclick="document.getElementById('mpMdFile').click()"
+             ondragover="event.preventDefault();this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="handleMdDrop(event,'mpMdTextarea','mpMdStatus','mpDropZone')">
+          <p>Drop your <code style="color:var(--accent)">.md</code> file here, or click to browse</p>
+          <span>Supports Markdown — will be stored in localStorage and synced to GitHub</span>
         </div>
-        <div class="file-upload-preview-actions">
-          <button class="btn-download" onclick="downloadProjectMarkdown(event)">⬇ download</button>
-          <button class="btn-edit" onclick="editProjectMarkdown(event)">✎ edit content</button>
-        </div>
-      </div>
-
-      <div class="markdown-editor" id="mp-markdown-editor">
-        <div class="markdown-editor-header">
-          <span class="markdown-editor-title">markdown editor</span>
-          <button style="background:none;border:none;color:var(--text-3);cursor:pointer;font-size:.8rem;" onclick="closeMarkdownEditor('mp')">✕ close</button>
-        </div>
-        <textarea id="mp-markdown-content" placeholder="Write your markdown content here...">${existingMd || ''}</textarea>
-        <div style="padding:12px 16px;background:var(--surface-2);border-top:1px solid var(--border);">
-          <button class="tb-btn accent" style="width:100%;justify-content:center;" onclick="saveMarkdownEditor('mp')">save content</button>
+        <textarea id="mpMdTextarea" placeholder="# Project Title&#10;&#10;Write your project write-up in Markdown here...&#10;&#10;## Overview&#10;&#10;## How it works&#10;&#10;## Setup" oninput="onMdInput('mpMdStatus','mpDropZone')">${escHtml(existingMd)}</textarea>
+        <div class="md-status-bar">
+          <span style="color:var(--text-3);font-size:.65rem;">stored in localStorage → synced to GitHub when enabled</span>
+          <span id="mpMdChars">${existingMd.length} chars</span>
         </div>
       </div>
     </div>
   `;
-
-  // Setup drag and drop
-  setupFileUploadDragDrop('mp-file-upload', 'mp-file-input', handleProjectFileUpload);
 
   document.getElementById('modalFooter').innerHTML = `
     <button class="tb-btn" onclick="closeModal()">cancel</button>
@@ -2127,7 +2249,7 @@ function saveProject(idx) {
   };
 
   // Save markdown content to localStorage
-  const markdownContent = document.getElementById('mp-markdown-content')?.value || tempProjectMarkdown;
+  const markdownContent = document.getElementById('mpMdTextarea')?.value || tempProjectMarkdown;
   if (markdownContent && markdownContent.trim()) {
     localStorage.setItem(`hwh_project_md_${proj.id}`, markdownContent);
   }
@@ -2179,6 +2301,13 @@ function deleteProject(i) {
   syncProjectToGitHub(p, true).then(result => {
     if (!result.skipped && result.success) {
       logChange(`Deleted project from GitHub: ${p.title}`);
+      toast('Project deleted from GitHub ✓', 'success');
+    } else if (!result.skipped) {
+      console.error('Project delete sync failed:', result.error);
+      toast('Failed to delete from GitHub: ' + (result.error || 'Unknown error'), 'error');
+      logChange(`Failed to delete project from GitHub: ${p.title} - ${result.error}`);
+    } else {
+      console.log('Project delete skipped:', result.reason);
     }
   });
 
@@ -2252,6 +2381,9 @@ function renderBlogs() {
         ${hasMarkdown ? `<button class="ia-btn" onclick="downloadBlogMarkdownBySlug('${b.slug}')" title="Download markdown">📄</button>` : ''}
         <button class="ia-btn del" onclick="deleteBlog(${i})">✕</button>
       </div>
+      <div style="margin-top:8px;">
+        <span class="md-badge${hasMarkdown?'':' missing'}">${hasMarkdown?'📄 .md stored':'📄 no .md'}</span>
+      </div>
     </div>`;
   }).join('');
 }
@@ -2264,91 +2396,100 @@ function openBlogModal(i) {
   };
 
   // Check if markdown content exists in localStorage
-  const existingMd = isEdit && b.slug ? localStorage.getItem(`hwh_blog_md_${b.slug}`) : null;
+  const existingMd = b.slug ? (localStorage.getItem(`hwh_blog_md_${b.slug}`) || '') : '';
+
+  // Widen modal for MD editor
+  document.getElementById('modalBox').style.maxWidth = '820px';
 
   document.getElementById('modalTitle').textContent = isEdit ? 'Edit Blog Post' : 'Add Blog Post';
   document.getElementById('modalBody').innerHTML = `
-    <div class="form-grid single">
-      <div class="form-row">
-        <label>title *</label>
-        <input type="text" id="mb-title" value="${escHtml(b.title)}" placeholder="Docker Networking Deep Dive"
-               oninput="autoSlug(this)" />
-      </div>
-      <div class="form-row">
-        <label>slug * (url identifier)</label>
-        <input type="text" id="mb-slug" value="${escHtml(b.slug)}" placeholder="docker-networking-deep-dive" />
-        <div class="form-hint">Used in URL: post.html?slug=your-slug — must match your .md filename in content/posts/</div>
-      </div>
-      <div class="form-row">
-        <label>excerpt (shown in blog list)</label>
-        <textarea id="mb-excerpt" rows="2">${escHtml(b.excerpt||'')}</textarea>
-      </div>
-      <div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+    <div class="modal-tabs" style="margin: -24px -24px 0; padding: 0 24px;">
+      <button class="modal-tab active" onclick="switchModalTab('mb-meta', this)">metadata</button>
+      <button class="modal-tab" onclick="switchModalTab('mb-content', this)">markdown content</button>
+    </div>
+
+    <!-- TAB: metadata -->
+    <div class="tab-pane active" id="mb-meta" style="padding-top:20px;">
+      <div class="form-grid single">
         <div class="form-row">
-          <label>publish date</label>
-          <input type="date" id="mb-date" value="${b.date||''}" />
+          <label>title *</label>
+          <input type="text" id="mb-title" value="${escHtml(b.title)}" placeholder="Docker Networking Deep Dive"
+                 oninput="autoSlug(this)" />
         </div>
         <div class="form-row">
-          <label>read time</label>
-          <input type="text" id="mb-readtime" value="${escHtml(b.readTime||'')}" placeholder="8 min read" />
+          <label>slug * (url identifier)</label>
+          <input type="text" id="mb-slug" value="${escHtml(b.slug)}" placeholder="docker-networking-deep-dive" />
+          <div class="form-hint">Used in URL: post.html?slug=your-slug — the MD content key uses this slug</div>
         </div>
-      </div>
-      <div class="form-row">
-        <label>tags (press Enter or comma to add)</label>
-        <div class="tags-editor" id="mb-tags-editor" onclick="document.getElementById('mb-tag-input').focus()">
-          ${(b.tags||[]).map(t=>`<span class="tag-chip">${escHtml(t)}<button onclick="this.parentElement.remove()" type="button">✕</button></span>`).join('')}
-          <input type="text" id="mb-tag-input" placeholder="docker, kubernetes..." onkeydown="handleBlogTagInput(event)" />
+        <div class="form-row">
+          <label>excerpt (shown in blog list)</label>
+          <textarea id="mb-excerpt" rows="2">${escHtml(b.excerpt||'')}</textarea>
         </div>
-      </div>
-      <div class="form-row">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:.82rem;color:var(--text-2);">
-          <input type="checkbox" id="mb-pinned" ${b.pinned?'checked':''} style="accent-color:var(--accent);" />
-          Pin this post (show at top of list)
-        </label>
+        <div class="form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div class="form-row">
+            <label>publish date</label>
+            <input type="date" id="mb-date" value="${b.date||''}" />
+          </div>
+          <div class="form-row">
+            <label>read time</label>
+            <input type="text" id="mb-readtime" value="${escHtml(b.readTime||'')}" placeholder="8 min read" />
+          </div>
+        </div>
+        <div class="form-row">
+          <label>tags (press Enter or comma to add)</label>
+          <div class="tags-editor" id="mb-tags-editor" onclick="document.getElementById('mb-tag-input').focus()">
+            ${(b.tags||[]).map(t=>`<span class="tag-chip">${escHtml(t)}<button onclick="this.parentElement.remove()" type="button">✕</button></span>`).join('')}
+            <input type="text" id="mb-tag-input" placeholder="docker, kubernetes..." onkeydown="handleBlogTagInput(event)" />
+          </div>
+        </div>
+        <div class="form-row">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;font-size:.82rem;color:var(--text-2);">
+            <input type="checkbox" id="mb-pinned" ${b.pinned?'checked':''} style="accent-color:var(--accent);" />
+            Pin this post (show at top of list)
+          </label>
+        </div>
       </div>
     </div>
 
-    <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
-      <div style="font-family:var(--ff-mono);font-size:.7rem;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;">
-        // blog content (markdown)
-      </div>
-
-      <div class="file-upload-area" id="mb-file-upload" onclick="document.getElementById('mb-file-input').click()">
-        <input type="file" id="mb-file-input" accept=".md,.markdown,.txt" onchange="handleBlogFileUpload(event)" />
-        <div class="file-upload-icon">📄</div>
-        <div class="file-upload-text">Drop your .md file here or click to upload</div>
-        <div class="file-upload-hint">Supports .md, .markdown, .txt files</div>
-      </div>
-
-      <div class="file-upload-preview${existingMd ? ' show' : ''}" id="mb-file-preview">
-        <div class="file-upload-preview-header">
-          <span class="file-upload-preview-name" id="mb-file-name">${existingMd ? (b.slug + '.md') : ''}</span>
-          <button class="file-upload-preview-remove" onclick="removeBlogFile(event)">✕ remove</button>
+    <!-- TAB: markdown content -->
+    <div class="tab-pane" id="mb-content" style="padding-top:20px;">
+      <div class="md-editor-wrap">
+        <div class="md-toolbar">
+          <button class="md-toolbar-btn" onclick="mdInsert('mbMdTextarea','# ','')">H1</button>
+          <button class="md-toolbar-btn" onclick="mdInsert('mbMdTextarea','## ','')">H2</button>
+          <button class="md-toolbar-btn" onclick="mdInsert('mbMdTextarea','### ','')">H3</button>
+          <div class="md-toolbar-sep"></div>
+          <button class="md-toolbar-btn" onclick="mdWrap('mbMdTextarea','**')"><b>B</b></button>
+          <button class="md-toolbar-btn" onclick="mdWrap('mbMdTextarea','_')"><i>I</i></button>
+          <button class="md-toolbar-btn" onclick="mdWrap('mbMdTextarea','\`')">code</button>
+          <div class="md-toolbar-sep"></div>
+          <button class="md-toolbar-btn" onclick="mdInsert('mbMdTextarea','\`\`\`bash\n','\n\`\`\`')">block</button>
+          <button class="md-toolbar-btn" onclick="mdInsert('mbMdTextarea','- ','')">list</button>
+          <button class="md-toolbar-btn" onclick="mdInsert('mbMdTextarea','> ','')">quote</button>
+          <button class="md-toolbar-btn" onclick="mdInsert('mbMdTextarea','[text](url)','')">link</button>
+          <div class="md-toolbar-sep"></div>
+          <button class="md-toolbar-btn accent" onclick="document.getElementById('mbMdFile').click()">⬆ upload .md</button>
+          <input type="file" id="mbMdFile" accept=".md,.txt" style="display:none" onchange="loadMdFile(event,'mbMdTextarea','mbMdStatus')" />
+          <button class="md-toolbar-btn" onclick="downloadMd('mbMdTextarea', slugForModal())">⬇ download</button>
+          ${existingMd ? `<button class="md-toolbar-btn danger" onclick="clearMdContent('mbMdTextarea','mbMdStatus')">✕ clear</button>` : ''}
+          <span class="md-toolbar-label" id="mbMdStatus">${existingMd ? '💾 draft stored' : '// no content yet'}</span>
         </div>
-        <div class="file-upload-preview-stats" id="mb-file-stats">
-          ${existingMd ? `${existingMd.length} characters · ${Math.ceil(existingMd.split(/\s+/).length / 200)} min read` : ''}
+        <div class="md-upload-zone" id="mbDropZone" style="${existingMd ? 'display:none' : ''}"
+             onclick="document.getElementById('mbMdFile').click()"
+             ondragover="event.preventDefault();this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="handleMdDrop(event,'mbMdTextarea','mbMdStatus','mbDropZone')">
+          <p>Drop your <code style="color:var(--accent)">.md</code> file here, or click to browse</p>
+          <span>Supports Markdown — stored in localStorage under the post slug</span>
         </div>
-        <div class="file-upload-preview-actions">
-          <button class="btn-download" onclick="downloadBlogMarkdown(event)">⬇ download</button>
-          <button class="btn-edit" onclick="editBlogMarkdown(event)">✎ edit content</button>
-        </div>
-      </div>
-
-      <div class="markdown-editor" id="mb-markdown-editor">
-        <div class="markdown-editor-header">
-          <span class="markdown-editor-title">markdown editor</span>
-          <button style="background:none;border:none;color:var(--text-3);cursor:pointer;font-size:.8rem;" onclick="closeMarkdownEditor('mb')">✕ close</button>
-        </div>
-        <textarea id="mb-markdown-content" placeholder="Write your markdown content here...">${existingMd || ''}</textarea>
-        <div style="padding:12px 16px;background:var(--surface-2);border-top:1px solid var(--border);">
-          <button class="tb-btn accent" style="width:100%;justify-content:center;" onclick="saveMarkdownEditor('mb')">save content</button>
+        <textarea id="mbMdTextarea" placeholder="# Post Title&#10;&#10;Write your post in Markdown here...&#10;&#10;## Introduction&#10;&#10;## The Problem&#10;&#10;## The Fix" oninput="onMdInput('mbMdStatus','mbDropZone')">${escHtml(existingMd)}</textarea>
+        <div class="md-status-bar">
+          <span style="color:var(--text-3);font-size:.65rem;">stored under key: hwh_blog_md_<slug> — synced to GitHub when enabled</span>
+          <span id="mbMdChars">${existingMd.length} chars</span>
         </div>
       </div>
     </div>
   `;
-
-  // Setup drag and drop
-  setupFileUploadDragDrop('mb-file-upload', 'mb-file-input', handleBlogFileUpload);
 
   document.getElementById('modalFooter').innerHTML = `
     <button class="tb-btn" onclick="closeModal()">cancel</button>
@@ -2403,7 +2544,7 @@ function saveBlog(idx) {
   };
 
   // Save markdown content to localStorage
-  const markdownContent = document.getElementById('mb-markdown-content')?.value || tempBlogMarkdown;
+  const markdownContent = document.getElementById('mbMdTextarea')?.value || tempBlogMarkdown;
   if (markdownContent && markdownContent.trim()) {
     localStorage.setItem(`hwh_blog_md_${slug}`, markdownContent);
   }
@@ -2455,6 +2596,13 @@ function deleteBlog(i) {
   syncBlogToGitHub(b, true).then(result => {
     if (!result.skipped && result.success) {
       logChange(`Deleted blog from GitHub: ${b.title}`);
+      toast('Blog deleted from GitHub ✓', 'success');
+    } else if (!result.skipped) {
+      console.error('Blog delete sync failed:', result.error);
+      toast('Failed to delete from GitHub: ' + (result.error || 'Unknown error'), 'error');
+      logChange(`Failed to delete blog from GitHub: ${b.title} - ${result.error}`);
+    } else {
+      console.log('Blog delete skipped:', result.reason);
     }
   });
 
@@ -2711,6 +2859,146 @@ function saveMarkdownEditor(prefix) {
 
   editor.classList.remove('show');
   toast('Content saved ✓', 'success');
+}
+
+/* ────────────────────────────────────────────
+   MARKDOWN EDITOR FUNCTIONS
+──────────────────────────────────────────── */
+
+// Switch between modal tabs
+function switchModalTab(paneId, btn) {
+  const modal = document.getElementById('modalBox');
+  modal.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  modal.querySelectorAll('.modal-tab').forEach(b => b.classList.remove('active'));
+  const pane = document.getElementById(paneId);
+  if (pane) pane.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// Insert text at cursor position
+function mdInsert(taId, before, after) {
+  const ta = document.getElementById(taId);
+  if (!ta) return;
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const selected = ta.value.substring(start, end);
+  const newText = before + selected + after;
+  ta.value = ta.value.substring(0, start) + newText + ta.value.substring(end);
+  ta.selectionStart = ta.selectionEnd = start + before.length + selected.length + after.length;
+  ta.focus();
+  ta.dispatchEvent(new Event('input'));
+}
+
+// Wrap selected text (toggle bold/italic/code)
+function mdWrap(taId, marker) {
+  const ta = document.getElementById(taId);
+  if (!ta) return;
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const selected = ta.value.substring(start, end) || 'text';
+  const wrapped = marker + selected + marker;
+  ta.value = ta.value.substring(0, start) + wrapped + ta.value.substring(end);
+  ta.selectionStart = start + marker.length;
+  ta.selectionEnd   = start + marker.length + selected.length;
+  ta.focus();
+  ta.dispatchEvent(new Event('input'));
+}
+
+// Load .md file from file input
+function loadMdFile(event, taId, statusId) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const ta = document.getElementById(taId);
+    if (ta) {
+      ta.value = e.target.result;
+      ta.style.display = 'block';
+      ta.dispatchEvent(new Event('input'));
+    }
+    const dropZoneId = taId === 'mbMdTextarea' ? 'mbDropZone' : 'mpDropZone';
+    const dz = document.getElementById(dropZoneId);
+    if (dz) dz.style.display = 'none';
+    const st = document.getElementById(statusId);
+    if (st) { st.textContent = `📂 ${file.name} loaded`; st.className = 'md-toolbar-label md-status-unsaved'; }
+    updateMdChars(taId, taId === 'mbMdTextarea' ? 'mbMdChars' : 'mpMdChars');
+    toast(`Loaded: ${file.name}`, 'success');
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// Handle drag-and-drop onto the upload zone
+function handleMdDrop(event, taId, statusId, dropZoneId) {
+  event.preventDefault();
+  const dz = document.getElementById(dropZoneId);
+  if (dz) dz.classList.remove('drag-over');
+  const file = event.dataTransfer.files[0];
+  if (!file) return;
+  if (!file.name.match(/\.(md|txt)$/i)) { toast('Please drop a .md or .txt file', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const ta = document.getElementById(taId);
+    if (ta) { ta.value = e.target.result; ta.style.display = 'block'; ta.dispatchEvent(new Event('input')); }
+    if (dz) dz.style.display = 'none';
+    const st = document.getElementById(statusId);
+    if (st) { st.textContent = `📂 ${file.name} loaded`; st.className = 'md-toolbar-label md-status-unsaved'; }
+    updateMdChars(taId, taId === 'mbMdTextarea' ? 'mbMdChars' : 'mpMdChars');
+    toast(`Loaded: ${file.name}`, 'success');
+  };
+  reader.readAsText(file);
+}
+
+// Download textarea content as .md file
+function downloadMd(taId, filename) {
+  const ta = document.getElementById(taId);
+  if (!ta || !ta.value.trim()) { toast('Nothing to download — editor is empty', 'warning'); return; }
+  const blob = new Blob([ta.value], { type: 'text/markdown' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = (filename || 'content') + '.md'; a.click();
+  URL.revokeObjectURL(url);
+  toast('Downloaded .md file', 'success');
+}
+
+// Clear MD content from textarea
+function clearMdContent(taId, statusId) {
+  if (!confirm('Clear this markdown content? This removes it from localStorage.')) return;
+  const ta = document.getElementById(taId);
+  if (ta) { ta.value = ''; ta.dispatchEvent(new Event('input')); }
+  const st = document.getElementById(statusId);
+  if (st) st.textContent = '// cleared';
+  const dropZoneId = taId === 'mbMdTextarea' ? 'mbDropZone' : 'mpDropZone';
+  const dz = document.getElementById(dropZoneId);
+  if (dz) dz.style.display = '';
+  toast('Content cleared', 'warning');
+}
+
+// Called on every textarea input to update status/char count
+function onMdInput(statusId, dropZoneId) {
+  const st = document.getElementById(statusId);
+  if (st) { st.textContent = '● unsaved'; st.className = 'md-toolbar-label md-status-unsaved'; }
+  const ta = document.getElementById(statusId === 'mbMdStatus' ? 'mbMdTextarea' : 'mpMdTextarea');
+  const charsId = statusId === 'mbMdStatus' ? 'mbMdChars' : 'mpMdChars';
+  updateMdChars(ta?.id, charsId);
+  if (ta && ta.value.trim()) {
+    const dz = document.getElementById(dropZoneId);
+    if (dz) dz.style.display = 'none';
+  }
+}
+
+function updateMdChars(taId, charsId) {
+  const ta = document.getElementById(taId);
+  const el = document.getElementById(charsId);
+  if (ta && el) el.textContent = ta.value.length + ' chars';
+}
+
+// Get current slug from blog modal for download filename
+function slugForModal() {
+  return document.getElementById('mb-slug')?.value?.trim() || 'post';
+}
+
+// Get current project id from modal for download filename
+function projIdForModal() {
+  return document.getElementById('mp-title')?.value?.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || 'project';
 }
 
 /* ────────────────────────────────────────────

@@ -79,10 +79,11 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Path is required' });
       }
 
-      await deleteFile(GITHUB_TOKEN, GITHUB_REPO, GITHUB_BRANCH, path);
+      const result = await deleteFile(GITHUB_TOKEN, GITHUB_REPO, GITHUB_BRANCH, path, message);
       return res.status(200).json({
         success: true,
         message: 'File deleted successfully',
+        result,
       });
     }
 
@@ -196,13 +197,15 @@ async function createOrUpdateFile(token, repo, branch, path, content, message) {
   return await response.json();
 }
 
-async function deleteFile(token, repo, branch, path) {
+async function deleteFile(token, repo, branch, path, message) {
   const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
 
   // Get file SHA first
   const existing = await getFileContent(token, repo, branch, path);
   if (!existing) {
-    throw new Error('File not found');
+    // File doesn't exist, but that's okay - consider it already deleted
+    console.log(`File not found for deletion: ${path}`);
+    return { success: true, message: 'File not found (already deleted)' };
   }
 
   const response = await fetch(url, {
@@ -214,7 +217,7 @@ async function deleteFile(token, repo, branch, path) {
       'User-Agent': 'hashwithharsh-admin',
     },
     body: JSON.stringify({
-      message: `Delete ${path}`,
+      message: message || `Delete ${path}`,
       sha: existing.sha,
       branch,
     }),

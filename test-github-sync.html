@@ -123,7 +123,25 @@ Created at: ${new Date().toISOString()}
   </div>
 
   <div class="test-section">
-    <h2>5. Sync Blog Post Test</h2>
+    <h2>5. Delete Blog Post Test</h2>
+    <p>Test deleting a blog post from GitHub:</p>
+    <input type="text" id="deleteBlogSlug" placeholder="test-blog-post" value="test-sync-blog" />
+    <button onclick="deleteBlogTest()" id="deleteBlogBtn" disabled>Delete Blog</button>
+    <span id="deleteBlogStatus" class="status"></span>
+    <div id="deleteBlogResult" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>6. Delete Project Test</h2>
+    <p>Test deleting a project from GitHub:</p>
+    <input type="text" id="deleteProjectId" placeholder="test-project" value="test-sync-project" />
+    <button onclick="deleteProjectTest()" id="deleteProjectBtn" disabled>Delete Project</button>
+    <span id="deleteProjectStatus" class="status"></span>
+    <div id="deleteProjectResult" class="result"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>7. Sync Blog Post Test</h2>
     <p>Test syncing a blog post:</p>
     <input type="text" id="blogSlug" placeholder="test-blog-post" value="test-sync-blog" />
     <input type="text" id="blogTitle" placeholder="Blog Title" value="Test Sync Blog Post" />
@@ -145,7 +163,7 @@ Created at: ${new Date().toISOString()}
   </div>
 
   <div class="test-section">
-    <h2>6. Sync Project Test</h2>
+    <h2>8. Sync Project Test</h2>
     <p>Test syncing a project:</p>
     <input type="text" id="projectId" placeholder="test-project" value="test-sync-project" />
     <input type="text" id="projectTitle" placeholder="Project Title" value="Test Sync Project" />
@@ -215,6 +233,8 @@ Created at: ${new Date().toISOString()}
           document.getElementById('uploadBtn').disabled = false;
           document.getElementById('getBtn').disabled = false;
           document.getElementById('deleteBtn').disabled = false;
+          document.getElementById('deleteBlogBtn').disabled = false;
+          document.getElementById('deleteProjectBtn').disabled = false;
           document.getElementById('syncBlogBtn').disabled = false;
           document.getElementById('syncProjectBtn').disabled = false;
 
@@ -417,6 +437,70 @@ Created at: ${new Date().toISOString()}
       } catch (error) {
         showStatus('syncProjectStatus', '✕ Error', 'error');
         showResult('syncProjectResult', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function deleteBlogTest() {
+      if (!sessionToken || !window.githubSync) {
+        showResult('deleteBlogResult', 'Please login first or sync service not available', 'error');
+        return;
+      }
+
+      const slug = document.getElementById('deleteBlogSlug').value;
+      const title = 'Test Blog Post';
+
+      showStatus('deleteBlogStatus', 'Deleting...', 'syncing');
+      showResult('deleteBlogResult', `Deleting blog post: ${slug}...`, 'info');
+
+      try {
+        const blog = { slug, title };
+        const result = await window.githubSync.syncBlog(blog, null, true);
+
+        if (result.success) {
+          showStatus('deleteBlogStatus', '✓ Success', 'success');
+          showResult('deleteBlogResult', `Blog deleted successfully!\n\nSlug: ${slug}\nPath: content/posts/${slug}.md`, 'success');
+        } else if (result.skipped) {
+          showStatus('deleteBlogStatus', '⊘ Skipped', 'info');
+          showResult('deleteBlogResult', `Delete skipped: ${result.reason || 'Unknown reason'}`, 'info');
+        } else {
+          showStatus('deleteBlogStatus', '✕ Failed', 'error');
+          showResult('deleteBlogResult', `Delete failed: ${result.error || 'Unknown error'}`, 'error');
+        }
+      } catch (error) {
+        showStatus('deleteBlogStatus', '✕ Error', 'error');
+        showResult('deleteBlogResult', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function deleteProjectTest() {
+      if (!sessionToken || !window.githubSync) {
+        showResult('deleteProjectResult', 'Please login first or sync service not available', 'error');
+        return;
+      }
+
+      const id = document.getElementById('deleteProjectId').value;
+      const title = 'Test Project';
+
+      showStatus('deleteProjectStatus', 'Deleting...', 'syncing');
+      showResult('deleteProjectResult', `Deleting project: ${id}...`, 'info');
+
+      try {
+        const project = { id, title };
+        const result = await window.githubSync.syncProject(project, null, true);
+
+        if (result.success) {
+          showStatus('deleteProjectStatus', '✓ Success', 'success');
+          showResult('deleteProjectResult', `Project deleted successfully!\n\nID: ${id}\nPath: content/projects/${id}.md`, 'success');
+        } else if (result.skipped) {
+          showStatus('deleteProjectStatus', '⊘ Skipped', 'info');
+          showResult('deleteProjectResult', `Delete skipped: ${result.reason || 'Unknown reason'}`, 'info');
+        } else {
+          showStatus('deleteProjectStatus', '✕ Failed', 'error');
+          showResult('deleteProjectResult', `Delete failed: ${result.error || 'Unknown error'}`, 'error');
+        }
+      } catch (error) {
+        showStatus('deleteProjectStatus', '✕ Error', 'error');
+        showResult('deleteProjectResult', `Error: ${error.message}`, 'error');
       }
     }
   </script>
