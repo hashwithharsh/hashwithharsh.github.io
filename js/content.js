@@ -22,41 +22,61 @@ const KEYS = {
 // ── Fetch helpers (always fetch from GitHub) ─────
 
 async function fetchBlogs() {
-  try {
-    const res = await fetch(new URL('blogs.json', CONTENT_BASE_URL));
-    if (!res.ok) throw new Error('Failed');
-    const data = await res.json();
+  // Try content/blogs.json first (standard layout), then fall back to root blogs.json
+  const urls = [
+    new URL('blogs.json', CONTENT_BASE_URL),
+    new URL('blogs.json', _base),
+  ];
 
-    // Sort by pinned first, then by date
-    return data.sort((a, b) => {
-      if (a.pinned && !b.pinned) return -1;
-      if (!a.pinned && b.pinned) return 1;
-      return new Date(b.date) - new Date(a.date);
-    });
-  } catch (e) {
-    console.error('Could not load blogs:', e);
-    return [];
+  for (const url of urls) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) continue;
+      const data = await res.json();
+
+      // Sort by pinned first, then by date
+      return data.sort((a, b) => {
+        if (a.pinned && !b.pinned) return -1;
+        if (!a.pinned && b.pinned) return 1;
+        return new Date(b.date) - new Date(a.date);
+      });
+    } catch (e) {
+      // try next URL
+    }
   }
+
+  console.error('Could not load blogs from any known path.');
+  return [];
 }
 
 async function fetchProjects() {
-  try {
-    const res = await fetch(new URL('projects.json', CONTENT_BASE_URL));
-    if (!res.ok) throw new Error('Failed');
-    const data = await res.json();
+  // Try content/projects.json first (standard layout), then fall back to root projects.json
+  const urls = [
+    new URL('projects.json', CONTENT_BASE_URL),
+    new URL('projects.json', _base),
+  ];
 
-    // Sort by pinned first, then by featured
-    return data.sort((a, b) => {
-      if (a.pinned && !b.pinned) return -1;
-      if (!a.pinned && b.pinned) return 1;
-      if (a.featured && !b.featured) return -1;
-      if (!a.featured && b.featured) return 1;
-      return 0;
-    });
-  } catch (e) {
-    console.error('Could not load projects:', e);
-    return [];
+  for (const url of urls) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) continue;
+      const data = await res.json();
+
+      // Sort by pinned first, then by featured
+      return data.sort((a, b) => {
+        if (a.pinned && !b.pinned) return -1;
+        if (!a.pinned && b.pinned) return 1;
+        if (a.featured && !b.featured) return -1;
+        if (!a.featured && b.featured) return 1;
+        return 0;
+      });
+    } catch (e) {
+      // try next URL
+    }
   }
+
+  console.error('Could not load projects from any known path.');
+  return [];
 }
 
 async function fetchPost(slug) {
@@ -219,11 +239,19 @@ async function fetchStackData() {
 }
 
 async function fetchSettingsData() {
-  try {
-    const res = await fetch(new URL('settings.json', CONTENT_BASE_URL), { cache: 'no-store' });
-    if (!res.ok) throw new Error('no settings.json');
-    return await res.json();
-  } catch { return null; }
+  const urls = [
+    new URL('settings.json', CONTENT_BASE_URL),
+    new URL('settings.json', _base),
+  ];
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) continue;
+      return await res.json();
+    } catch { /* try next */ }
+  }
+  return null;
+}
 }
 
 // ── Apply Hero ─────────────────────────────────
