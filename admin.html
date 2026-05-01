@@ -664,6 +664,59 @@ input, textarea, select { font-family: var(--ff-body); }
   position: sticky; bottom: 0; background: var(--surface);
 }
 
+/* Playlist Modal */
+.modal {
+  display: none; position: fixed; inset: 0; z-index: 9000;
+  background: rgba(7,7,7,.85); backdrop-filter: blur(8px);
+  align-items: center; justify-content: center;
+  padding: 24px;
+}
+.modal.active { display: flex; }
+.modal-content {
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: 12px;
+  width: 100%; max-width: 600px;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: modalIn .25s var(--ease) both;
+}
+.modal-content h3 {
+  font-size: .92rem; font-weight: 600; color: var(--text);
+  margin: 0;
+}
+
+/* Form Groups */
+.form-group {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.form-group label {
+  font-size: .75rem; color: var(--text-2);
+  font-family: var(--ff-mono);
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-size: .85rem;
+  font-family: var(--ff-body);
+  transition: border-color var(--fast);
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
 /* Toast */
 #toastContainer {
   position: fixed; bottom: 24px; right: 24px;
@@ -1067,6 +1120,10 @@ input, textarea, select { font-family: var(--ff-body); }
         <span class="icon">≡</span> Blog Posts
         <span class="nav-badge" id="blogsBadge">–</span>
       </div>
+      <div class="nav-item" data-section="playlists" onclick="showSection('playlists', this)">
+        <span class="icon">▶</span> Playlists
+        <span class="nav-badge" id="playlistsBadge">–</span>
+      </div>
 
       <div class="sidebar-section-title">config</div>
       <div class="nav-item" data-section="settings" onclick="showSection('settings', this)">
@@ -1287,6 +1344,25 @@ input, textarea, select { font-family: var(--ff-body); }
         </div>
       </section>
 
+      <!-- ── PLAYLISTS ── -->
+      <section class="section-panel" id="sec-playlists">
+        <div class="section-hdr">
+          <div class="section-hdr-left">
+            <div class="section-tag">// playlist manager</div>
+            <h2>Blog Playlists</h2>
+          </div>
+          <div class="actions">
+            <button class="tb-btn accent" onclick="openPlaylistModal()">+ new playlist</button>
+          </div>
+        </div>
+        <div style="background:var(--surface);border:1px solid rgba(91,155,255,.2);border-radius:6px;padding:12px 16px;margin-bottom:20px;font-size:.78rem;color:var(--blue);font-family:var(--ff-mono);">
+          ℹ Playlist data is saved to localStorage. To persist permanently, copy the JSON below to <code style="color:var(--accent)">content/blog-playlists.json</code> in your repo.
+        </div>
+        <div class="list-items" id="playlistsListAdmin">
+          <!-- JS rendered -->
+        </div>
+      </section>
+
       <!-- ── SETTINGS ── -->
       <section class="section-panel" id="sec-settings">
         <div class="section-hdr">
@@ -1437,6 +1513,7 @@ const KEYS = {
   stack:    'hwh_stack',
   projects: 'hwh_projects',
   blogs:    'hwh_blogs',
+  playlists: 'hwh_playlists',
   settings: 'hwh_settings',
 };
 
@@ -1447,6 +1524,7 @@ let state = {
   stack:    null,
   projects: [],
   blogs:    [],
+  playlists: [],
   settings: {},
 };
 
@@ -1660,6 +1738,19 @@ function loadAllData() {
       .catch(() => { state.blogs = []; updateBadges(); });
   }
 
+  // Playlists — try localStorage first, then fetch from JSON
+  const cachedPlaylists = localStorage.getItem(KEYS.playlists);
+  if (cachedPlaylists) {
+    state.playlists = JSON.parse(cachedPlaylists);
+    updateBadges();
+    renderPlaylists();
+  } else {
+    fetch('content/blog-playlists.json')
+      .then(r => r.ok ? r.json() : [])
+      .then(data => { state.playlists = data; updateBadges(); renderPlaylists(); })
+      .catch(() => { state.playlists = []; updateBadges(); });
+  }
+
   // Populate forms
   populateHeroForm();
   populateAboutForm();
@@ -1677,6 +1768,7 @@ function saveAllData() {
   saveToLS(KEYS.stack,    state.stack);
   saveToLS(KEYS.projects, state.projects);
   saveToLS(KEYS.blogs,    state.blogs);
+  saveToLS(KEYS.playlists, state.playlists);
   saveToLS(KEYS.settings, state.settings);
   toast('All data saved to localStorage ✓', 'success');
   logChange('Saved all data');
@@ -1685,8 +1777,10 @@ function saveAllData() {
 function updateBadges() {
   const pb = document.getElementById('projectsBadge');
   const bb = document.getElementById('blogsBadge');
+  const plb = document.getElementById('playlistsBadge');
   if (pb) pb.textContent = state.projects.length;
   if (bb) bb.textContent = state.blogs.length;
+  if (plb) plb.textContent = state.playlists.length;
 }
 
 /* ────────────────────────────────────────────
@@ -1719,6 +1813,7 @@ function exportData() {
     stack:    state.stack,
     projects: state.projects,
     blogs:    state.blogs,
+    playlists: state.playlists,
     settings: state.settings,
     markdown: markdownContent,
   };
@@ -1744,6 +1839,7 @@ function importData(event) {
       if (data.stack)    { state.stack    = data.stack;    saveToLS(KEYS.stack, data.stack); }
       if (data.projects) { state.projects = data.projects; saveToLS(KEYS.projects, data.projects); }
       if (data.blogs)    { state.blogs    = data.blogs;    saveToLS(KEYS.blogs, data.blogs); }
+      if (data.playlists) { state.playlists = data.playlists; saveToLS(KEYS.playlists, data.playlists); }
       if (data.settings) { state.settings = data.settings; saveToLS(KEYS.settings, data.settings); }
 
       // Restore markdown content
@@ -1795,6 +1891,7 @@ function showSection(id, el) {
   if (id === 'dashboard') renderDashboard();
   if (id === 'projects')  renderProjects();
   if (id === 'blogs')     renderBlogs();
+  if (id === 'playlists') renderPlaylists();
   if (id === 'stack')     populateStackEditor();
 }
 
@@ -1845,6 +1942,14 @@ function logChange(msg) {
       <span style="font-family:var(--ff-mono);font-size:.66rem;color:var(--text-3);">${c.time}</span>
     </div>
   `).join('') || '<div style="font-size:.8rem;color:var(--text-3);font-family:var(--ff-mono);">// no changes yet</div>';
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&')
+    .replace(/</g, '<')
+    .replace(/>/g, '>')
+    .replace(/"/g, '"');
 }
 
 function updateSessionInfo() {
@@ -2630,6 +2735,230 @@ function toggleBlogPin(i) {
 }
 
 /* ────────────────────────────────────────────
+   PLAYLISTS
+──────────────────────────────────────────── */
+function renderPlaylists() {
+  const list = document.getElementById('playlistsListAdmin');
+  if (!list) return;
+
+  if (!state.playlists.length) {
+    list.innerHTML = `
+      <div style="text-align:center; padding:60px 20px; color:var(--text-3);">
+        <div style="font-size:2rem; margin-bottom:16px;">▶</div>
+        <div>No playlists yet</div>
+        <div style="font-size:.75rem; margin-top:8px;">Create a playlist to group related blog posts</div>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = state.playlists.map((p, i) => {
+    const postCount = p.posts ? p.posts.length : 0;
+    const featuredBadge = p.featured ? '<span style="color:var(--accent); font-size:.7rem;">⭐</span>' : '';
+
+    return `
+    <div class="list-item" data-idx="${i}">
+      <div class="list-item-main">
+        <div class="list-item-title">
+          ${featuredBadge} ${escapeHtml(p.title)}
+        </div>
+        <div class="list-item-meta">
+          <span>${postCount} posts</span>
+          <span>•</span>
+          <span>${p.slug}</span>
+        </div>
+      </div>
+      <div class="list-item-actions">
+        <button class="tb-btn" onclick="editPlaylist(${i})" title="Edit">✎</button>
+        <button class="tb-btn" onclick="deletePlaylist(${i})" title="Delete" style="color:var(--red);">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openPlaylistModal(idx = null) {
+  const modal = document.getElementById('playlistModal');
+  if (!modal) {
+    // Create modal if it doesn't exist
+    createPlaylistModal();
+    return openPlaylistModal(idx);
+  }
+
+  const isEdit = idx !== null;
+  const playlist = isEdit ? state.playlists[idx] : null;
+
+  // Populate form
+  document.getElementById('pl-title').value = playlist?.title || '';
+  document.getElementById('pl-slug').value = playlist?.slug || '';
+  document.getElementById('pl-description').value = playlist?.description || '';
+  document.getElementById('pl-cover').value = playlist?.coverImage || '';
+  document.getElementById('pl-featured').checked = playlist?.featured || false;
+  document.getElementById('pl-order').value = playlist?.order || (state.playlists.length + 1);
+
+  // Populate posts checkboxes
+  const postsContainer = document.getElementById('pl-posts');
+  postsContainer.innerHTML = state.blogs.map(blog => {
+    const isChecked = playlist?.posts?.includes(blog.slug) ? 'checked' : '';
+    return `
+      <label style="display:flex; align-items:center; gap:8px; padding:8px; border-bottom:1px solid var(--border-2); cursor:pointer;">
+        <input type="checkbox" value="${blog.slug}" ${isChecked} style="accent-color:var(--accent);">
+        <span style="flex:1;">${escapeHtml(blog.title)}</span>
+        <span style="font-size:.7rem; color:var(--text-3);">${blog.slug}</span>
+      </label>`;
+  }).join('');
+
+  modal.dataset.idx = idx;
+  modal.classList.add('active');
+}
+
+function createPlaylistModal() {
+  const modal = document.createElement('div');
+  modal.id = 'playlistModal';
+  modal.className = 'modal';
+  modal.innerHTML = `
+    <div class="modal-content" style="max-width:600px;">
+      <div class="modal-header">
+        <h3 id="pl-modal-title">New Playlist</h3>
+        <button class="modal-close" onclick="closePlaylistModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Title *</label>
+          <input type="text" id="pl-title" placeholder="e.g., Docker Mastery Series" />
+        </div>
+        <div class="form-group">
+          <label>Slug *</label>
+          <input type="text" id="pl-slug" placeholder="e.g., docker-mastery-series" />
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="pl-description" rows="3" placeholder="Brief description of this playlist..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Cover Image URL</label>
+          <input type="text" id="pl-cover" placeholder="https://..." />
+        </div>
+        <div class="form-group" style="display:flex; gap:20px;">
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+            <input type="checkbox" id="pl-featured" style="accent-color:var(--accent);">
+            Featured
+          </label>
+          <div style="flex:1;">
+            <label>Order</label>
+            <input type="number" id="pl-order" min="1" value="1" style="width:80px;" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Posts</label>
+          <div id="pl-posts" style="max-height:200px; overflow-y:auto; border:1px solid var(--border-2); border-radius:6px;">
+            <!-- Posts checkboxes -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="tb-btn" onclick="closePlaylistModal()">Cancel</button>
+        <button class="tb-btn accent" onclick="savePlaylist()">Save Playlist</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+function closePlaylistModal() {
+  const modal = document.getElementById('playlistModal');
+  if (modal) modal.classList.remove('active');
+}
+
+function savePlaylist() {
+  const modal = document.getElementById('playlistModal');
+  const idx = modal?.dataset.idx !== undefined ? parseInt(modal.dataset.idx) : null;
+
+  const title = document.getElementById('pl-title').value.trim();
+  const slug = document.getElementById('pl-slug').value.trim();
+  const description = document.getElementById('pl-description').value.trim();
+  const coverImage = document.getElementById('pl-cover').value.trim();
+  const featured = document.getElementById('pl-featured').checked;
+  const order = parseInt(document.getElementById('pl-order').value) || 1;
+
+  // Get selected posts
+  const posts = [];
+  document.querySelectorAll('#pl-posts input[type="checkbox"]:checked').forEach(cb => {
+    posts.push(cb.value);
+  });
+
+  if (!title || !slug) {
+    toast('Title and slug are required', 'error');
+    return;
+  }
+
+  const playlist = {
+    id: idx !== null ? (state.playlists[idx]?.id || slug) : slug,
+    title,
+    slug,
+    description,
+    coverImage,
+    featured,
+    order,
+    posts,
+    createdAt: idx !== null ? state.playlists[idx]?.createdAt : new Date().toISOString().split('T')[0],
+  };
+
+  if (idx !== null) {
+    state.playlists[idx] = playlist;
+  } else {
+    state.playlists.push(playlist);
+  }
+
+  saveToLS(KEYS.playlists, state.playlists);
+  renderPlaylists();
+  updateBadges();
+  closePlaylistModal();
+  toast('Playlist saved ✓', 'success');
+
+  // Sync to GitHub
+  syncPlaylistsToGitHub();
+}
+
+function editPlaylist(idx) {
+  openPlaylistModal(idx);
+}
+
+function deletePlaylist(idx) {
+  if (!confirm('Delete this playlist?')) return;
+
+  const playlist = state.playlists[idx];
+  state.playlists.splice(idx, 1);
+  saveToLS(KEYS.playlists, state.playlists);
+  renderPlaylists();
+  updateBadges();
+  toast('Playlist deleted', 'info');
+
+  // Sync to GitHub
+  syncPlaylistsToGitHub();
+}
+
+async function syncPlaylistsToGitHub() {
+  if (!window.githubSync || !window.githubSync.isEnabled()) {
+    console.log('GitHub sync is disabled');
+    return;
+  }
+
+  toast('Syncing playlists to GitHub...', 'info');
+
+  const result = await window.githubSync.syncPlaylists(state.playlists);
+
+  if (result.success) {
+    toast('Playlists synced to GitHub ✓', 'success');
+    logChange('Synced playlists to GitHub');
+  } else if (!result.skipped) {
+    console.error('Playlist sync failed:', result.error);
+    toast('Failed to sync to GitHub: ' + (result.error || 'Unknown error'), 'error');
+    logChange(`Failed to sync playlists to GitHub: ${result.error}`);
+  } else {
+    console.log('Playlist sync skipped:', result.reason);
+  }
+}
+
+/* ────────────────────────────────────────────
    FILE UPLOAD & MARKDOWN HANDLING
 ──────────────────────────────────────────── */
 
@@ -3135,6 +3464,7 @@ async function syncAllToGitHub() {
     const result = await window.githubSync.syncAll({
       blogs: state.blogs,
       projects: state.projects,
+      playlists: state.playlists,
     });
 
     if (result.success) {
@@ -3203,6 +3533,16 @@ async function syncProjectsJsonToGitHub() {
     return await window.githubSync.syncProjectsJson(state.projects);
   } catch (error) {
     console.error('Projects JSON sync error:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+async function syncPlaylistsToGitHub() {
+  if (!await _ensureSync()) return { skipped: true };
+  try {
+    return await window.githubSync.syncPlaylists(state.playlists);
+  } catch (error) {
+    console.error('Playlists JSON sync error:', error);
     return { success: false, error: error.message };
   }
 }

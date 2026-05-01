@@ -88,8 +88,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Apply admin-synced social links / settings
   applyGlobalSettings();
 
+  const projectsFull = document.getElementById('projectsFull');
   const projects = await fetchProjects();
   let active     = 'all';
+
+  // Check if projects loaded successfully
+  if (!projects || projects.length === 0) {
+    projectsFull.innerHTML = `
+      <div class="loading-state" style="grid-column:1/-1">
+        <span style="color:var(--text-3)">Unable to load projects. Please refresh the page or check your connection.</span>
+      </div>`;
+    return;
+  }
 
   // Build tag filter buttons from all unique tags
   const allTags   = [...new Set(projects.flatMap(p => p.tags))].sort();

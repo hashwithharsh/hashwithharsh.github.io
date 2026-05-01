@@ -62,6 +62,19 @@
   </div>
 </div>
 
+<!-- Playlist Navigation -->
+<div id="playlistNav" style="display:none; border-top:1px solid var(--border); padding: 32px 0; background:var(--surface);">
+  <div class="container" style="max-width:760px;">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+      <span style="font-family:var(--ff-mono); font-size:.75rem; color:var(--accent);">▶</span>
+      <span style="font-size:.9rem; font-weight:500;">Part of: <a id="playlistLink" href="" style="color:var(--accent);"></a></span>
+    </div>
+    <div id="playlistPostsNav" style="display:flex; gap:8px; flex-wrap:wrap;">
+      <!-- Playlist posts navigation -->
+    </div>
+  </div>
+</div>
+
 <!-- Post Footer Nav -->
 <div style="border-top:1px solid var(--border); padding: 48px 0; background:var(--surface);">
   <div class="container" style="max-width:760px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
@@ -106,6 +119,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const blogs = await fetchBlogs();
   const meta = blogs.find(b => b.slug === slug);
 
+  // Load playlists to show which ones this post belongs to
+  const playlists = await fetchPlaylists();
+  const postPlaylists = playlists.filter(p => p.posts && p.posts.includes(slug));
+
   // Render header
   const header = document.getElementById('postHeader');
   if (meta) {
@@ -128,6 +145,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     header.innerHTML = `
       <div class="post-header-tags">
         ${meta.tags.map(t => `<span class="blog-tag">${t}</span>`).join('')}
+        ${postPlaylists.length > 0 ? postPlaylists.map(p => `<a href="playlist.html?slug=${p.slug}" class="blog-tag" style="background:var(--accent-dim); color:var(--accent);">▶ ${p.title}</a>`).join('') : ''}
       </div>
       <h1>${meta.title}</h1>
       <div class="post-meta">
@@ -161,6 +179,46 @@ document.addEventListener('DOMContentLoaded', async () => {
     hljs.highlightAll();
     addCopyButtons();
     buildTOC();
+
+    // Show playlist navigation if this post is in a playlist
+    if (postPlaylists.length > 0) {
+      const playlistNav = document.getElementById('playlistNav');
+      const playlistLink = document.getElementById('playlistLink');
+      const playlistPostsNav = document.getElementById('playlistPostsNav');
+
+      // Show the first playlist this post belongs to
+      const playlist = postPlaylists[0];
+      playlistNav.style.display = 'block';
+      playlistLink.href = `playlist.html?slug=${playlist.slug}`;
+      playlistLink.textContent = playlist.title;
+
+      // Get all posts in this playlist
+      const playlistPosts = blogs.filter(blog => playlist.posts.includes(blog.slug));
+
+      // Render navigation links
+      playlistPostsNav.innerHTML = playlistPosts.map((blog, idx) => {
+        const isActive = blog.slug === slug;
+        return `
+          <a href="post.html?slug=${blog.slug}" style="
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
+            padding:6px 12px;
+            border-radius:4px;
+            font-size:.75rem;
+            font-family:var(--ff-mono);
+            background:${isActive ? 'var(--accent-dim)' : 'var(--surface-2)'};
+            color:${isActive ? 'var(--accent)' : 'var(--text-2)'};
+            text-decoration:none;
+            transition:all .2s;
+          ">
+            <span style="opacity:0.6;">${idx + 1}.</span>
+            ${blog.title}
+            ${isActive ? '<span style="margin-left:4px;">●</span>' : ''}
+          </a>
+        `;
+      }).join('');
+    }
   } catch (e) {
     document.getElementById('postBody').innerHTML = `
       <p style="color:var(--text-2); text-align:center; padding: 60px 0;">

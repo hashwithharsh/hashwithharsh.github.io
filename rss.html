@@ -122,8 +122,19 @@ function copyFeedUrl() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  const rssPreview = document.getElementById('rssPreview');
   const blogs = await fetchBlogs();
-  renderBlogItems(blogs.slice(0, 5), 'rssPreview');
+  const playlists = await fetchPlaylists();
+
+  if (!blogs || blogs.length === 0) {
+    rssPreview.innerHTML = `
+      <div class="loading-state">
+        <span style="color:var(--text-3)">Unable to load posts. Please refresh the page.</span>
+      </div>`;
+    return;
+  }
+
+  renderBlogItems(blogs.slice(0, 5), 'rssPreview', playlists);
 });
 </script>
 <script src="js/admin-trigger.js"></script>

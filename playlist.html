@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Playlist — hashwithharsh</title>
+  <meta name="description" content="Blog playlists by Harsh Yadav — curated collections of posts." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="alternate" type="application/rss+xml" title="hashwithharsh RSS Feed" href="/feed.xml" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>#</text></svg>" />
+</head>
+<body>
+
+<nav id="nav">
+  <div class="container">
+    <a href="index.html" class="nav-logo"><span>#</span>hashwithharsh</a>
+    <ul class="nav-links">
+      <li><a href="index.html#about">about</a></li>
+      <li><a href="index.html#stack">stack</a></li>
+      <li><a href="projects.html">projects</a></li>
+      <li><a href="blog.html">blog</a></li>
+      <li><a href="uses.html">uses</a></li>
+    </ul>
+    <a href="index.html#contact" class="nav-cta">say hello →</a>
+    <div class="nav-hamburger" id="menuBtn">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <span class="mobile-close" id="closeMenu">✕ close</span>
+  <a href="index.html">home</a>
+  <a href="projects.html">projects</a>
+  <a href="blog.html">blog</a>
+  <a href="index.html#contact">contact</a>
+</div>
+
+<!-- Playlist Header -->
+<div class="page-hero" style="background:var(--surface); border-bottom:1px solid var(--border);">
+  <div class="container">
+    <span class="section-label">// playlist</span>
+    <h1 id="playlistTitle">Loading...</h1>
+    <p class="mt-16" id="playlistDescription"></p>
+    <div style="margin-top:24px; display:flex; gap:16px; align-items:center;">
+      <span id="playlistPostCount" style="font-family:var(--ff-mono); font-size:.8rem; color:var(--text-3);"></span>
+      <span id="playlistDate" style="font-family:var(--ff-mono); font-size:.8rem; color:var(--text-3);"></span>
+    </div>
+  </div>
+</div>
+
+<section style="padding-top:60px; padding-bottom:0;">
+  <div class="container">
+    <div class="blog-full-list" id="playlistPosts">
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <span>loading posts...</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <span class="footer-logo"><span>#</span>hashwithharsh</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/harshyadav" target="_blank" rel="noopener">github</a></li>
+        <li><a href="https://linkedin.com/in/harshyadav" target="_blank" rel="noopener">linkedin</a></li>
+        <li><a href="rss.html">rss</a></li>
+        <li><a href="mailto:harsh@hashwithharsh.dev">email</a></li>
+      </ul>
+      <span class="footer-copy">© 2025 Harsh Yadav</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/content.js"></script>
+<script src="js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  // Apply admin-synced social links / settings
+  applyGlobalSettings();
+
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get('slug');
+
+  if (!slug) {
+    window.location.href = 'blog.html';
+    return;
+  }
+
+  const playlists = await fetchPlaylists();
+  const playlist = playlists.find(p => p.slug === slug);
+
+  if (!playlist) {
+    document.getElementById('playlistTitle').textContent = 'Playlist not found';
+    document.getElementById('playlistPosts').innerHTML = `
+      <div class="loading-state">
+        <span style="color:var(--text-3)">Playlist not found. <a href="blog.html" style="color:var(--accent);">Back to blog →</a></span>
+      </div>`;
+    return;
+  }
+
+  // Update header
+  document.title = playlist.title + ' — hashwithharsh';
+  document.getElementById('playlistTitle').textContent = playlist.title;
+  document.getElementById('playlistDescription').textContent = playlist.description;
+  document.getElementById('playlistPostCount').textContent = (playlist.posts?.length || 0) + ' posts';
+  document.getElementById('playlistDate').textContent = 'Created ' + new Date(playlist.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  // Load all blogs
+  const blogs = await fetchBlogs();
+
+  // Filter blogs that are in this playlist
+  const playlistPosts = blogs.filter(blog => playlist.posts.includes(blog.slug));
+
+  if (!playlistPosts.length) {
+    document.getElementById('playlistPosts').innerHTML = `
+      <div class="loading-state">
+        <span style="color:var(--text-3)">No posts in this playlist yet.</span>
+      </div>`;
+    return;
+  }
+
+  // Render posts
+  renderBlogItems(playlistPosts, 'playlistPosts', [playlist]);
+});
+</script>
+<script src="js/admin-trigger.js"></script>
+</body>
+</html>

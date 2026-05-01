@@ -286,6 +286,29 @@
 </section>
 
 <!-- ─────────────────────────────
+     PLAYLISTS
+───────────────────────────── -->
+<section id="playlists" style="border-bottom:1px solid var(--border);">
+  <div class="container">
+    <div class="reveal">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px;">
+        <div>
+          <span class="section-label">// playlists</span>
+          <h2>Curated<br>Collections.</h2>
+        </div>
+        <a href="blog.html" class="view-all">view all</a>
+      </div>
+    </div>
+    <div class="blog-list reveal reveal-delay-1" id="playlistsList">
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <span>loading playlists...</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────
      NOW
 ───────────────────────────── -->
 <section id="now" style="border-bottom:1px solid var(--border);">
@@ -492,7 +515,18 @@
 
     // Blog
     const blogs = await fetchBlogs();
-    renderBlogItems(blogs.slice(0, 3), 'blogList');
+    renderBlogItems(blogs.slice(0, 3), 'blogList', []);
+
+    // Playlists
+    const playlists = await fetchPlaylists();
+    if (playlists && playlists.length > 0) {
+      renderPlaylists(playlists, blogs, 'playlistsList');
+    } else {
+      document.getElementById('playlistsList').innerHTML = `
+        <div class="loading-state">
+          <span style="color:var(--text-3)">No playlists yet.</span>
+        </div>`;
+    }
 
     // Ticker — use stack data if available, otherwise default list
     const stackData = await fetchStackData();
