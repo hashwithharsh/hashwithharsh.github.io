@@ -1,15 +1,1 @@
-[
-  {
-    "id": "docker-series",
-    "title": "Docker Mastery Series",
-    "slug": "docker-mastery-series",
-    "description": "Complete guide to Docker from basics to advanced networking",
-    "coverImage": "",
-    "featured": true,
-    "order": 1,
-    "posts": [
-      "docker-networking-deep-dive"
-    ],
-    "createdAt": "2025-04-10"
-  }
-]
+[]
