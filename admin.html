@@ -1352,6 +1352,7 @@ input, textarea, select { font-family: var(--ff-body); }
             <h2>Blog Playlists</h2>
           </div>
           <div class="actions">
+            <button class="tb-btn" onclick="reloadPlaylistsFromGitHub()" title="Reload from GitHub">↻</button>
             <button class="tb-btn accent" onclick="openPlaylistModal()">+ new playlist</button>
           </div>
         </div>
@@ -1766,15 +1767,50 @@ function loadAllData() {
 
   // Playlists — try localStorage first, then fetch from JSON
   const cachedPlaylists = localStorage.getItem(KEYS.playlists);
+  let playlistsLoaded = false;
+
   if (cachedPlaylists) {
-    state.playlists = JSON.parse(cachedPlaylists);
-    updateBadges();
-    renderPlaylists();
-  } else {
+    try {
+      const parsed = JSON.parse(cachedPlaylists);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        state.playlists = parsed;
+        console.log('Loaded playlists from localStorage:', state.playlists);
+        updateBadges();
+        renderPlaylists();
+        playlistsLoaded = true;
+      } else {
+        console.log('localStorage playlists empty or invalid, fetching from JSON');
+      }
+    } catch (e) {
+      console.error('Error parsing cached playlists:', e);
+      // Clear corrupted localStorage
+      localStorage.removeItem(KEYS.playlists);
+    }
+  }
+
+  if (!playlistsLoaded) {
+    console.log('Fetching playlists from blog-playlists.json');
     fetch(contentBase + 'blog-playlists.json')
-      .then(r => r.ok ? r.json() : [])
-      .then(data => { state.playlists = data; updateBadges(); renderPlaylists(); })
-      .catch(() => { state.playlists = []; updateBadges(); });
+      .then(r => {
+        console.log('Fetch response status:', r.status);
+        return r.ok ? r.json() : [];
+      })
+      .then(data => {
+        console.log('Fetched playlists data:', data);
+        state.playlists = Array.isArray(data) ? data : [];
+        updateBadges();
+        renderPlaylists();
+        // Save to localStorage for future use
+        if (state.playlists.length > 0) {
+          saveToLS(KEYS.playlists, state.playlists);
+        }
+      })
+      .catch(e => {
+        console.error('Error fetching playlists:', e);
+        state.playlists = [];
+        updateBadges();
+        renderPlaylists();
+      });
   }
 
   // Populate forms
@@ -3021,8 +3057,34 @@ function deletePlaylist(idx) {
   }
 }
 
-async function syncPlaylistsToGitHub() {
+async function reloadPlaylistsFromGitHub() {
+  console.log('Reloading playlists from GitHub...');
+  try {
+    const response = await fetch(contentBase + 'blog-playlists.json');
+    if (response.ok) {
+      const data = await response.json();
+      state.playlists = Array.isArray(data) ? data : [];
+      saveToLS(KEYS.playlists, state.playlists);
+      renderPlaylists();
+      updateBadges();
+      toast('Playlists reloaded from GitHub ✓', 'success');
+      console.log('Reloaded playlists:', state.playlists);
+    } else {
+      throw new Error('Failed to fetch');
+    }
+  } catch (e) {
+    console.error('Error reloading playlists:', e);
+    toast('Failed to reload playlists', 'error');
+  }
+}
   if (!await _ensureSync()) return { skipped: true };
+
+  console.log('About to sync playlists:', state.playlists);
+
+  if (!Array.isArray(state.playlists) || state.playlists.length === 0) {
+    console.warn('No playlists to sync');
+    return { skipped: true, reason: 'No playlists to sync' };
+  }
 
   toast('Syncing playlists to GitHub...', 'info');
 
