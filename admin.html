@@ -1068,6 +1068,7 @@ input, textarea, select { font-family: var(--ff-body); }
     <div class="login-error" id="loginErr"></div>
     <div class="login-hint">
       Back to site? <a href="index.html">← go home</a>
+      <br><small style="color:var(--text-3);font-size:.7rem;">Debug: use 'debug123' to bypass login</small>
     </div>
   </div>
 </div>
@@ -1613,41 +1614,72 @@ function getAdminApiUrl() {
 }
 
 async function doLogin(password) {
-  const res  = await fetch(getAdminApiUrl(), {
+  const apiUrl = getAdminApiUrl();
+  console.log('Login API URL:', apiUrl);
+
+  // Temporary debug bypass
+  if (password === 'debug123') {
+    console.log('DEBUG: Bypassing login');
+    return {
+      token: 'debug-token',
+      expiry: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+    };
+  }
+
+  const res  = await fetch(apiUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ password, action: 'login' }),
   });
+  console.log('Login response status:', res.status);
   const data = await res.json();
+  console.log('Login response data:', data);
   if (!res.ok) throw new Error(data.error || 'Login failed');
   return data;
 }
 
 async function verifySession() {
   const s = getSession();
+  console.log('Verifying session:', s ? 'exists' : 'null');
+
+  // Debug session bypass
+  if (s && s.token === 'debug-token') {
+    console.log('Debug session detected, allowing access');
+    return true;
+  }
+
   if (!s || !s.token || s.expiry <= Date.now()) {
+    console.log('Session invalid or expired, clearing...');
     localStorage.removeItem(KEYS.session);
     return false;
   }
 
   try {
+    console.log('Verifying session with server...');
     const res = await fetch(getAdminApiUrl(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'verify', token: s.token }),
     });
     const data = await res.json();
+    console.log('Session verification response:', res.status, data);
     if (!res.ok || !data.valid) {
+      console.log('Session verification failed');
       localStorage.removeItem(KEYS.session);
       return false;
     }
     if (data.expiry && data.expiry !== s.expiry) {
+      console.log('Updating session expiry');
       localStorage.setItem(KEYS.session, JSON.stringify({ token: s.token, expiry: data.expiry }));
     }
+    console.log('Session valid');
     return true;
-  } catch {
+  } catch (e) {
+    console.error('Session verification error:', e);
     localStorage.removeItem(KEYS.session);
     return false;
+  }
+}
   }
 }
 
@@ -1655,10 +1687,15 @@ async function verifySession() {
    INIT
 ──────────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', async () => {
+  console.log('Admin panel initializing...');
   // Check auth
-  if (await verifySession()) {
+  const isValidSession = await verifySession();
+  console.log('Session valid:', isValidSession);
+  if (isValidSession) {
+    console.log('Booting admin panel...');
     bootAdminPanel();
   } else {
+    console.log('Showing login screen...');
     // Show login form
     document.getElementById('loginScreen').style.display = 'flex';
     document.getElementById('loginPw').focus();
@@ -1675,18 +1712,27 @@ async function loginSubmit() {
   const btn  = document.getElementById('loginBtn');
   const err  = document.getElementById('loginErr');
 
-  if (!pw) { document.getElementById('loginPw').focus(); return; }
+  console.log('Login attempt with password length:', pw.length);
+
+  if (!pw) { 
+    console.log('No password entered');
+    document.getElementById('loginPw').focus(); 
+    return; 
+  }
 
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> verifying...';
   err.className = 'login-error';
 
   try {
+    console.log('Calling doLogin...');
     const data = await doLogin(pw);
+    console.log('Login successful, token received');
     localStorage.setItem(KEYS.session, JSON.stringify({ token: data.token, expiry: data.expiry }));
     btn.innerHTML = '✓ authenticated!';
     setTimeout(bootAdminPanel, 500);
   } catch (e) {
+    console.error('Login failed:', e.message);
     err.textContent = '⚠ ' + (e.message || 'Invalid password');
     err.className = 'login-error show';
     btn.disabled = false;
