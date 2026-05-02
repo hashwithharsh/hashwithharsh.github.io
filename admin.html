@@ -2771,7 +2771,7 @@ function renderPlaylists() {
   const list = document.getElementById('playlistsListAdmin');
   if (!list) return;
 
-  if (!state.playlists.length) {
+  if (!state.playlists || !Array.isArray(state.playlists) || !state.playlists.length) {
     list.innerHTML = `
       <div style="text-align:center; padding:60px 20px; color:var(--text-3);">
         <div style="font-size:2rem; margin-bottom:16px;">▶</div>
@@ -2782,19 +2782,20 @@ function renderPlaylists() {
   }
 
   list.innerHTML = state.playlists.map((p, i) => {
-    const postCount = p.posts ? p.posts.length : 0;
+    if (!p || typeof p !== 'object') return '';
+    const postCount = Array.isArray(p.posts) ? p.posts.length : 0;
     const featuredBadge = p.featured ? '<span style="color:var(--accent); font-size:.7rem;">⭐</span>' : '';
 
     return `
     <div class="list-item" data-idx="${i}">
       <div class="list-item-main">
         <div class="list-item-title">
-          ${featuredBadge} ${escapeHtml(p.title)}
+          ${featuredBadge} ${escapeHtml(p.title || 'Untitled')}
         </div>
         <div class="list-item-meta">
           <span>${postCount} posts</span>
           <span>•</span>
-          <span>${p.slug}</span>
+          <span>${escapeHtml(p.slug || 'no-slug')}</span>
         </div>
       </div>
       <div class="list-item-actions">
@@ -2949,6 +2950,11 @@ function savePlaylist() {
     return;
   }
 
+  if (posts.length === 0) {
+    const confirmed = confirm('No posts selected. Create playlist anyway?');
+    if (!confirmed) return;
+  }
+
   // Check if blogs are loaded
   if (state.blogs.length === 0) {
     toast('Blogs are still loading. Please wait and try again.', 'error');
@@ -2969,11 +2975,14 @@ function savePlaylist() {
 
   if (idx !== null) {
     state.playlists[idx] = playlist;
+    console.log('Updated playlist at index', idx, playlist);
   } else {
     state.playlists.push(playlist);
+    console.log('Added new playlist', playlist);
   }
 
   saveToLS(KEYS.playlists, state.playlists);
+  console.log('Saved playlists to localStorage', state.playlists);
   renderPlaylists();
   updateBadges();
   closePlaylistModal();
@@ -2981,6 +2990,7 @@ function savePlaylist() {
 
   // Sync to GitHub if enabled
   if (window.githubSync && window.githubSync.isEnabled()) {
+    console.log('Syncing playlists to GitHub:', state.playlists);
     syncPlaylistsToGitHub().then(result => {
       if (!result.skipped && result.success) {
         logChange(`Synced playlist to GitHub: ${playlist.title}`);
