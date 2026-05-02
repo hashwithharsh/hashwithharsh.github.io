@@ -1,10 +1,19 @@
 [
   {
-    "slug": "GITHUB_SYNC_IMPLEMENTATION",
-    "title": "githubsync",
-    "date": "2026-05-01",
+    "slug": "fuck",
+    "title": "fuck",
+    "date": "2026-05-02",
     "readTime": "5 min read",
-    "excerpt": "nothing to write",
+    "excerpt": "",
+    "tags": [],
+    "pinned": false
+  },
+  {
+    "slug": "Linux Day 1 — Foundations & Filesystem Navigation Notes",
+    "title": "Linux Day 1 — Foundations & Filesystem Navigation Notes",
+    "date": "2026-04-28",
+    "readTime": "5 min read",
+    "excerpt": "Linux Day 1 — Foundations & Filesystem Navigation Notes",
     "tags": [],
     "pinned": false
   },
@@ -12,14 +21,13 @@
     "slug": "docker-networking-deep-dive",
     "title": "Docker Networking: What Nobody Explains Clearly",
     "date": "2025-04-10",
-    "readTime": "9 min read",
-    "excerpt": "I spent 3 hours debugging a container networking issue. Here's everything I learned so you don't have to suffer the same way.",
     "tags": [
       "docker",
       "networking",
       "devops"
     ],
-    "pinned": false
+    "excerpt": "I spent 3 hours debugging a container networking issue. Here's everything I learned so you don't have to suffer the same way.",
+    "readTime": "9 min read"
   },
   {
     "slug": "kubernetes-from-scratch",
@@ -81,5 +89,17 @@
     ],
     "excerpt": "Not a beginner's guide. This is the stuff that separates people who google everything from people who actually understand what's happening under the hood.",
     "readTime": "8 min read"
+  },
+  {
+    "slug": "kingofall-died",
+    "title": "kingofall-died",
+    "date": "2025-01-18",
+    "tags": [
+      "linux",
+      "bash",
+      "devops"
+    ],
+    "excerpt": "Not a beginner's fuck. This is the stuff that separates people who google everything from people who actually understand what's happening under the hood.",
+    "readTime": "fuch min read"
   }
 ]
