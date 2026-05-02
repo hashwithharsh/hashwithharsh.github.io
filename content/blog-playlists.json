@@ -12,4 +12,17 @@
     ],
     "createdAt": "2025-04-10"
   }
+  {
+    "id": "Linux",
+    "title": "LInux",
+    "slug": "Linux",
+    "description": "Complete guide to Docker from basics to advanced Linux",
+    "coverImage": "",
+    "featured": true,
+    "order": 1,
+    "posts": [
+      "linux-for-devops"
+    ],
+    "createdAt": "2025-04-10"
+  }
 ]
