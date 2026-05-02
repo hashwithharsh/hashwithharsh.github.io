@@ -1050,41 +1050,7 @@ input, textarea, select { font-family: var(--ff-body); }
   background: var(--surface-4); color: var(--text-3);
   border-color: var(--border);
 }
-
-/* ── Modal ───────────────────────────── */
-.modal {
-  position: fixed; inset: 0; z-index: 1000;
-  background: rgba(0,0,0,.5); display: none;
-  align-items: center; justify-content: center;
-}
-.modal.active { display: flex; }
-.modal-content {
-  background: var(--surface);
-  border: 1px solid var(--border-2);
-  border-radius: 8px; padding: 0;
-  max-width: 600px; width: 100%; margin: 20px;
-  max-height: 80vh; overflow-y: auto;
-}
-.modal-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 20px; border-bottom: 1px solid var(--border);
-}
-.modal-header h3 { margin: 0; }
-.modal-close {
-  background: none; border: none; color: var(--text-2);
-  font-size: 1.5rem; cursor: pointer; padding: 0;
-}
-.modal-body { padding: 20px; }
-.form-group { margin-bottom: 16px; }
-.form-group label { display: block; margin-bottom: 6px; font-weight: 500; }
-.form-group input, .form-group textarea, .form-group select {
-  width: 100%; padding: 8px 12px; border: 1px solid var(--border-2);
-  border-radius: 4px; background: var(--surface-3); color: var(--text);
-}
-.modal-footer {
-  display: flex; justify-content: flex-end; gap: 10px;
-  padding: 20px; border-top: 1px solid var(--border);
-}
+</style>
 </head>
 <body>
 
@@ -1798,32 +1764,17 @@ function loadAllData() {
       });
   }
 
-  // Playlists — try localStorage first (if has data), then fetch from JSON
+  // Playlists — try localStorage first, then fetch from JSON
   const cachedPlaylists = localStorage.getItem(KEYS.playlists);
-  let parsedPlaylists = null;
-  try {
-    parsedPlaylists = cachedPlaylists ? JSON.parse(cachedPlaylists) : null;
-  } catch (e) {
-    parsedPlaylists = null;
-  }
-  
-  if (parsedPlaylists && Array.isArray(parsedPlaylists) && parsedPlaylists.length > 0) {
-    state.playlists = parsedPlaylists;
+  if (cachedPlaylists) {
+    state.playlists = JSON.parse(cachedPlaylists);
     updateBadges();
     renderPlaylists();
   } else {
     fetch(contentBase + 'blog-playlists.json')
       .then(r => r.ok ? r.json() : [])
-      .then(data => { 
-        state.playlists = data; 
-        saveToLS(KEYS.playlists, data); // Save to localStorage so next time it loads from there
-        updateBadges(); 
-        renderPlaylists(); 
-      })
-      .catch(() => { 
-        state.playlists = []; 
-        updateBadges(); 
-      });
+      .then(data => { state.playlists = data; updateBadges(); renderPlaylists(); })
+      .catch(() => { state.playlists = []; updateBadges(); });
   }
 
   // Populate forms
