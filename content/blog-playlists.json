@@ -12,16 +12,17 @@
     ],
     "createdAt": "2025-04-10"
   },
-   {
+  {
     "id": "linux",
-    "title": "linux",
+    "title": "Linux Series",
     "slug": "linux",
-    "description": "Complete guide to Docker from basics to advanced networking",
+    "description": "Linux skills for DevOps engineers",
     "coverImage": "",
     "featured": true,
-    "order": 1,
+    "order": 2,
     "posts": [
-      "linux-for-devops"
+      "linux-for-devops",
+      "prometheus-grafana-monitoring"
     ],
     "createdAt": "2025-04-10"
   }
