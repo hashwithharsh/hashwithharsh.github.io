@@ -1747,11 +1747,21 @@ function loadAllData() {
     state.blogs = JSON.parse(cachedBlogs);
     updateBadges();
     renderBlogs();
+    updatePlaylistModalIfOpen();
   } else {
     fetch(contentBase + 'blogs.json')
       .then(r => r.ok ? r.json() : [])
-      .then(data => { state.blogs = data; updateBadges(); renderBlogs(); })
-      .catch(() => { state.blogs = []; updateBadges(); });
+      .then(data => { 
+        state.blogs = data; 
+        updateBadges(); 
+        renderBlogs(); 
+        updatePlaylistModalIfOpen();
+      })
+      .catch(() => { 
+        state.blogs = []; 
+        updateBadges(); 
+        updatePlaylistModalIfOpen();
+      });
   }
 
   // Playlists — try localStorage first, then fetch from JSON
@@ -2816,15 +2826,19 @@ function openPlaylistModal(idx = null) {
 
   // Populate posts checkboxes
   const postsContainer = document.getElementById('pl-posts');
-  postsContainer.innerHTML = state.blogs.map(blog => {
-    const isChecked = playlist?.posts?.includes(blog.slug) ? 'checked' : '';
-    return `
-      <label style="display:flex; align-items:center; gap:8px; padding:8px; border-bottom:1px solid var(--border-2); cursor:pointer;">
-        <input type="checkbox" value="${blog.slug}" ${isChecked} style="accent-color:var(--accent);">
-        <span style="flex:1;">${escapeHtml(blog.title)}</span>
-        <span style="font-size:.7rem; color:var(--text-3);">${blog.slug}</span>
-      </label>`;
-  }).join('');
+  if (state.blogs.length === 0) {
+    postsContainer.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-3);">Loading blogs...</div>';
+  } else {
+    postsContainer.innerHTML = state.blogs.map(blog => {
+      const isChecked = playlist?.posts?.includes(blog.slug) ? 'checked' : '';
+      return `
+        <label style="display:flex; align-items:center; gap:8px; padding:8px; border-bottom:1px solid var(--border-2); cursor:pointer;">
+          <input type="checkbox" value="${blog.slug}" ${isChecked} style="accent-color:var(--accent);">
+          <span style="flex:1;">${escapeHtml(blog.title)}</span>
+          <span style="font-size:.7rem; color:var(--text-3);">${blog.slug}</span>
+        </label>`;
+    }).join('');
+  }
 
   modal.dataset.idx = idx;
   modal.classList.add('active');
@@ -2888,6 +2902,30 @@ function closePlaylistModal() {
   if (modal) modal.classList.remove('active');
 }
 
+function updatePlaylistModalIfOpen() {
+  const modal = document.getElementById('playlistModal');
+  if (modal && modal.classList.contains('active')) {
+    // Re-populate the posts checkboxes now that blogs are loaded
+    const idx = modal.dataset.idx !== undefined ? parseInt(modal.dataset.idx) : null;
+    const playlist = idx !== null ? state.playlists[idx] : null;
+    const postsContainer = document.getElementById('pl-posts');
+    
+    if (state.blogs.length === 0) {
+      postsContainer.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-3);">No blogs available</div>';
+    } else {
+      postsContainer.innerHTML = state.blogs.map(blog => {
+        const isChecked = playlist?.posts?.includes(blog.slug) ? 'checked' : '';
+        return `
+          <label style="display:flex; align-items:center; gap:8px; padding:8px; border-bottom:1px solid var(--border-2); cursor:pointer;">
+            <input type="checkbox" value="${blog.slug}" ${isChecked} style="accent-color:var(--accent);">
+            <span style="flex:1;">${escapeHtml(blog.title)}</span>
+            <span style="font-size:.7rem; color:var(--text-3);">${blog.slug}</span>
+          </label>`;
+      }).join('');
+    }
+  }
+}
+
 function savePlaylist() {
   const modal = document.getElementById('playlistModal');
   const idx = modal?.dataset.idx !== undefined ? parseInt(modal.dataset.idx) : null;
@@ -2901,12 +2939,19 @@ function savePlaylist() {
 
   // Get selected posts
   const posts = [];
-  document.querySelectorAll('#pl-posts input[type="checkbox"]:checked').forEach(cb => {
+  const checkboxes = document.querySelectorAll('#pl-posts input[type="checkbox"]:checked');
+  checkboxes.forEach(cb => {
     posts.push(cb.value);
   });
 
   if (!title || !slug) {
     toast('Title and slug are required', 'error');
+    return;
+  }
+
+  // Check if blogs are loaded
+  if (state.blogs.length === 0) {
+    toast('Blogs are still loading. Please wait and try again.', 'error');
     return;
   }
 
