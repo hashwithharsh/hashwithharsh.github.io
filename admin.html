@@ -1764,17 +1764,32 @@ function loadAllData() {
       });
   }
 
-  // Playlists — try localStorage first, then fetch from JSON
+  // Playlists — try localStorage first (if has data), then fetch from JSON
   const cachedPlaylists = localStorage.getItem(KEYS.playlists);
-  if (cachedPlaylists) {
-    state.playlists = JSON.parse(cachedPlaylists);
+  let parsedPlaylists = null;
+  try {
+    parsedPlaylists = cachedPlaylists ? JSON.parse(cachedPlaylists) : null;
+  } catch (e) {
+    parsedPlaylists = null;
+  }
+  
+  if (parsedPlaylists && Array.isArray(parsedPlaylists) && parsedPlaylists.length > 0) {
+    state.playlists = parsedPlaylists;
     updateBadges();
     renderPlaylists();
   } else {
     fetch(contentBase + 'blog-playlists.json')
       .then(r => r.ok ? r.json() : [])
-      .then(data => { state.playlists = data; updateBadges(); renderPlaylists(); })
-      .catch(() => { state.playlists = []; updateBadges(); });
+      .then(data => { 
+        state.playlists = data; 
+        saveToLS(KEYS.playlists, data); // Save to localStorage so next time it loads from there
+        updateBadges(); 
+        renderPlaylists(); 
+      })
+      .catch(() => { 
+        state.playlists = []; 
+        updateBadges(); 
+      });
   }
 
   // Populate forms
