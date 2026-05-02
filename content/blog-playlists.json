@@ -7,18 +7,9 @@
     "coverImage": "",
     "featured": true,
     "order": 1,
-    "posts": ["docker-networking-deep-dive"],
-    "createdAt": "2025-04-10"
-  },
-  {
-    "id": "linux-for-devops",
-    "title": "linux-for-devops",
-    "slug": "linux-for-devopss",
-    "description": "Complete guide to Docker from basics to advanced networking",
-    "coverImage": "",
-    "featured": true,
-    "order": 1,
-    "posts": ["linux-for-devops"],
+    "posts": [
+      "docker-networking-deep-dive"
+    ],
     "createdAt": "2025-04-10"
   }
 ]
