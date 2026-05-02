@@ -9,7 +9,7 @@
     "order": 1,
     "posts": ["docker-networking-deep-dive"],
     "createdAt": "2025-04-10"
-    },
+  },
   {
     "id": "linux-for-devops",
     "title": "linux-for-devops",
