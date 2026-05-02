@@ -20,6 +20,8 @@
     "coverImage": "",
     "featured": true,
     "order": 1,
-    "posts": "linux-for-devops"
+    "posts": [
+      "linux-for-devops"
+    ],
   }
-]
+ ]
