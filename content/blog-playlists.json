@@ -20,9 +20,6 @@
     "coverImage": "",
     "featured": true,
     "order": 1,
-    "posts": [
-      "linux-for-devops"
-    ],
-    "createdAt": "2025-04-10"
+    "posts": "linux-for-devops"
   }
 ]
