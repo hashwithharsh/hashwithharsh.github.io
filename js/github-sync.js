@@ -367,6 +367,24 @@ class GitHubSyncService {
   }
 
   /**
+   * Sync playlists to GitHub
+   * @param {Array} playlists - Array of playlist objects
+   * @returns {Promise<Object>} Sync result
+   */
+  async syncPlaylists(playlists) {
+    if (!this.isEnabled()) {
+      return { success: false, skipped: true };
+    }
+
+    const content = JSON.stringify(playlists, null, 2);
+    return await this.uploadFile(
+      'content/blog-playlists.json',
+      content,
+      'Update blog playlists'
+    );
+  }
+
+  /**
    * Sync all content (full sync)
    * @param {Object} data - All content data
    * @returns {Promise<Object>} Sync result
@@ -381,6 +399,7 @@ class GitHubSyncService {
     const results = {
       blogsJson: null,
       projectsJson: null,
+      playlistsJson: null,
       blogs: [],
       projects: [],
     };
@@ -388,6 +407,7 @@ class GitHubSyncService {
     // Sync metadata files
     results.blogsJson = await this.syncBlogsJson(data.blogs || []);
     results.projectsJson = await this.syncProjectsJson(data.projects || []);
+    results.playlistsJson = await this.syncPlaylists(data.playlists || []);
 
     // Sync blog markdown files
     for (const blog of data.blogs || []) {

@@ -1712,6 +1712,22 @@ function loadAllData() {
   state.stack    = JSON.parse(localStorage.getItem(KEYS.stack))    || [...DEFAULTS.stack];
   state.settings = JSON.parse(localStorage.getItem(KEYS.settings)) || { ...DEFAULTS.settings };
 
+  // Helper function to get content base URL (works on both local and GitHub Pages)
+  function getContentBaseUrl() {
+    const isGitHubPages = window.location.hostname.includes('github.io');
+    if (isGitHubPages) {
+      const pathParts = window.location.pathname.split('/').filter(Boolean);
+      if (pathParts.length > 1) {
+        const repoName = pathParts[0];
+        return `/${repoName}/content/`;
+      }
+      return '/content/';
+    }
+    return 'content/';
+  }
+
+  const contentBase = getContentBaseUrl();
+
   // Projects — try localStorage first, then fetch from JSON
   const cachedProjects = localStorage.getItem(KEYS.projects);
   if (cachedProjects) {
@@ -1719,7 +1735,7 @@ function loadAllData() {
     updateBadges();
     renderProjects();
   } else {
-    fetch('content/projects.json')
+    fetch(contentBase + 'projects.json')
       .then(r => r.ok ? r.json() : [])
       .then(data => { state.projects = data; updateBadges(); renderProjects(); })
       .catch(() => { state.projects = []; updateBadges(); });
@@ -1732,7 +1748,7 @@ function loadAllData() {
     updateBadges();
     renderBlogs();
   } else {
-    fetch('content/blogs.json')
+    fetch(contentBase + 'blogs.json')
       .then(r => r.ok ? r.json() : [])
       .then(data => { state.blogs = data; updateBadges(); renderBlogs(); })
       .catch(() => { state.blogs = []; updateBadges(); });
@@ -1745,7 +1761,7 @@ function loadAllData() {
     updateBadges();
     renderPlaylists();
   } else {
-    fetch('content/blog-playlists.json')
+    fetch(contentBase + 'blog-playlists.json')
       .then(r => r.ok ? r.json() : [])
       .then(data => { state.playlists = data; updateBadges(); renderPlaylists(); })
       .catch(() => { state.playlists = []; updateBadges(); });
@@ -2937,10 +2953,7 @@ function deletePlaylist(idx) {
 }
 
 async function syncPlaylistsToGitHub() {
-  if (!window.githubSync || !window.githubSync.isEnabled()) {
-    console.log('GitHub sync is disabled');
-    return;
-  }
+  if (!await _ensureSync()) return;
 
   toast('Syncing playlists to GitHub...', 'info');
 
@@ -3533,16 +3546,6 @@ async function syncProjectsJsonToGitHub() {
     return await window.githubSync.syncProjectsJson(state.projects);
   } catch (error) {
     console.error('Projects JSON sync error:', error);
-    return { success: false, error: error.message };
-  }
-}
-
-async function syncPlaylistsToGitHub() {
-  if (!await _ensureSync()) return { skipped: true };
-  try {
-    return await window.githubSync.syncPlaylists(state.playlists);
-  } catch (error) {
-    console.error('Playlists JSON sync error:', error);
     return { success: false, error: error.message };
   }
 }

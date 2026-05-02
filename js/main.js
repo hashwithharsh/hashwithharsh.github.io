@@ -253,7 +253,7 @@ function buildTOC() {
 }
 
 // ── Blog search ───────────────────────────────
-function initBlogSearch(blogs, containerId) {
+function initBlogSearch(blogs, containerId, playlists = []) {
   const wrap = document.querySelector('.search-wrap');
   const input = document.getElementById('blogSearch');
   if (!input || !wrap) return;
@@ -267,7 +267,7 @@ function initBlogSearch(blogs, containerId) {
           b.tags.some(t => t.toLowerCase().includes(q))
         )
       : blogs;
-    renderBlogItems(filtered, containerId);
+    renderBlogItems(filtered, containerId, playlists);
   });
 }
 

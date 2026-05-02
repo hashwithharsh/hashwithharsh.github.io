@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Build tag filter buttons
-  const allTags  = [...new Set(blogs.flatMap(b => b.tags))].sort();
+  const allTags  = [...new Set(blogs.flatMap(b => Array.isArray(b.tags) ? b.tags : []))].sort();
   const filterBar = document.getElementById('filterBar');
 
   allTags.forEach(tag => {
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Re-render list
     const filtered = active === 'all'
       ? blogs
-      : blogs.filter(b => b.tags.includes(active));
+      : blogs.filter(b => Array.isArray(b.tags) && b.tags.includes(active));
     renderBlogItems(filtered, 'blogFull', playlists);
 
     // Clear search input on filter change

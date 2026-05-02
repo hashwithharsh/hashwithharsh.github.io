@@ -1,97 +1,191 @@
 /* =============================================
-   hashwithharsh — content.js (v4)
+   hashwithharsh — content.js (v5)
    Content loading with real-time refresh
    Always fetches latest content from GitHub
+   Fixed for GitHub Pages deployment
    ============================================= */
 
-// Derive the base URL from the page's own location, stripping the filename.
-// Works on both root-domain and subdirectory GitHub Pages deployments.
-const _base = window.location.href.replace(/\/[^/]*(\?.*)?$/, '/');
-const CONTENT_BASE_URL = new URL('content/', _base);
+// Get the base URL - works on both local and GitHub Pages
+const CONTENT_BASE_URL = (function() {
+  // Get the current URL
+  const currentUrl = window.location.href;
+
+  // Check if we're on GitHub Pages
+  const isGitHubPages = window.location.hostname.includes('github.io');
+
+  if (isGitHubPages) {
+    // On GitHub Pages, we need to find the repository root
+    // The URL structure is: https://username.github.io/repo-name/page.html
+    // or: https://username.github.io/page.html (for user pages)
+
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+
+    // If we have more than 1 path part, we're in a repository page
+    // The first part is the repo name
+    if (pathParts.length > 1) {
+      const repoName = pathParts[0];
+      return new URL(`/${repoName}/content/`, window.location.origin);
+    } else {
+      // User page (no repo name in path)
+      return new URL('/content/', window.location.origin);
+    }
+  }
+
+  // Local development - use relative path from current page
+  // This works for both root and subdirectory local setups
+  const _base = window.location.href.replace(/\/[^/]*(\?.*)?$/, '/');
+  return new URL('content/', _base);
+})();
 const KEYS = {
   blogs:    'hwh_blogs',
   projects: 'hwh_projects',
   hero:     'hwh_hero',
   about:    'hwh_about',
   stack:    'hwh_stack',
+  playlists: 'hwh_playlists',
   // Version keys to track when content was last updated
   blogsVersion:    'hwh_blogs_version',
   projectsVersion: 'hwh_projects_version',
+  playlistsVersion: 'hwh_playlists_version',
 };
 
 // ── Fetch helpers (always fetch from GitHub) ─────
 
 async function fetchBlogs() {
-  // Try content/blogs.json first (standard layout), then fall back to root blogs.json
-  const urls = [
-    new URL('blogs.json', CONTENT_BASE_URL),
-    new URL('blogs.json', _base),
-  ];
+  try {
+    const url = new URL('blogs.json', CONTENT_BASE_URL);
+    console.log('Fetching blogs from:', url.href);
 
-  for (const url of urls) {
-    try {
-      const res = await fetch(url);
-      if (!res.ok) continue;
-      const data = await res.json();
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-      // Sort by pinned first, then by date
-      return data.sort((a, b) => {
-        if (a.pinned && !b.pinned) return -1;
-        if (!a.pinned && b.pinned) return 1;
-        return new Date(b.date) - new Date(a.date);
-      });
-    } catch (e) {
-      // try next URL
-    }
+    const res = await fetch(url, {
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+
+    console.log('Blogs response status:', res.status);
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    const data = await res.json();
+
+    console.log('Blogs loaded:', data.length, 'posts');
+
+    // Sort by pinned first, then by date
+    return data.sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      return new Date(b.date) - new Date(a.date);
+    });
+  } catch (e) {
+    console.error('Could not load blogs:', e);
+    console.error('Content base URL:', CONTENT_BASE_URL.href);
+    return [];
   }
-
-  console.error('Could not load blogs from any known path.');
-  return [];
 }
 
 async function fetchProjects() {
-  // Try content/projects.json first (standard layout), then fall back to root projects.json
-  const urls = [
-    new URL('projects.json', CONTENT_BASE_URL),
-    new URL('projects.json', _base),
-  ];
+  try {
+    const url = new URL('projects.json', CONTENT_BASE_URL);
+    console.log('Fetching projects from:', url.href);
 
-  for (const url of urls) {
-    try {
-      const res = await fetch(url);
-      if (!res.ok) continue;
-      const data = await res.json();
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
 
-      // Sort by pinned first, then by featured
-      return data.sort((a, b) => {
-        if (a.pinned && !b.pinned) return -1;
-        if (!a.pinned && b.pinned) return 1;
-        if (a.featured && !b.featured) return -1;
-        if (!a.featured && b.featured) return 1;
-        return 0;
-      });
-    } catch (e) {
-      // try next URL
-    }
+    const res = await fetch(url, {
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+
+    console.log('Projects response status:', res.status);
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    const data = await res.json();
+
+    console.log('Projects loaded:', data.length, 'projects');
+
+    // Sort by pinned first, then by featured
+    return data.sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      if (a.featured && !b.featured) return -1;
+      if (!a.featured && b.featured) return 1;
+      return 0;
+    });
+  } catch (e) {
+    console.error('Could not load projects:', e);
+    console.error('Content base URL:', CONTENT_BASE_URL.href);
+    return [];
   }
+}
 
-  console.error('Could not load projects from any known path.');
-  return [];
+async function fetchPlaylists() {
+  try {
+    const url = new URL('blog-playlists.json', CONTENT_BASE_URL);
+    console.log('Fetching playlists from:', url.href);
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    const res = await fetch(url, {
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+
+    console.log('Playlists response status:', res.status);
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+    const data = await res.json();
+
+    console.log('Playlists loaded:', data.length, 'playlists');
+
+    // Sort by order, then by featured, then by date
+    return data.sort((a, b) => {
+      if (a.order !== undefined && b.order !== undefined) return a.order - b.order;
+      if (a.featured && !b.featured) return -1;
+      if (!a.featured && b.featured) return 1;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+  } catch (e) {
+    console.error('Could not load playlists:', e);
+    console.error('Content base URL:', CONTENT_BASE_URL.href);
+    return [];
+  }
 }
 
 async function fetchPost(slug) {
-  // Always fetch from file to get latest content
-  const res = await fetch(new URL(`posts/${encodeURIComponent(slug)}.md`, CONTENT_BASE_URL));
-  if (!res.ok) throw new Error(`Post "${slug}" not found`);
-  return await res.text();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+
+  try {
+    const res = await fetch(new URL(`posts/${encodeURIComponent(slug)}.md`, CONTENT_BASE_URL), {
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+    if (!res.ok) throw new Error(`Post "${slug}" not found`);
+    return await res.text();
+  } catch (e) {
+    clearTimeout(timeout);
+    throw e;
+  }
 }
 
 // NEW: fetch project detail markdown
 async function fetchProjectPost(id) {
-  // Always fetch from file to get latest content
-  const res = await fetch(new URL(`projects/${encodeURIComponent(id)}.md`, CONTENT_BASE_URL));
-  if (!res.ok) throw new Error(`Project "${id}" not found`);
-  return await res.text();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+
+  try {
+    const res = await fetch(new URL(`projects/${encodeURIComponent(id)}.md`, CONTENT_BASE_URL), {
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+    if (!res.ok) throw new Error(`Project "${id}" not found`);
+    return await res.text();
+  } catch (e) {
+    clearTimeout(timeout);
+    throw e;
+  }
 }
 
 // ── Hero data (admin-editable) ─────────────────
@@ -103,7 +197,7 @@ function getHeroData() {
 }
 
 // ── Render: Blog Items ─────────────────────────
-function renderBlogItems(blogs, containerId) {
+function renderBlogItems(blogs, containerId, playlists = []) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
@@ -125,15 +219,21 @@ function renderBlogItems(blogs, containerId) {
     const mon = d.toLocaleString('en-US', { month: 'short' }).toUpperCase();
     const yr  = d.getFullYear();
 
+    const blogTags = Array.isArray(blog.tags) ? blog.tags : [];
+    const blogPlaylists = Array.isArray(playlists)
+      ? playlists.filter(p => Array.isArray(p.posts) && p.posts.includes(blog.slug))
+      : [];
+
     return `
-    <a class="blog-item${blog.pinned ? ' blog-item--pinned' : ''}" href="${postPath}?slug=${blog.slug}">
+    <a class="blog-item${blog.pinned ? ' blog-item--pinned' : ''}" href="${postPath}?slug=${encodeURIComponent(blog.slug)}">
       <div class="blog-date">
         <span class="blog-date-day">${day}</span>
         ${mon}<br>${yr}
       </div>
       <div class="blog-content">
         <div class="blog-item-tags">
-          ${blog.tags.map(t => `<span class="blog-tag">${t}</span>`).join('')}
+          ${blogTags.map(t => `<span class="blog-tag">${escapeHtml(t)}</span>`).join('')}
+          ${blogPlaylists.length > 0 ? blogPlaylists.map(p => `<span class="blog-tag" style="background:var(--accent-dim); color:var(--accent);">▶ ${escapeHtml(p.title || '')}</span>`).join('') : ''}
           ${blog.pinned ? '<span class="blog-tag blog-tag--pin">📌 pinned</span>' : ''}
         </div>
         <div class="blog-item-title">${blog.title}</div>
@@ -141,6 +241,49 @@ function renderBlogItems(blogs, containerId) {
       </div>
       <div class="blog-meta">
         <span class="blog-read-time">${blog.readTime}</span>
+        <span class="blog-arrow">→</span>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+// ── Render: Blog Playlists ──────────────────────
+function renderPlaylists(playlists, blogs, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  if (!playlists.length) {
+    container.innerHTML = `
+      <div class="loading-state">
+        <span style="color:var(--text-3)">No playlists yet.</span>
+      </div>`;
+    return;
+  }
+
+  const playlistPath = 'playlist.html';
+
+  container.innerHTML = playlists.map(playlist => {
+    const postCount = Array.isArray(playlist.posts) ? playlist.posts.length : 0;
+    const slug = playlist.slug ? encodeURIComponent(playlist.slug) : '';
+    const title = escapeHtml(playlist.title || 'Untitled playlist');
+    const description = escapeHtml(playlist.description || 'No description provided.');
+    const featuredBadge = playlist.featured ? '<span class="blog-tag blog-tag--pin">⭐ featured</span>' : '';
+
+    return `
+    <a class="blog-item" href="${playlistPath}${slug ? `?slug=${slug}` : ''}">
+      <div class="blog-date">
+        <span class="blog-date-day">${postCount}</span>
+        POSTS
+      </div>
+      <div class="blog-content">
+        <div class="blog-item-tags">
+          ${featuredBadge}
+        </div>
+        <div class="blog-item-title">${title}</div>
+        <div class="blog-item-excerpt">${description}</div>
+      </div>
+      <div class="blog-meta">
+        <span class="blog-read-time">playlist</span>
         <span class="blog-arrow">→</span>
       </div>
     </a>`;
@@ -169,6 +312,10 @@ function renderProjectCards(projects, containerId) {
   const extIcon   = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
 
   container.innerHTML = projects.map(p => {
+    const tags = Array.isArray(p.tags) ? p.tags : [];
+    const status = p.status || 'inactive';
+    const statusLabel = status === 'active' ? 'active' : status === 'wip' ? 'in progress' : 'archived';
+
     // Format date exactly like blog items (fall back gracefully if no date field)
     let dateBlock;
     if (p.date) {
@@ -185,25 +332,25 @@ function renderProjectCards(projects, containerId) {
     }
 
     return `
-    <a class="project-card${p.pinned ? ' project-card--pinned' : ''}" href="${projectPath}?id=${p.id}" aria-label="View ${p.title} project">
+    <a class="project-card${p.pinned ? ' project-card--pinned' : ''}" href="${projectPath}?id=${encodeURIComponent(p.id)}" aria-label="View ${escapeHtml(p.title || 'Project')} project">
       <div class="project-top">
         ${dateBlock}
         <div class="project-links">
           ${p.github
-            ? `<button class="project-link" onclick="event.preventDefault();event.stopPropagation();window.open('${p.github}','_blank','noopener')" title="GitHub repo" aria-label="Open GitHub repo for ${p.title}">${githubIcon}</button>`
+            ? `<button class="project-link" onclick="event.preventDefault();event.stopPropagation();window.open('${p.github}','_blank','noopener')" title="GitHub repo" aria-label="Open GitHub repo for ${escapeHtml(p.title || 'project')}">${githubIcon}</button>`
             : ''}
           ${p.demo
-            ? `<button class="project-link" onclick="event.preventDefault();event.stopPropagation();window.open('${p.demo}','_blank','noopener')" title="Live demo" aria-label="Open live demo for ${p.title}">${extIcon}</button>`
+            ? `<button class="project-link" onclick="event.preventDefault();event.stopPropagation();window.open('${p.demo}','_blank','noopener')" title="Live demo" aria-label="Open live demo for ${escapeHtml(p.title || 'project')}">${extIcon}</button>`
             : ''}
         </div>
       </div>
-      <div class="project-title">${p.title}</div>
-      <div class="project-desc">${p.description}</div>
+      <div class="project-title">${escapeHtml(p.title || 'Untitled project')}</div>
+      <div class="project-desc">${escapeHtml(p.description || 'No description available.')}</div>
       <div class="project-tags">
-        ${p.tags.map(t => `<span class="project-tag">${t}</span>`).join('')}
+        ${tags.map(t => `<span class="project-tag">${escapeHtml(t)}</span>`).join('')}
       </div>
       <div class="project-card-footer">
-        <div class="project-status ${p.status}">${p.status === 'active' ? 'active' : p.status === 'wip' ? 'in progress' : 'archived'}</div>
+        <div class="project-status ${status}">${statusLabel}</div>
         <span class="project-view-hint">view details →</span>
       </div>
     </a>`;
@@ -216,7 +363,14 @@ function renderProjectCards(projects, containerId) {
 
 async function fetchHeroData() {
   try {
-    const res = await fetch(new URL('hero.json', CONTENT_BASE_URL), { cache: 'no-store' });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    const res = await fetch(new URL('hero.json', CONTENT_BASE_URL), {
+      cache: 'no-store',
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
     if (!res.ok) throw new Error('no hero.json');
     return await res.json();
   } catch { return null; }
@@ -224,7 +378,14 @@ async function fetchHeroData() {
 
 async function fetchAboutData() {
   try {
-    const res = await fetch(new URL('about.json', CONTENT_BASE_URL), { cache: 'no-store' });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    const res = await fetch(new URL('about.json', CONTENT_BASE_URL), {
+      cache: 'no-store',
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
     if (!res.ok) throw new Error('no about.json');
     return await res.json();
   } catch { return null; }
@@ -232,26 +393,32 @@ async function fetchAboutData() {
 
 async function fetchStackData() {
   try {
-    const res = await fetch(new URL('stack.json', CONTENT_BASE_URL), { cache: 'no-store' });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    const res = await fetch(new URL('stack.json', CONTENT_BASE_URL), {
+      cache: 'no-store',
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
     if (!res.ok) throw new Error('no stack.json');
     return await res.json();
   } catch { return null; }
 }
 
 async function fetchSettingsData() {
-  const urls = [
-    new URL('settings.json', CONTENT_BASE_URL),
-    new URL('settings.json', _base),
-  ];
-  for (const url of urls) {
-    try {
-      const res = await fetch(url, { cache: 'no-store' });
-      if (!res.ok) continue;
-      return await res.json();
-    } catch { /* try next */ }
-  }
-  return null;
-}
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    const res = await fetch(new URL('settings.json', CONTENT_BASE_URL), {
+      cache: 'no-store',
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+    if (!res.ok) throw new Error('no settings.json');
+    return await res.json();
+  } catch { return null; }
 }
 
 // ── Apply Hero ─────────────────────────────────

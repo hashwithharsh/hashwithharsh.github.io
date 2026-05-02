@@ -21,6 +21,8 @@
   --accent-glow:  rgba(181,255,77,.06);
   --red:          #ff4c4c;
   --blue:         #5b9bff;
+  --purple:       #a855f7;
+  --orange:       #f97316;
 
   --ff-display:  'Syne', sans-serif;
   --ff-body:     'Outfit', sans-serif;
@@ -31,7 +33,10 @@
 
   --ease:        cubic-bezier(.23,1,.32,1);
   --ease-back:   cubic-bezier(.34,1.56,.64,1);
+  --ease-elastic: cubic-bezier(.5,1.5,.5,1);
   --fast:        .22s;
+  --medium:      .35s;
+  --slow:        .6s;
 }
 
 /* ── Reset ── */

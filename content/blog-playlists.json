@@ -7,9 +7,7 @@
     "coverImage": "",
     "featured": true,
     "order": 1,
-    "posts": [
-      "docker-networking-deep-dive"
-    ],
+    "posts": ["docker-networking-deep-dive"],
     "createdAt": "2025-04-10"
   }
 ]
