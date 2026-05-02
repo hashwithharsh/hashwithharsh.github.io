@@ -11,5 +11,21 @@
       "docker-networking-deep-dive"
     ],
     "createdAt": "2025-04-10"
+  },
+   {
+    "id": "linux",
+    "title": "linux",
+    "slug": "linux",
+    "description": "Complete guide to Docker from basics to advanced networking",
+    "coverImage": "",
+    "featured": true,
+    "order": 1,
+    "posts": [
+      "linux-for-devops"
+    ],
+     [
+     "prometheus-grafana-monitoring"
+     ],
+    "createdAt": "2025-04-10"
   }
 ]
