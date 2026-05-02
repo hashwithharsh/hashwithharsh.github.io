@@ -2402,17 +2402,19 @@ function saveProject(idx) {
   // Reset temp storage
   tempProjectMarkdown = null;
 
-  // Sync to GitHub
-  syncProjectToGitHub(proj).then(result => {
-    if (!result.skipped && result.success) {
-      logChange(`Synced project to GitHub: ${proj.title}`);
-    } else if (!result.skipped) {
-      console.error('Project sync failed:', result.error);
-    }
-  });
+  // Sync to GitHub if enabled
+  if (window.githubSync && window.githubSync.isEnabled()) {
+    syncProjectToGitHub(proj).then(result => {
+      if (!result.skipped && result.success) {
+        logChange(`Synced project to GitHub: ${proj.title}`);
+      } else if (!result.skipped) {
+        console.error('Project sync failed:', result.error);
+      }
+    });
 
-  // Sync projects.json
-  syncProjectsJsonToGitHub();
+    // Sync projects.json
+    syncProjectsJsonToGitHub();
+  }
 }
 
 function deleteProject(i) {
@@ -2697,17 +2699,19 @@ function saveBlog(idx) {
   // Reset temp storage
   tempBlogMarkdown = null;
 
-  // Sync to GitHub
-  syncBlogToGitHub(post).then(result => {
-    if (!result.skipped && result.success) {
-      logChange(`Synced blog to GitHub: ${post.title}`);
-    } else if (!result.skipped) {
-      console.error('Blog sync failed:', result.error);
-    }
-  });
+  // Sync to GitHub if enabled
+  if (window.githubSync && window.githubSync.isEnabled()) {
+    syncBlogToGitHub(post).then(result => {
+      if (!result.skipped && result.success) {
+        logChange(`Synced blog to GitHub: ${post.title}`);
+      } else if (!result.skipped) {
+        console.error('Blog sync failed:', result.error);
+      }
+    });
 
-  // Sync blogs.json
-  syncBlogsJsonToGitHub();
+    // Sync blogs.json
+    syncBlogsJsonToGitHub();
+  }
 }
 
 function deleteBlog(i) {
@@ -2930,8 +2934,16 @@ function savePlaylist() {
   closePlaylistModal();
   toast('Playlist saved ✓', 'success');
 
-  // Sync to GitHub
-  syncPlaylistsToGitHub();
+  // Sync to GitHub if enabled
+  if (window.githubSync && window.githubSync.isEnabled()) {
+    syncPlaylistsToGitHub().then(result => {
+      if (!result.skipped && result.success) {
+        logChange(`Synced playlist to GitHub: ${playlist.title}`);
+      } else if (!result.skipped) {
+        console.error('Playlist sync failed:', result.error);
+      }
+    });
+  }
 }
 
 function editPlaylist(idx) {
@@ -2948,12 +2960,14 @@ function deletePlaylist(idx) {
   updateBadges();
   toast('Playlist deleted', 'info');
 
-  // Sync to GitHub
-  syncPlaylistsToGitHub();
+  // Sync to GitHub if enabled
+  if (window.githubSync && window.githubSync.isEnabled()) {
+    syncPlaylistsToGitHub();
+  }
 }
 
 async function syncPlaylistsToGitHub() {
-  if (!await _ensureSync()) return;
+  if (!await _ensureSync()) return { skipped: true };
 
   toast('Syncing playlists to GitHub...', 'info');
 
@@ -2969,6 +2983,8 @@ async function syncPlaylistsToGitHub() {
   } else {
     console.log('Playlist sync skipped:', result.reason);
   }
+
+  return result;
 }
 
 /* ────────────────────────────────────────────

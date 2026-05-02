@@ -60,6 +60,7 @@ async function fetchBlogs() {
     const timeout = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
     const res = await fetch(url, {
+      cache: 'no-store',
       signal: controller.signal
     });
     clearTimeout(timeout);
@@ -93,6 +94,7 @@ async function fetchProjects() {
     const timeout = setTimeout(() => controller.abort(), 10000);
 
     const res = await fetch(url, {
+      cache: 'no-store',
       signal: controller.signal
     });
     clearTimeout(timeout);
@@ -128,6 +130,7 @@ async function fetchPlaylists() {
     const timeout = setTimeout(() => controller.abort(), 10000);
 
     const res = await fetch(url, {
+      cache: 'no-store',
       signal: controller.signal
     });
     clearTimeout(timeout);
