@@ -73,7 +73,7 @@
 /* ── Code blocks — keep dark bg in light mode (intentional) ── */
 [data-theme="light"] pre,
 [data-theme="light"] .post-body pre {
-  background: #1e1e1e !important;
+  background: #282c34 !important;
 }
 [data-theme="light"] code:not(pre code) {
   background: var(--surface-2);
@@ -83,18 +83,52 @@
 }
 
 /* ── Preserve syntax highlighting in light mode ──
-   Prevent light-mode color overrides from cascading
-   into highlight.js tokens — keeps atom-one-dark intact
+   Force atom-one-dark exact colors so light mode
+   overrides cannot dim or recolor any token
 ─────────────────────────────────────────────────── */
+[data-theme="light"] pre code,
 [data-theme="light"] pre code.hljs {
   background: #282c34 !important;
-  color: #abb2bf !important;
+  color: #abb2bf !important;        /* atom-one-dark base text — same as dark mode */
+  -webkit-text-fill-color: #abb2bf !important; /* overrides inherited fill on some browsers */
 }
-[data-theme="light"] pre code,
-[data-theme="light"] .hljs,
-[data-theme="light"] .hljs span {
-  color: revert !important;
-}
+
+/* Restore every individual token to its atom-one-dark value */
+[data-theme="light"] .hljs-comment,
+[data-theme="light"] .hljs-quote              { color: #5c6370 !important; font-style: italic; }
+[data-theme="light"] .hljs-doctag,
+[data-theme="light"] .hljs-keyword,
+[data-theme="light"] .hljs-formula            { color: #c678dd !important; }
+[data-theme="light"] .hljs-section,
+[data-theme="light"] .hljs-name,
+[data-theme="light"] .hljs-selector-tag,
+[data-theme="light"] .hljs-deletion,
+[data-theme="light"] .hljs-subst              { color: #e06c75 !important; }
+[data-theme="light"] .hljs-literal            { color: #56b6c2 !important; }
+[data-theme="light"] .hljs-string,
+[data-theme="light"] .hljs-regexp,
+[data-theme="light"] .hljs-addition,
+[data-theme="light"] .hljs-attribute,
+[data-theme="light"] .hljs-meta-string        { color: #98c379 !important; }
+[data-theme="light"] .hljs-built_in,
+[data-theme="light"] .hljs-class .hljs-title  { color: #e6c07b !important; }
+[data-theme="light"] .hljs-attr,
+[data-theme="light"] .hljs-variable,
+[data-theme="light"] .hljs-template-variable,
+[data-theme="light"] .hljs-type,
+[data-theme="light"] .hljs-selector-class,
+[data-theme="light"] .hljs-selector-attr,
+[data-theme="light"] .hljs-selector-pseudo,
+[data-theme="light"] .hljs-number             { color: #d19a66 !important; }
+[data-theme="light"] .hljs-symbol,
+[data-theme="light"] .hljs-bullet,
+[data-theme="light"] .hljs-link,
+[data-theme="light"] .hljs-meta,
+[data-theme="light"] .hljs-selector-id,
+[data-theme="light"] .hljs-title              { color: #61aeee !important; }
+[data-theme="light"] .hljs-emphasis           { font-style: italic; }
+[data-theme="light"] .hljs-strong             { font-weight: bold; }
+[data-theme="light"] .hljs-link               { text-decoration: underline; }
 
 /* ── Smooth theme transition (only on interactive switch) ── */
 html[data-theme] {
