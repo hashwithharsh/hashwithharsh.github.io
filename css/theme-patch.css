@@ -82,6 +82,20 @@
   border-radius: 3px;
 }
 
+/* ── Preserve syntax highlighting in light mode ──
+   Prevent light-mode color overrides from cascading
+   into highlight.js tokens — keeps atom-one-dark intact
+─────────────────────────────────────────────────── */
+[data-theme="light"] pre code.hljs {
+  background: #282c34 !important;
+  color: #abb2bf !important;
+}
+[data-theme="light"] pre code,
+[data-theme="light"] .hljs,
+[data-theme="light"] .hljs span {
+  color: revert !important;
+}
+
 /* ── Smooth theme transition (only on interactive switch) ── */
 html[data-theme] {
   transition:
