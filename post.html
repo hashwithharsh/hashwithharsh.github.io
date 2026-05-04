@@ -10,9 +10,15 @@
   <!-- Syntax highlighting for code blocks -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
 </head>
-<body>
 
-<nav id="nav">
+<head>
+  ...
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/theme-patch.css" />  <!-- ADD -->
+</head>
+<body>
+  <script src="js/theme.js"></script>  <!-- ADD — must be FIRST -->
+  <nav id="nav">
   <div class="container">
     <a href="index.html" class="nav-logo"><span>#</span>hashwithharsh</a>
     <ul class="nav-links">

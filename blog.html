@@ -9,9 +9,15 @@
   <link rel="alternate" type="application/rss+xml" title="hashwithharsh RSS Feed" href="/feed.xml" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>#</text></svg>" />
 </head>
-<body>
 
-<nav id="nav">
+<head>
+  ...
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/theme-patch.css" />  <!-- ADD -->
+</head>
+<body>
+  <script src="js/theme.js"></script>  <!-- ADD — must be FIRST -->
+  <nav id="nav">
   <div class="container">
     <a href="index.html" class="nav-logo"><span>#</span>hashwithharsh</a>
     <ul class="nav-links">
