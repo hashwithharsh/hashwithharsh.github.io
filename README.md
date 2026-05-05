@@ -332,6 +332,12 @@ After using **"Sync All to GitHub"**:
 * 🔗 LinkedIn: (add link)
 
 ---
+## custom favicon added
+- favicon.png in root / dir..
+- added these fetching links to index.html
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/favicon.png">
 
 ## ⭐ One-Line Summary
 
