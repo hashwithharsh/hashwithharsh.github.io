@@ -1,5 +1,17 @@
 [
   {
+    "slug": "why-devops-exists-real-understanding",
+    "title": "Nobody Tells You DevOps Is Mostly About Fixing Human Problems First",
+    "date": "2026-05-08",
+    "readTime": "5 min read",
+    "excerpt": "DevOps is not just CI/CD or automation. This blog explains why DevOps actually exists, the real problems it solves, and why culture matters more than tools.",
+    "tags": [
+      "DevOps Culture",
+      "DevOps"
+    ],
+    "pinned": false
+  },
+  {
     "slug": "linux-for-devops",
     "title": "Linux Skills Every DevOps Engineer Actually Needs",
     "date": "2025-01-18",
