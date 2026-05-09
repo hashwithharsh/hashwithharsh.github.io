@@ -1,6 +1,6 @@
 # hashwithharsh — Portfolio & Blog
 
-**Harsh Yadav** · DevOps & Cloud Engineering Student  
+**Harsh Yadav** · DevOps & Cloud Engineering Student. 
 Live at → [hashwithharsh.github.io](https://hashwithharsh.github.io)
 
 **Harsh Yadav**
