@@ -1,5 +1,19 @@
 [
   {
+    "slug": "sdlc-and-devops-real-understanding",
+    "title": "I Thought DevOps Engineers Controlled Everything. SDLC Taught Me Otherwise.",
+    "date": "2026-05-09",
+    "readTime": "7 min read",
+    "excerpt": "Understanding SDLC, organizational roles, Agile workflow, and where DevOps actually fits inside real software delivery.",
+    "tags": [
+      "SDLC",
+      "Agile",
+      "DevOps",
+      "DevOps Culture"
+    ],
+    "pinned": false
+  },
+  {
     "slug": "why-devops-exists-real-understanding",
     "title": "Nobody Tells You DevOps Is Mostly About Fixing Human Problems First",
     "date": "2026-05-08",
