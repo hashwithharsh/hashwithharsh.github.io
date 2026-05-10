@@ -1,5 +1,17 @@
 [
   {
+    "slug": "why-git-felt-easy-until-i-broke-my-own-repository",
+    "title": "Why Git Felt Easy… Until I Broke My Own Repository",
+    "date": "2026-05-10",
+    "readTime": "8 min read",
+    "excerpt": "A real DevOps learning story about breaking Git branches, recovering commits with reflog, understanding merge conflicts, and finally understanding how Git actually works.",
+    "tags": [
+      "Git and Github",
+      "Version Control System"
+    ],
+    "pinned": false
+  },
+  {
     "slug": "sdlc-and-devops-real-understanding",
     "title": "I Thought DevOps Engineers Controlled Everything. SDLC Taught Me Otherwise.",
     "date": "2026-05-09",
