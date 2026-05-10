@@ -1,5 +1,19 @@
 [
   {
+    "slug": "git--github-complete",
+    "title": "Git & GitHub: The Skill That Quietly Runs Modern Software ( Complete )",
+    "date": "2026-05-10",
+    "readTime": "10 min read",
+    "excerpt": "A complete practical beginner-to-advanced Git and GitHub tutorial with real-world workflows",
+    "tags": [
+      "git",
+      "github",
+      "DevOps",
+      "Version Control"
+    ],
+    "pinned": false
+  },
+  {
     "slug": "why-git-felt-easy-until-i-broke-my-own-repository",
     "title": "Why Git Felt Easy… Until I Broke My Own Repository",
     "date": "2026-05-10",
