@@ -1,5 +1,23 @@
 [
   {
+    "id": "awscli-ec2-apache-deployment-automation-1778956332449",
+    "title": "Awscli-ec2-apache-deployment-automation",
+    "description": "A Bash scripting project that automates AWS EC2 provisioning, Apache installation, and website deployment using AWS CLI.",
+    "github": "https://github.com/hashwithharsh/bash-scripting/blob/main/projects/Auto-ec2-apacheserver-deployV2.sh",
+    "demo": "https://youtu.be/5VbyXvZH2-w",
+    "date": "2026-05-16",
+    "year": "2026",
+    "status": "active",
+    "tags": [
+      "aws",
+      "bash scripting",
+      "aws cli",
+      "cloud automation"
+    ],
+    "featured": false,
+    "pinned": false
+  },
+  {
     "id": "bash-automation-scripts",
     "title": "DevOps Automation Scripts",
     "description": "A growing collection of bash scripts for automating common DevOps tasks: server setup, log rotation, backup pipelines, and health check monitors.",
