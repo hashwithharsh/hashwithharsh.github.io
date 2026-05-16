@@ -85,30 +85,77 @@ This project helped me understand how infrastructure automation actually works b
 
 ## Screenshots
 
-![EC2 Deployment Script Running](https://drive.google.com/uc?export=view&id=1gt5vHzLD3mFAiaCMLaq396t1Z6yKOSjI)
+### Script Overview
 
-*Running the Bash automation script that provisions EC2, creates security groups, and deploys the website automatically*
+![Script Overview](Screenshot%20From%202026-05-17%2001-31-27.png)
 
----
-
-![Inside Bash Automation Script](https://drive.google.com/uc?export=view&id=1S36cSH-THLcAyajiFLZIPrF8L1-SKmFk)
-
-*Inside the Bash automation script showing AWS CLI commands, EC2 provisioning logic, and Apache deployment workflow*
+*Initial section of the Bash script containing AWS configuration, instance naming logic, and AWS CLI installation.*
 
 ---
 
-## Demo
+### AWS Configuration Validation
 
-<div class="video-embed">
-  <iframe
-    src="https://drive.google.com/file/d/1p2j1ycb9_qcprT8s9OdowQ4ZEAkui-y_/preview"
-    title="AWS EC2 Automation Project Demo"
-    allow="autoplay"
-    allowfullscreen>
-  </iframe>
-</div>
+![AWS Configuration Validation](Screenshot%20From%202026-05-17%2001-31-37.png)
 
-*Complete walkthrough of EC2 provisioning, Apache installation, and automated website deployment*
+*Checking AWS CLI configuration automatically before deployment begins.*
+
+---
+
+### Key Pair & Security Group Creation
+
+![Security Group Creation](Screenshot%20From%202026-05-17%2001-31-45.png)
+
+*Creating SSH key pair and dynamically configuring AWS security groups.*
+
+---
+
+### Inbound Rules Configuration
+
+![Inbound Rules](Screenshot%20From%202026-05-17%2001-31-51.png)
+
+*Automatically opening ports 22, 80, and 443 for SSH, HTTP, and HTTPS access.*
+
+---
+
+### EC2 Instance Provisioning
+
+![EC2 Provisioning](Screenshot%20From%202026-05-17%2001-31-56.png)
+
+*Launching EC2 instance and waiting for instance startup.*
+
+---
+
+### Public IP & Instance Details
+
+![Public IP Retrieval](Screenshot%20From%202026-05-17%2001-32-01.png)
+
+*Fetching public IP address and displaying EC2 instance details automatically.*
+
+---
+
+### Apache Deployment Automation
+
+![Apache Deployment](Screenshot%20From%202026-05-17%2001-32-05.png)
+
+*Connecting to EC2 remotely and deploying Apache web server automatically.*
+
+---
+
+### Final Deployment Output
+
+![Final Output](Screenshot%20From%202026-05-17%2001-32-10.png)
+
+*Final deployment output showing live website URL and SSH access command.*
+
+---
+
+## Demo Video
+
+<video width="100%" controls>
+  <source src="https://drive.google.com/uc?export=download&id=1p2j1ycb9_qcprT8s9OdowQ4ZEAkui-y_" type="video/mp4">
+</video>
+
+*Complete walkthrough of EC2 provisioning, Apache installation, and automated website deployment.*
 
 ---
 
