@@ -1,337 +1,398 @@
-# AWS EC2 Apache Deployment Automation
+# I Automated EC2 + Apache Deployment… Then SSH Became the Real Problem
+(demo video are on my Github mentioned above)
 
-A Bash scripting project that fully automates AWS EC2 provisioning and Apache website deployment using AWS CLI. Instead of manually creating instances, configuring security groups, generating SSH keys, and deploying websites every single time, this script handles the complete deployment workflow automatically.
+## Intro
 
----
+Nobody tells you this when you start learning DevOps…
 
-## Why I Built This
+Creating an EC2 instance manually is fun exactly one time.
 
-After launching EC2 instances manually again and again, I realized most of the work was repetitive:
+After that, it becomes:
 
-- creating key pairs
-- opening security group ports
-- waiting for EC2 startup
+- launch instance
+- create keypair
+- create security group
+- open ports
+- wait for public IP
 - SSH into server
-- installing Apache
-- deploying website files manually
+- install Apache
+- clone repo
+- deploy website
 
-At some point this stopped feeling like learning cloud and started feeling like repetitive operations work.
+Repeat. Again. And again.
 
-So I built a Bash automation script that handles the entire deployment process in one run.
+So I decided to automate the entire flow using a single Bash script.
 
-> Run script → Get live website deployed automatically.
+Not Terraform.  
+Not Ansible.  
+Just pure shell scripting and AWS CLI.
 
-This project helped me understand how infrastructure automation actually works behind DevOps workflows.
+And honestly… this project taught me more about automation flow than most “beginner DevOps projects” online.
 
 ---
 
-## Architecture
+# The Idea
+
+The goal was simple:
+
+Run one script → get a live website hosted on AWS automatically.
+
+The script handles:
+
+- AWS CLI installation
+- AWS authentication check
+- Key pair creation
+- Security group creation
+- EC2 launch
+- Public IP fetching
+- SSH connection
+- Apache installation
+- GitHub website deployment
+
+Everything happens automatically.
+
+Project script reference: :contentReference[oaicite:0]{index=0}
+
+---
+
+# Architecture
+
+![Architecture Diagram](https://miro.medium.com/v2/resize:fit:1400/1*0g6U1Q2F3H9x4V4V9f1r9A.png)
 
 ```text
-┌──────────────────────────────┐
-│        Local Machine         │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│         Bash Script          │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│           AWS CLI            │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│       EC2 Provisioning       │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│ Security Group + Key Pair    │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│        SSH Into EC2          │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│ Apache + Git Installation    │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│   GitHub Website Deployment  │
-└──────────────────────────────┘
+Local Machine
+      ↓
+Bash Script
+      ↓
+AWS CLI Commands
+      ↓
+EC2 Instance Created
+      ↓
+Security Group Attached
+      ↓
+SSH Into Server
+      ↓
+Apache Installed
+      ↓
+GitHub Repo Cloned
+      ↓
+Website Live
 ```
 
 ---
 
-## Stack
+# Tech Used
 
-- **Bash Scripting** — automation logic
-- **AWS CLI** — cloud provisioning
-- **Amazon EC2** — compute instance
-- **Security Groups** — firewall rules
-- **SSH** — remote server access
-- **Apache2** — web server
-- **Git** — website deployment
-- **GitHub** — website source repository
-
----
-
-## Screenshots
-
-### Script Overview
-
-![Script Overview](Screenshot%20From%202026-05-17%2001-31-27.png)
-
-*Initial section of the Bash script containing AWS configuration, instance naming logic, and AWS CLI installation.*
+- AWS EC2
+- Bash Scripting
+- AWS CLI
+- Apache2
+- Git
+- Linux
+- SSH
 
 ---
 
-### AWS Configuration Validation
+# What I Thought
 
-![AWS Configuration Validation](Screenshot%20From%202026-05-17%2001-31-37.png)
+I thought launching EC2 from Bash would be the difficult part.
 
-*Checking AWS CLI configuration automatically before deployment begins.*
+Turns out…
 
----
+The real challenge was handling all the small infrastructure details around it.
 
-### Key Pair & Security Group Creation
+Things like:
 
-![Security Group Creation](Screenshot%20From%202026-05-17%2001-31-45.png)
+- existing keypairs
+- security group reuse
+- waiting for SSH readiness
+- instance startup delays
+- permissions on `.pem` files
+- SSH host verification
 
-*Creating SSH key pair and dynamically configuring AWS security groups.*
-
----
-
-### Inbound Rules Configuration
-
-![Inbound Rules](Screenshot%20From%202026-05-17%2001-31-51.png)
-
-*Automatically opening ports 22, 80, and 443 for SSH, HTTP, and HTTPS access.*
+This is where automation projects become real.
 
 ---
 
-### EC2 Instance Provisioning
+# Deep Dive Into the Script
 
-![EC2 Provisioning](Screenshot%20From%202026-05-17%2001-31-56.png)
+## 1. Dynamic EC2 Naming
 
-*Launching EC2 instance and waiting for instance startup.*
+The script first asks the user for an instance name.
 
----
+```bash
+read -p "enter ec2 instance name: " USER_INSTANCE_NAME
+```
 
-### Public IP & Instance Details
+If nothing is entered, it uses a default name.
 
-![Public IP Retrieval](Screenshot%20From%202026-05-17%2001-32-01.png)
-
-*Fetching public IP address and displaying EC2 instance details automatically.*
-
----
-
-### Apache Deployment Automation
-
-![Apache Deployment](Screenshot%20From%202026-05-17%2001-32-05.png)
-
-*Connecting to EC2 remotely and deploying Apache web server automatically.*
+This small thing makes the script reusable.
 
 ---
 
-### Final Deployment Output
+## 2. AWS CLI Configuration Check
 
-![Final Output](Screenshot%20From%202026-05-17%2001-32-10.png)
-
-*Final deployment output showing live website URL and SSH access command.*
-
----
-
-## Demo Video
-
-<video width="100%" controls>
-  <source src="https://drive.google.com/uc?export=download&id=1p2j1ycb9_qcprT8s9OdowQ4ZEAkui-y_" type="video/mp4">
-</video>
-
-*Complete walkthrough of EC2 provisioning, Apache installation, and automated website deployment.*
-
----
-
-## Features
-
-### Automatic AWS CLI Validation
-
-The script checks whether AWS CLI credentials are configured before deployment.
+This part was important.
 
 ```bash
 aws sts get-caller-identity
 ```
 
-If AWS CLI is not configured:
+At first I ignored validation completely.
+
+Bad idea.
+
+Without checking authentication first, the entire automation fails later in confusing ways.
+
+Now the script checks AWS authentication before continuing.
+
+That changed everything.
+
+---
+
+## 3. Key Pair Automation
+
+The script:
+
+- deletes old keypairs
+- creates a fresh one
+- downloads the `.pem` file
+- applies correct permissions
 
 ```bash
-aws configure
+chmod 400 harsh-ec2key.pem
 ```
 
-is triggered automatically.
+Linux permissions became very real here.
+
+SSH is extremely strict with private keys.
+
+If permissions are wrong, SSH refuses connection immediately.
+
+Simple way to understand it:
+
+Private keys are basically VIP passes.  
+If everyone can access the pass, SSH stops trusting it.
 
 ---
 
-### Dynamic Security Group Automation
+## 4. Security Group Handling
 
-Automatically creates or reuses security groups and configures:
+The script intelligently:
 
-- SSH → Port 22
-- HTTP → Port 80
-- HTTPS → Port 443
+- checks whether the security group exists
+- creates it if missing
+- adds:
+  - SSH
+  - HTTP
+  - HTTPS rules
 
-No manual AWS Console configuration required.
+This part felt like infrastructure logic instead of scripting.
 
----
-
-### Automatic EC2 Provisioning
-
-Creates EC2 instance using:
-
-```bash
-aws ec2 run-instances
-```
-
-with custom:
-
-- AMI ID
-- Instance Type
-- Security Group
-- Key Pair
-- Tags
+Because now the script is making decisions dynamically.
 
 ---
 
-### Remote Apache Deployment
+## 5. Waiting for EC2 Properly
 
-After EC2 launch, the script:
-
-- SSHs into server automatically
-- installs Apache and Git
-- clones website repository
-- deploys website files
-- restarts Apache service
-
-Everything happens automatically inside one script.
-
----
-
-## Script Output Example
-
-```bash
-====================================
-WEBSITE DEPLOYED SUCCESSFULLY
-====================================
-
-website url:
-http://PUBLIC_IP
-
-ssh command:
-ssh -i harsh-ec2key.pem ubuntu@PUBLIC_IP
-```
-
----
-
-## Challenges I Faced
-
-### SSH Timing Issue
-
-Initially SSH failed because EC2 wasn't fully ready.
-
-Adding:
+This part saved me from multiple headaches.
 
 ```bash
 aws ec2 wait instance-running
 ```
 
-and proper delays solved the problem.
+And later:
+
+```bash
+sleep 40
+```
+
+Why?
+
+Because “instance running” does NOT mean:
+
+- SSH is ready
+- networking is ready
+- packages are installable
+
+I learned this the hard way after getting random SSH failures.
+
+Something felt off there initially.
+
+Turns out cloud infrastructure needs stabilization time.
 
 ---
 
-### Public IP Delays
+## 6. Remote Deployment Through SSH
 
-Sometimes the instance launched before public IP assignment completed.
+This was the most satisfying part.
 
-The fix was simply waiting before fetching the IP.
+The script SSHes into the server automatically:
 
----
+```bash
+ssh -o StrictHostKeyChecking=no -i ${KEY_NAME}.pem ubuntu@${PUBLIC_IP}
+```
 
-### Key Pair Conflicts
+Then executes deployment commands remotely.
 
-AWS throws duplicate key pair errors if the same key already exists.
+Including:
 
-The script now automatically:
+- Apache installation
+- Git installation
+- service enable/start
+- GitHub repo clone
+- moving files into `/var/www/html`
 
-- deletes old key pair
-- recreates new one
-- downloads fresh `.pem`
+This is where it clicked.
 
-making the script reusable.
+Infrastructure automation is basically:
 
----
-
-## Stats
-
-<div class="project-stat-bar">
-  <div class="project-stat-item">
-    <div class="project-stat-value">100%</div>
-    <div class="project-stat-label">Automated Deployment</div>
-  </div>
-  <div class="project-stat-item">
-    <div class="project-stat-value">1</div>
-    <div class="project-stat-label">Single Bash Script</div>
-  </div>
-  <div class="project-stat-item">
-    <div class="project-stat-value">3</div>
-    <div class="project-stat-label">Ports Configured</div>
-  </div>
-  <div class="project-stat-item">
-    <div class="project-stat-value">∞</div>
-    <div class="project-stat-label">Manual Steps Saved</div>
-  </div>
-</div>
+> “make machines configure themselves.”
 
 ---
 
-## What I Learned
+# What Actually Happens Behind the Scenes
 
-This project helped me understand:
+When the script runs:
+
+1. AWS creates a virtual machine
+2. Security rules are attached
+3. A public IP gets assigned
+4. SSH becomes available
+5. Bash connects remotely
+6. Commands execute on another Linux machine
+7. Apache serves the website publicly
+
+The crazy part?
+
+All of this happens from one terminal window.
+
+---
+
+# Challenges I Faced
+
+## SSH Connection Failures
+
+This happened multiple times.
+
+Reason?  
+The instance was “running” but SSH wasn’t ready yet.
+
+Fix:  
+Added waiting delays.
+
+---
+
+## Existing Keypair Conflicts
+
+AWS throws errors if the keypair already exists.
+
+Fix:  
+Delete old keypair before creating a new one.
+
+---
+
+## Apache Deployment Path Issues
+
+Initially files were cloning into nested directories.
+
+The website wouldn’t load correctly.
+
+Fix:
+
+```bash
+sudo mv hashwithharsh.github.io/* .
+```
+
+Issue was simpler than expected.
+
+---
+
+# What I Learned
+
+This project improved my understanding of:
 
 - infrastructure automation
-- cloud provisioning
 - AWS CLI workflows
-- SSH automation
-- deployment orchestration
-- server bootstrap processes
+- remote server management
+- Linux permissions
+- deployment pipelines
+- SSH behavior
+- Bash scripting structure
 
-Most importantly:
+More importantly…
 
-> Real DevOps starts when repetitive infrastructure tasks become automated workflows.
+It changed how I think about automation.
+
+Automation is not:
+
+> “running commands automatically.”
+
+It is:
+
+> “handling every possible failure before users see it.”
 
 ---
 
-## Future Improvements
+# Real World Relevance
 
-- Terraform version
-- Route53 integration
-- HTTPS using Let's Encrypt
+This is basically a mini deployment pipeline.
+
+Real companies use more advanced tools like:
+
+- Terraform
+- Ansible
+- Jenkins
+
+But understanding this low-level flow matters a lot.
+
+Because if automation breaks in production…
+
+You still need to understand what’s happening underneath.
+
+---
+
+# Future Improvements
+
+Things I want to add next:
+
+- HTTPS with SSL
+- Route53 domain setup
 - Nginx reverse proxy
 - Docker deployment support
-- CI/CD pipeline integration
-- Multi-instance deployments
+- Terraform version
+- Auto cleanup script
+- CI/CD integration
 
 ---
 
-## Repository
+# GitHub Repository
 
-Full Bash automation script and deployment workflow available in the repository.
+Example deployment repo cloned in script:
+
+```bash
+https://github.com/hashwithharsh/hashwithharsh.github.io.git
+```
+
+
+# Final Thoughts
+
+This project looked small at first.
+
+But it touched:
+
+- cloud
+- networking
+- Linux
+- security
+- deployment
+- automation
+
+Which is basically the heart of DevOps.
+
+And honestly…
+
+Building projects like this teaches way more than watching another 2-hour tutorial.
 
 ---
 
